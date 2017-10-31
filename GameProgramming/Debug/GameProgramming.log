@@ -1,29 +1,23 @@
-﻿  winmain.cpp
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\winmain.cpp(149): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\winmain.cpp(154): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
-  GameTime.cpp
-  game.cpp
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(20): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(21): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(22): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(23): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(24): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(25): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(28): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(29): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(30): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(31): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(100): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(102): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(110): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(111): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(119): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(121): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(134): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(136): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(154): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(155): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
-  dxgraphics.cpp
+﻿  game.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(145): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(147): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(155): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(156): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(164): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(166): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(179): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(181): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(199): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(200): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
+  dxinput.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Generating Code...
+  Compiling...
+  winmain.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\winmain.cpp(165): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\winmain.cpp(170): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
   Generating Code...
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.exe
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.pdb (Partial PDB)

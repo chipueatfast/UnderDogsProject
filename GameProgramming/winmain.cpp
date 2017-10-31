@@ -17,6 +17,7 @@
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
+#include "dxinput.h"
 #include "GameTime.h"
 #include <Windows.h>
 #include <WinUser.h>
@@ -43,7 +44,15 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	switch (msg)
 	{
+	case WM_ACTIVATE:
+		
+		dikeyboard->Acquire();
+		return 0;
 	case WM_DESTROY:
+		//release input objects
+		Kill_Keyboard();
+		if (dinput != NULL)
+			dinput->Release();
 		//release the Direct3D device
 		if (d3ddev != NULL)
 			d3ddev->Release();
@@ -115,6 +124,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		hInstance, //application instance
 		NULL); //window parameters
 			   //was there an error creating the window?
+	//initialize  DirectInput
+	if(!Init_DirectInput(hWnd))
+	{
+		MessageBox(hWnd, "Error initializing DirectInput", "Error", MB_OK);
+		return 0;
+
+	}
 	if (!hWnd)
 		return FALSE;
 	//display the window

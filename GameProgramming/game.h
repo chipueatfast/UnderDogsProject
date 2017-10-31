@@ -5,8 +5,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dxgraphics.h"
+#include "sprite.h"
 //application title
-#define APPTITLE "Anim_Sprite"
+#define APPTITLE "FrameworkStage"
 //screen setup
 #define FULLSCREEN 0
 #define SCREEN_WIDTH 640
@@ -18,12 +19,12 @@
 int Game_Init(HWND);
 void Game_Run(HWND, int);
 void Game_End(HWND);
-//sprite structure
-typedef struct {
-	int x, y;
-	int width, height;
-	int movex, movey;
-	int curframe, lastframe;
-	int animdelay, animcount;
-} SPRITE;
+////sprite structure
+//typedef struct {
+//	int x, y;
+//	int width, height;
+//	int movex, movey;
+//	int curframe, lastframe;
+//	int animdelay, animcount;
+//} SPRITE;
 #endif

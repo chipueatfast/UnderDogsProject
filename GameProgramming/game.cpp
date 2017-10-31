@@ -1,13 +1,21 @@
 #include "game.h"
 #include <math.h>
 #include <limits>
+#include <d3dx9.h>
+#include "GameTime.h"
+#include "dxinput.h"
 #define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
 #define KEY_UP(vk_code)((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 
-//simple move
 
-LPDIRECT3DSURFACE9 kitty_image[2];
-SPRITE kitty;
+//test sprite
+LPDIRECT3DTEXTURE9 mario_image[2];
+Sprite* mario;
+LPDIRECT3DSURFACE9 back;
+
+HRESULT result;
+
+
 //collision check
 int width, height;
 int vx, vy;
@@ -17,7 +25,7 @@ long start = GetTickCount();
 //initializes the game
 int Game_Init(HWND hwnd)
 {
-	vy = 1.0f;
+	/*vy = 1.0f;
 	vx = 1.0f;
 	width = 20.0f;
 	height = 20.0f;
@@ -28,37 +36,65 @@ int Game_Init(HWND hwnd)
 	staticRect.x1 = 400.0f;
 	staticRect.x2 = 420.0f;
 	staticRect.y1 = 0.0f;
-	staticRect.y2 = 400.0f;
+	staticRect.y2 = 400.0f;*/
+	//initialize keyboard 
+	if (!Init_Keyboard(hwnd))
+	{
+		MessageBox(hwnd	, "Error initializing the keyboard", "Error", MB_OK);
+		return 0;
+	}
+	mario = new Sprite("RunLeft.png", 22, 20, 4, 4);
+	//load the background image
+	back = LoadSurface("c.bmp", 0);
+	//initialize the sprite's properties
+	mario->set_x(100);
+	mario->set_y(150);
+	mario->set_width(21);
+	mario->set_height(39);
+	mario->set_curframe(0);
+	mario->set_lastframe(1);
+	mario->set_animdelay(2);
+	mario->set_animcount(0);
+	mario->set_movex(3);
+	mario->set_movey(0);
+	//return okay
 	return 1;
 }
-
-void PhysicsUpdate(int delta);
+void InputUpdate();
+void PhysicsUpdate();
+void GraphicUpdate();
 //the main game loop
 void Game_Run(HWND hwnd, int delta)
-{	
-	int timestep = 2;
-	while( delta - timestep > 0)
-	{
-		delta -= timestep;
-		
-	}
-	PhysicsUpdate(timestep);
-	
-	
-	
+{
+	InputUpdate();
+	PhysicsUpdate();
 	//make sure the Direct3D device is valid
 	if (d3ddev == NULL)
 		return;
+	//this keeps the game running at a steady frame rate
+	if (GetTickCount() - start >= 30)
+	{
+		//reset timing
+		start = GetTickCount();
+
+
+		//"warp" the sprite at screen edges 
+		if (mario->x() > SCREEN_WIDTH - mario->width()) 
+		mario->set_x(0);
+		if (mario->x() < 0) 
+			mario->set_movex(SCREEN_WIDTH - mario->width());
+		GraphicUpdate();
+	}
 	
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255, 255, 255), 1.0f, NULL);
-	//start rendering
-	d3ddev->BeginScene();
-	
-	movingRect.x2 = movingRect.x1 + width;
-	movingRect.y2 = movingRect.y1 + height;
-	d3ddev->Clear(1, &movingRect, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255, 0, 255), 1.0f, NULL);
-	d3ddev->Clear(1, &staticRect, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, NULL);
-	d3ddev->EndScene();
+	//d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255, 255, 255), 1.0f, NULL);
+	////start rendering
+	//d3ddev->BeginScene();
+	//
+	//movingRect.x2 = movingRect.x1 + width;
+	//movingRect.y2 = movingRect.y1 + height;
+	//d3ddev->Clear(1, &movingRect, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255, 0, 255), 1.0f, NULL);
+	//d3ddev->Clear(1, &staticRect, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, NULL);
+	//d3ddev->EndScene();
 	
 	//display the back buffer on the screen
 	d3ddev->Present(NULL, NULL, NULL, NULL);
@@ -66,7 +102,16 @@ void Game_Run(HWND hwnd, int delta)
 	if (KEY_DOWN(VK_ESCAPE))
 		PostMessage(hwnd, WM_DESTROY, 0, 0);
 }
-void PhysicsUpdate(int delta)
+void InputUpdate()
+{
+	Poll_Keyboard();
+	//check for left arrow
+	if (Key_Hold(DIK_LEFT))
+		mario->set_x(mario->x() - 1);
+	if (Key_Hold(DIK_RIGHT))
+		mario->set_x(mario->x() + 1);
+}
+void PhysicsUpdate()
 {
 	float dxEntry, dxExit, txEntry, txExit;
 	float dyEntry, dyExit, tyEntry, tyExit;
@@ -162,6 +207,33 @@ void PhysicsUpdate(int delta)
 	
 	
 	 
+}
+void GraphicUpdate()
+{
+	//has the animation delay reached threshold
+	mario->set_animcount(mario->animcount() + 1);
+	if (mario->animcount()> mario->animdelay())
+	{
+		//reset counter
+		mario->set_animcount(0);
+		//animate the sprite
+		mario->Next();
+	}
+	//start rendering
+	d3ddev->BeginScene();
+	//erase the entire background 
+	d3ddev->StretchRect(back, NULL, backbuffer, NULL, D3DTEXF_NONE);
+	//start sprite handler 
+	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
+	//create vector to update sprite position 
+	D3DXVECTOR3 position((float)mario->x(), (float)mario->y(), 0);
+	//draw the sprite 
+	//sprite_handler->Draw( mario_image[mario->curframe()], NULL, NULL, &position, D3DCOLOR_XRGB(255,255,255));
+	mario->Render(mario->x(), mario->y());
+	//stop drawing 
+	sprite_handler->End();
+	//stop rendering 
+	d3ddev->EndScene();
 }
 //frees memory and cleans up before the game ends
 void Game_End(HWND hwnd)
