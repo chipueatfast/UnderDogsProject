@@ -16,15 +16,18 @@
 #define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 #define KEY_UP(vk_code)((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 //function prototypes
-int Game_Init(HWND);
-void Game_Run(HWND, int);
-void Game_End(HWND);
-////sprite structure
-//typedef struct {
-//	int x, y;
-//	int width, height;
-//	int movex, movey;
-//	int curframe, lastframe;
-//	int animdelay, animcount;
-//} SPRITE;
+class Game
+{
+protected:
+	void ProcessKeyboard(); //for making action by pressing (not hold) button, a part of input update
+	virtual void Key_Pressed(int KeyCode);
+	virtual void InputUpdate();
+	virtual void PhysicsUpdate();
+	virtual void GraphicUpdate();
+public:
+	int Game_Init(HWND);
+	void Game_Run(HWND, int);
+	void Game_End(HWND);
+	
+};
 #endif
