@@ -1,23 +1,14 @@
 ﻿  game.cpp
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(145): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(147): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(155): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(156): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(164): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(166): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(179): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(181): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(199): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(200): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
-  dxinput.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  Generating Code...
-  Compiling...
-  winmain.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\winmain.cpp(165): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\winmain.cpp(170): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
-  Generating Code...
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(175): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(177): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(185): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(186): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(194): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(196): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(209): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(211): warning C4244: '=': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(229): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\game.cpp(230): warning C4244: '+=': conversion from 'float' to 'LONG', possible loss of data
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.exe
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.pdb (Partial PDB)

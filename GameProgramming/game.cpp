@@ -4,7 +4,8 @@
 #include <d3dx9.h>
 #include "GameTime.h"
 #include "dxinput.h"
-#define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
+
+#define KEY_PRESSED(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
 #define KEY_UP(vk_code)((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 
 
@@ -23,7 +24,7 @@ D3DRECT movingRect, staticRect;
 //timing variable
 long start = GetTickCount();
 //initializes the game
-int Game_Init(HWND hwnd)
+int Game::Game_Init(HWND hwnd)
 {
 	/*vy = 1.0f;
 	vx = 1.0f;
@@ -60,12 +61,11 @@ int Game_Init(HWND hwnd)
 	//return okay
 	return 1;
 }
-void InputUpdate();
-void PhysicsUpdate();
-void GraphicUpdate();
+
 //the main game loop
-void Game_Run(HWND hwnd, int delta)
+void Game::Game_Run(HWND hwnd, int delta)
 {
+	
 	InputUpdate();
 	PhysicsUpdate();
 	//make sure the Direct3D device is valid
@@ -99,19 +99,49 @@ void Game_Run(HWND hwnd, int delta)
 	//display the back buffer on the screen
 	d3ddev->Present(NULL, NULL, NULL, NULL);
 	//check for escape key (to exit program)
-	if (KEY_DOWN(VK_ESCAPE))
+	if (KEY_PRESSED(VK_ESCAPE))
 		PostMessage(hwnd, WM_DESTROY, 0, 0);
 }
-void InputUpdate()
+
+//because different scene will required different action so key_pressed is protected
+void Game::ProcessKeyboard()
+{
+	//Collect all buffered events 
+	DWORD dwElements = KEYBOARD_BUFFER_SIZE;
+	if (dikeyboard!=nullptr)
+		HRESULT hr = dikeyboard->GetDeviceData(sizeof(DIDEVICEOBJECTDATA), _KeyEvents, &dwElements, 0);
+	//Scan through all data, check if the is pressed or released 
+	for (DWORD i = 0; i < dwElements; i++)
+	{
+		int KeyCode = _KeyEvents[i].dwOfs;
+		int KeyState = _KeyEvents[i].dwData;
+		if ((KeyState & 0x80) > 0)
+			Key_Pressed(KeyCode);
+
+	}
+}
+void Game::Key_Pressed(int KeyCode)
+ {
+	switch (KeyCode)
+	{
+	case DIK_SPACE:
+ 		mario->set_y(mario->y() - 20);
+		break;
+	}
+}
+
+//loop components
+void Game::InputUpdate()
 {
 	Poll_Keyboard();
+	ProcessKeyboard();
 	//check for left arrow
 	if (Key_Hold(DIK_LEFT))
-		mario->set_x(mario->x() - 1);
+		mario->set_x(mario->x() - 5);
 	if (Key_Hold(DIK_RIGHT))
-		mario->set_x(mario->x() + 1);
+		mario->set_x(mario->x() + 5);
 }
-void PhysicsUpdate()
+void Game::PhysicsUpdate()
 {
 	float dxEntry, dxExit, txEntry, txExit;
 	float dyEntry, dyExit, tyEntry, tyExit;
@@ -208,7 +238,7 @@ void PhysicsUpdate()
 	
 	 
 }
-void GraphicUpdate()
+void Game::GraphicUpdate()
 {
 	//has the animation delay reached threshold
 	mario->set_animcount(mario->animcount() + 1);
@@ -236,7 +266,7 @@ void GraphicUpdate()
 	d3ddev->EndScene();
 }
 //frees memory and cleans up before the game ends
-void Game_End(HWND hwnd)
+void Game::Game_End(HWND hwnd)
 {
 
 }
