@@ -13,7 +13,7 @@
 //Beginning Game Programming, Second Edition
 //Chapter 7
 //wimain.cpp - Windows framework source code file	
-
+//Test Commit (NamLe)
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 

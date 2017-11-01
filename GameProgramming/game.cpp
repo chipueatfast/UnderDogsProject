@@ -1,4 +1,4 @@
-#include "game.h"
+﻿#include "game.h"
 #include <math.h>
 #include <limits>
 #define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
@@ -66,6 +66,9 @@ void Game_Run(HWND hwnd, int delta)
 	if (KEY_DOWN(VK_ESCAPE))
 		PostMessage(hwnd, WM_DESTROY, 0, 0);
 }
+ 
+ //như bị lỗi vậy, để tao chạy lại bên máy
+
 void PhysicsUpdate(int delta)
 {
 	float dxEntry, dxExit, txEntry, txExit;
