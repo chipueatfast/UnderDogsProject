@@ -18,6 +18,7 @@ private:
 public:
 	GameObject();
 	~GameObject();
+	void setSprite(Sprite* t);
 	int getWidth();
 	int getHeight();
 	void setWidth(int value);
@@ -32,6 +33,7 @@ public:
 	void setAngel(float angel);
 	void Transform(D3DXVECTOR2 Translation = D3DXVECTOR2(0, 0), float Rotation = 0, D3DXVECTOR2 Scale = D3DXVECTOR2(1, 1) , D3DXVECTOR2 center = D3DXVECTOR2(0,0));
 	void Render();
+	void Update();
 };
 
 #endif // ! _GAME_OBJECT_H_

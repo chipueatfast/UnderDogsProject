@@ -9,11 +9,17 @@ GameObject::GameObject()
 	_scale = D3DXVECTOR2(1, 1);
 	_translation = D3DXVECTOR2(0, 0);
 	_angel = 0;
+	_sprite = new Sprite();
 }
 
 
 GameObject::~GameObject()
 {
+}
+
+void GameObject::setSprite(Sprite * t)
+{
+	_sprite = t;
 }
 
 int GameObject::getWidth()
@@ -79,7 +85,7 @@ void GameObject::setAngel(float angel)
 void GameObject::Transform(D3DXVECTOR2 Translation, float Rotation, D3DXVECTOR2 Scale, D3DXVECTOR2 center)
 {
 	D3DXMATRIX  mMatrix;
-	float mRotation = 0;
+	float mRotation = Rotation;
 	D3DXVECTOR2 mTranslation = Translation;
 	D3DXVECTOR2 mScale = Scale;
 	D3DXVECTOR2 mRotationCenter;
@@ -100,4 +106,8 @@ void GameObject::Transform(D3DXVECTOR2 Translation, float Rotation, D3DXVECTOR2 
 void GameObject::Render()
 {
 	 _sprite->Render(getX(),getY());
+}
+
+void GameObject::Update()
+{
 }
