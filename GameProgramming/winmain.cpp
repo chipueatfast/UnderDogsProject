@@ -1,22 +1,9 @@
-//Beginning Game Programming, Second Edition
-//Chapter 4
-//GameLoop project
-
-//Beginning Game Progamming, Second Edition
-//Chapter 5
-//d3d_windowed program
-
-//Beginning Game Progamming, Second Edition
-//Chapter 6
-//Create_Surface Program
-
-//Beginning Game Programming, Second Edition
-//Chapter 7
-//wimain.cpp - Windows framework source code file	
+//updated on 02-11, chipu
 
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
+#include"GameManager.h"
 #include "dxinput.h"
 #include "GameTime.h"
 #include <Windows.h>
@@ -28,8 +15,7 @@
 
 #include "dxgraphics.h"
 #include "game.h"
-
-
+#include "Scene1.h"
 
 
 //function prototypes
@@ -37,7 +23,6 @@ LRESULT CALLBACK WinProc(HWND, UINT, WPARAM, LPARAM);
 ATOM MyRegisterClass(HINSTANCE);
 
 
-Game* MainGame;
 
 //window event callback function
 LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -60,7 +45,7 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (d3d != NULL)
 			d3d->Release();
 		//call the "front-end" shutdown function
-		MainGame->Game_End(hWnd);
+		GameManager::GetInstance()->GetCurrentScene()->Game_End(hWnd);
 		//tell Windows to kill this program
 		PostQuitMessage(0);
 		return 0;
@@ -98,7 +83,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
-	MainGame = new Game();
+	Scene1* scene1 = new Scene1();
+	GameManager::GetInstance()->ReplaceScene(scene1);
 	int mFPS = 1;
 	MSG msg;
 	float tickPerFrame = 1.0f / mFPS, delta = 0;
@@ -140,7 +126,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	if (!Init_Direct3D(hWnd, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN))
 		return 0;
 	//initialize the game
-	if (!MainGame->Game_Init(hWnd))
+	if (!GameManager::GetInstance()->GetCurrentScene()->Game_Init(hWnd))
 	{
 		MessageBox(hWnd, "Error initializing the game", "Error", MB_OK);
 		return 0;
@@ -163,7 +149,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if (delta >= tickPerFrame)
 		{
 			//process game loop (prevents running after window is closed)
-			MainGame->Game_Run(hWnd, delta);
+			GameManager::GetInstance()->GetCurrentScene()->Game_Run(hWnd);
 			delta = 0;
 		}
 		else

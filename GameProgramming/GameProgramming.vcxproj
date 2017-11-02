@@ -122,8 +122,10 @@
     <ClCompile Include="dxgraphics.cpp" />
     <ClCompile Include="dxinput.cpp" />
     <ClCompile Include="game.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
@@ -132,8 +134,10 @@
     <ClInclude Include="dxgraphics.h" />
     <ClInclude Include="dxinput.h" />
     <ClInclude Include="game.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTime.h" />
+    <ClInclude Include="Scene1.h" />
     <ClInclude Include="sprite.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include "dxgraphics.h"
 #include "sprite.h"
+#include "AABB.h"
+#include "GameObject.h"
 //application title
 #define APPTITLE "FrameworkStage"
 //screen setup
@@ -13,6 +15,7 @@
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 //macros to read the keyboard asynchronously
+#define KEY_PRESSED(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
 #define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 #define KEY_UP(vk_code)((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 //function prototypes
@@ -25,9 +28,9 @@ protected:
 	virtual void PhysicsUpdate();
 	virtual void GraphicUpdate();
 public:
-	int Game_Init(HWND);
-	void Game_Run(HWND, int);
-	void Game_End(HWND);
+	int virtual Game_Init(HWND);
+	void virtual Game_Run(HWND);
+	void virtual Game_End(HWND);
 	
 };
 #endif
