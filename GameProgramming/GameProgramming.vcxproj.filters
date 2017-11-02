@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Aladdin">
+      <UniqueIdentifier>{54a03b1d-1909-488b-b9e5-09c05b0e62a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aladdin\States">
+      <UniqueIdentifier>{07d255f8-519e-4d5c-b1bc-d08421833ec5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winmain.cpp">
@@ -33,11 +39,32 @@
     <ClCompile Include="dxinput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Aladdin.cpp">
+      <Filter>Aladdin</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerState.cpp">
+      <Filter>Aladdin</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerStanding.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StateData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StateManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Transition_check.cpp">
+      <Filter>Aladdin\States</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,11 +83,32 @@
     <ClInclude Include="dxinput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Aladdin.h">
+      <Filter>Aladdin</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerState.h">
+      <Filter>Aladdin</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerStanding.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StateManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Transition_check.h">
+      <Filter>Aladdin\States</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

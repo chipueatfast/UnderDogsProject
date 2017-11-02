@@ -1,0 +1,3 @@
+﻿  GameObject.cpp
+c:\users\pcpv\desktop\underdogsproject-master\gameprogramming\gameobject.cpp(140): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+  GameProgramming.vcxproj -> C:\Users\PCPV\Desktop\UnderDogsProject-master\x64\Debug\GameProgramming.exe

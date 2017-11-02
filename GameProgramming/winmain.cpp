@@ -37,7 +37,7 @@ LRESULT CALLBACK WinProc(HWND, UINT, WPARAM, LPARAM);
 ATOM MyRegisterClass(HINSTANCE);
 
 
-Game* MainGame;
+
 
 //window event callback function
 LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -60,7 +60,7 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (d3d != NULL)
 			d3d->Release();
 		//call the "front-end" shutdown function
-		MainGame->Game_End(hWnd);
+		Game_End(hWnd);
 		//tell Windows to kill this program
 		PostQuitMessage(0);
 		return 0;
@@ -98,7 +98,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
-	MainGame = new Game();
 	int mFPS = 1;
 	MSG msg;
 	float tickPerFrame = 1.0f / mFPS, delta = 0;
@@ -140,7 +139,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	if (!Init_Direct3D(hWnd, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN))
 		return 0;
 	//initialize the game
-	if (!MainGame->Game_Init(hWnd))
+	if (!Game_Init(hWnd))
 	{
 		MessageBox(hWnd, "Error initializing the game", "Error", MB_OK);
 		return 0;
@@ -163,7 +162,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if (delta >= tickPerFrame)
 		{
 			//process game loop (prevents running after window is closed)
-			MainGame->Game_Run(hWnd, delta);
+			Game_Run(hWnd, delta);
 			delta = 0;
 		}
 		else
