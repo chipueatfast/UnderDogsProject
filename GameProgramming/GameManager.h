@@ -11,7 +11,7 @@ public:
 	~GameManager();
 
 	Game* GetCurrentScene();
-	void Update(HWND);
+	void Update(HWND, int);
 	void ReplaceScene(Game *scene);
 
 private:

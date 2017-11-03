@@ -16,6 +16,7 @@
 #include "dxgraphics.h"
 #include "game.h"
 #include "Scene1.h"
+#include "dxaudio.h"
 
 
 //function prototypes
@@ -83,6 +84,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	LPSTR lpCmdLine,
 	int nCmdShow)
 {
+
 	Scene1* scene1 = new Scene1();
 	GameManager::GetInstance()->ReplaceScene(scene1);
 	int mFPS = 1;
@@ -118,6 +120,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		return 0;
 
 	}
+	//initialize DirectSound 
+	if (!Init_DirectSound(hWnd)) 
+	{ 
+		MessageBox(hWnd, "Error initializing DirectSound", "Error", MB_OK); 
+		return 0; 
+	}
+
 	if (!hWnd)
 		return FALSE;
 	//display the window
@@ -149,14 +158,13 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if (delta >= tickPerFrame)
 		{
 			//process game loop (prevents running after window is closed)
-			GameManager::GetInstance()->GetCurrentScene()->Game_Run(hWnd);
+			GameManager::GetInstance()->GetCurrentScene()->Game_Run(hWnd, delta);
 			delta = 0;
 		}
 		else
 		{
 			Sleep(tickPerFrame - delta);
 			delta = tickPerFrame;
-
 		}
 		
 		

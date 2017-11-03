@@ -25,9 +25,9 @@ Game* GameManager::GetCurrentScene()
 	return mCurrentScene;
 }
 
-void GameManager::Update(HWND hWnd)
+void GameManager::Update(HWND hWnd, int dt)
 {
-	mCurrentScene->Game_Run(hWnd);
+	mCurrentScene->Game_Run(hWnd, dt);
 }
 
 void GameManager::ReplaceScene(Game* scene)

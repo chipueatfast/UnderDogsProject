@@ -5,9 +5,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dxgraphics.h"
+#include "dxaudio.h"
 #include "sprite.h"
 #include "AABB.h"
 #include "GameObject.h"
+
 //application title
 #define APPTITLE "FrameworkStage"
 //screen setup
@@ -22,6 +24,8 @@
 class Game
 {
 protected:
+	CSound* _soundTheme;
+
 	void ProcessKeyboard(); //for making action by pressing (not hold) button, a part of input update
 	virtual void Key_Pressed(int KeyCode);
 	virtual void InputUpdate();
@@ -29,7 +33,7 @@ protected:
 	virtual void GraphicUpdate();
 public:
 	int virtual Game_Init(HWND);
-	void virtual Game_Run(HWND);
+	void virtual Game_Run(HWND, int);
 	void virtual Game_End(HWND);
 	
 };

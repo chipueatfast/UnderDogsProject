@@ -6,6 +6,7 @@
 #include "dxinput.h"
 
 
+
 #define KEY_UP(vk_code)((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 
 
@@ -58,7 +59,7 @@ int Game::Game_Init(HWND hwnd)
 }
 
 //the main game loop
-void Game::Game_Run(HWND hwnd)
+void Game::Game_Run(HWND hwnd, int dt)
 {
 	
 	//InputUpdate();

@@ -1,5 +1,6 @@
 #include "Scene1.h"
 #include "dxinput.h"
+#include "GameTime.h"
 
 #define CHARACTER_VX 2
 //test sprite
@@ -28,6 +29,7 @@ void Scene1::Key_Pressed(int KeyCode)
 	{
 	case DIK_SPACE:
 	mario->set_y(mario->y() - 20);
+	PlaySound(_soundJump);
 	break;
 	}
 }
@@ -94,6 +96,12 @@ int Scene1::Game_Init(HWND hwnd)
 	staticRect.x2 = 420.0f;
 	staticRect.y1 = 0.0f;
 	staticRect.y2 = 400.0f;*/
+	//init sound files
+	_soundTheme = LoadSound("alarm_beep.WAVE");
+	_soundJump = LoadSound("Cuica-1.wave");
+	if (_soundTheme == NULL)
+		return 0;
+	_soundTheme->Play(0, DSBPLAY_LOOPING);
 	//initialize keyboard 
 	if (!Init_Keyboard(hwnd))
 	{
@@ -122,8 +130,9 @@ int Scene1::Game_Init(HWND hwnd)
 }
 
 //the main game loop content
-void Scene1::Game_Run(HWND hwnd)
+void Scene1::Game_Run(HWND hwnd, int dt)
 {
+	GameTime::GetInstance()->StartCounter();
 	InputUpdate();
 	PhysicsUpdate();
 	//make sure the Direct3D device is valid
@@ -141,10 +150,14 @@ void Scene1::Game_Run(HWND hwnd)
 	//check for escape key (to exit program)
 	if (KEY_PRESSED(VK_ESCAPE))
 		PostMessage(hwnd, WM_DESTROY, 0, 0);
+	Sleep(6 - GameTime::GetInstance()->GetCounter());
 }
 
 void Scene1::Game_End(HWND)
 {
+
+
+
 }
 
 

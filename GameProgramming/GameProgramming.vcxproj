@@ -119,6 +119,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="dsutil.cpp" />
+    <ClCompile Include="dxaudio.cpp" />
     <ClCompile Include="dxgraphics.cpp" />
     <ClCompile Include="dxinput.cpp" />
     <ClCompile Include="game.cpp" />
@@ -127,18 +129,23 @@
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="sprite.cpp" />
+    <ClCompile Include="trace.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="dsutil.h" />
+    <ClInclude Include="dxaudio.h" />
     <ClInclude Include="dxgraphics.h" />
     <ClInclude Include="dxinput.h" />
+    <ClInclude Include="dxutil.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Scene1.h" />
     <ClInclude Include="sprite.h" />
+    <ClInclude Include="trace.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
