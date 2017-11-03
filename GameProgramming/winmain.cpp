@@ -28,8 +28,8 @@
 
 #include "dxgraphics.h"
 #include "game.h"
-
-
+#include "GameManager.h"
+#include "Scene1.h"
 
 
 //function prototypes
@@ -60,7 +60,7 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		if (d3d != NULL)
 			d3d->Release();
 		//call the "front-end" shutdown function
-		Game_End(hWnd);
+		GameManager::GetInstance()->GetCurrentScene()->Game_End(hWnd);
 		//tell Windows to kill this program
 		PostQuitMessage(0);
 		return 0;
@@ -102,6 +102,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	MSG msg;
 	float tickPerFrame = 1.0f / mFPS, delta = 0;
 	HWND hWnd;
+	GameManager::GetInstance()->ReplaceScene(new Scene1());
 	// register the class
 	MyRegisterClass(hInstance);
 	//set up the screen in windowed or fullscreen mode?
@@ -139,7 +140,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	if (!Init_Direct3D(hWnd, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN))
 		return 0;
 	//initialize the game
-	if (!Game_Init(hWnd))
+	if (!GameManager::GetInstance()->GetCurrentScene()->Game_Init(hWnd))
 	{
 		MessageBox(hWnd, "Error initializing the game", "Error", MB_OK);
 		return 0;
@@ -162,7 +163,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		if (delta >= tickPerFrame)
 		{
 			//process game loop (prevents running after window is closed)
-			Game_Run(hWnd, delta);
+			GameManager::GetInstance()->GetCurrentScene()->Game_Run(hWnd);
 			delta = 0;
 		}
 		else

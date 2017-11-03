@@ -1,4 +1,4 @@
 #pragma once
-#include "PlayerState.h"
+#include <string>
 
-bool checker(State_Name scrState, State_Name desState);
+bool checker(std::string scrState, std::string desState);

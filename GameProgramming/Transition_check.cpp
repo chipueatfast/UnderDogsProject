@@ -1,7 +1,7 @@
 
 #include "Transition_check.h"
 
-bool checker(State_Name scrState, State_Name desState)
+bool checker(std::string scrState, std::string desState)
 {
-
+	return true;
 }

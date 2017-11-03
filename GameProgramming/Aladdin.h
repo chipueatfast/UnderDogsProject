@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 #include "GameObject.h"
-#include "PlayerState.h"
+#include "StateManager.h"
+
 using namespace std;
 
 
@@ -12,26 +13,22 @@ class Aladdin : public GameObject
 {
 private:
 	int _health;
-	#pragma region State_Data
-	PlayerState* _PlayerStateData;
-#pragma endregion
-
-	
-	State_Name _state;
-
-	float vx, vy;
-	int width, height;
+	StateManager _playerState;
+	int _index;
+	float _animadelay,_animaCount;
 public:
 	Aladdin();
 	~Aladdin();
 
 	void Init();
-	void Update();
-	void Render();
+	void Update(float t);
+	void Render(D3DXVECTOR3* AnchorPoint) override ;
 
-	void setState(PlayerState newState);
+	void setState(string newState);
 	void Move(int keycode);
 
+	void Next();
+	void Reset();
 	void BeHitted();
 };
 

@@ -1,17 +1,30 @@
 #ifndef _STATE_MANAGER_H_
 #define _STATE_MANAGER_H_
-
-#include "PlayerState.h"
+#include <map>
+#include "State.h"
+#include <vector>
+using namespace std;
 
 class StateManager
 {
 private:
-	State_Name _curState;
-	//Sta	te_Name _state;
+	State _curState;
 public:
-	StateManager(State_Name state);
+	State curState() const
+	{
+		return _curState;
+	}
+
+private:
+	//Sta	te_Name _state;
+	map<string, State> _mapState;
+	vector<string> _listStateName;
+
+public:
+	StateManager();
 	~StateManager();
-	void setState(State_Name targetState);
+	StateManager(char* xmlpath);
+	void setState(string targetState);
 };
 
 #endif // !_STATE_MANAGER_H_

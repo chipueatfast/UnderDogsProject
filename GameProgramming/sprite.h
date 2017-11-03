@@ -7,8 +7,8 @@ class Sprite
 	
 private:
 	LPDIRECT3DTEXTURE9 _image;
-	int _width, _height;
-public:
+	int	_width, _height;
+	public:
 	#pragma region  Properties
 	LPDIRECT3DTEXTURE9 image() const
 	{
@@ -20,7 +20,8 @@ public:
 		_image = direct3_d_texture9;
 	}
 
-	
+
+
 
 	int width() const
 	{
@@ -37,8 +38,13 @@ public:
 		return _height;
 	}
 
-
+	void set_height(int height)
+	{
+		_height = height;
+	}
+#pragma endregion 
 	Sprite(LPCSTR FilePath, int Width, int Height);
+
 	Sprite();
 	~Sprite();
 };

@@ -3,7 +3,6 @@
 
 Sprite::Sprite(LPCSTR FilePath, int Width, int Height)
 {
-	RECT _boundingBox;
 	D3DXIMAGE_INFO info;
 	HRESULT result;
 	_image = NULL;
@@ -37,7 +36,6 @@ Sprite::Sprite(LPCSTR FilePath, int Width, int Height)
 		return;
 	}
 }
-
 
 Sprite::Sprite()
 {
