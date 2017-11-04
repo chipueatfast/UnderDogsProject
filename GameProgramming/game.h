@@ -30,7 +30,7 @@ protected:
 	virtual void Key_Pressed(int KeyCode);
 	virtual void InputUpdate();
 	virtual void PhysicsUpdate();
-	virtual void GraphicUpdate();
+	virtual void GraphicUpdate(float t);
 public:
 	int virtual Game_Init(HWND);
 	void virtual Game_Run(HWND, int);

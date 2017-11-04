@@ -1,16 +1,13 @@
 #include "sprite.h"
 #include "game.h"
 
-Sprite::Sprite(LPCSTR FilePath, int Width, int Height, int Count, int SpritesPerRow)
+Sprite::Sprite(LPCSTR FilePath, int Width, int Height)
 {
 	D3DXIMAGE_INFO info;
 	HRESULT result;
 	_image = NULL;
 	_width = Width;
 	_height = Height;
-	_count = Count;
-	_spritesPerRow = SpritesPerRow;
-	_index = 0;
 	result = D3DXGetImageInfoFromFile(FilePath, &info);
 
 	if (result != D3D_OK)
@@ -39,41 +36,6 @@ Sprite::Sprite(LPCSTR FilePath, int Width, int Height, int Count, int SpritesPer
 		return;
 	}
 }
-
-void Sprite::Next()
-{
-	_index = (_index + 1) % _spritesPerRow;
-}
-
-void Sprite::Next2()
-{
-	if (_index >= _count)
-		_index = -1;
-	else if (_index != -1)
-		_index++;
-}
-
-
-void Sprite::Render(int X, int Y, D3DXVECTOR3* AnchorPoint)
-{
-	RECT cameraSheet;
-	cameraSheet.top = (_index / _spritesPerRow)*_height + 1;
-	cameraSheet.bottom = cameraSheet.top + _height + 1;
-	cameraSheet.left = 2 + (_index%_spritesPerRow)* _width;
-	cameraSheet.right = cameraSheet.left + _width - 2;
-
-	D3DXVECTOR3 position((float)X, (float)Y, 0);
-	sprite_handler->Draw(
-		_image,
-		&cameraSheet,
-		AnchorPoint,
-		&position,
-		D3DCOLOR_XRGB(255, 255, 255)
-	);
-
-
-}
-
 
 Sprite::Sprite()
 {

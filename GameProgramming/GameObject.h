@@ -2,11 +2,22 @@
 #define  _GAME_OBJECT_H_
 //update 02-11 chipu
 #include "sprite.h"
-
+enum AnchorPoint
+{
+	TOP_LEFT,
+	TOP_MID,
+	TOP_RIGHT,
+	MID_LEFT,
+	MIDDLE,
+	MID_RIGHT,
+	BOTTOM_LEFT,
+	BOTTOM_MID,
+	BOTTOM_RIGHT
+};
 
 class GameObject
 {
-private:
+protected:
 	Sprite* _sprite;
 	int _width, _height;
 	float _vx, _vy;
@@ -41,14 +52,29 @@ public:
 		_boundingBox = tag_rect;
 	}
 
-private:
+protected:
 	RECT _boundingBox;
 	D3DXVECTOR3 _position;
 	D3DXMATRIX _scale;
 	D3DXMATRIX _translation;
 	D3DXMATRIX _rotation;
+	AnchorPoint _anchor;
+public:
+	AnchorPoint anchor() const
+	{
+		return _anchor;
+	}
+
+	void setAnchor(AnchorPoint anchor)
+	{
+		_anchor = anchor;
+	}
+
+protected:
+	D3DXVECTOR3 _anchorPoint;
 
 public:
+
 	int width() const
 	{
 		return _width;
@@ -71,11 +97,11 @@ public:
 	GameObject();
 	~GameObject();
 	void setSprite(Sprite* t);
-	int x() const 
+	float x() const
 	{
 		return _position.x;
 	};
-	int y() const 
+	float y() const
 	{
 		return _position.y;
 	}
@@ -84,14 +110,16 @@ public:
 	void setPosition(float x, float y);
 	void setScale(D3DXVECTOR2 scale);
 	void setAngle(float angle);
+	void setTranslation(D3DXVECTOR2 vec);
 
 	void Rotation(float angel);
 	void Scale(D3DXVECTOR2 scale);
 
 	void Flip();
 	void Transform(float Rotation = 0, D3DXVECTOR2 Scale = D3DXVECTOR2(1, 1), D3DXVECTOR2 Translation = D3DXVECTOR2(0, 0));
-	void Render(D3DXVECTOR3* AnchorPoint = NULL);
-	void Update();
+	virtual void Render(D3DXVECTOR3* AnchorPoint = NULL) = 0;
+	void Translation(D3DXVECTOR2 vec);
+	void Update(float t);
 };
 
 #endif // ! _GAME_OBJECT_H_

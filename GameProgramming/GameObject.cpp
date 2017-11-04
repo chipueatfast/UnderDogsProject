@@ -51,6 +51,11 @@ void GameObject::setAngle(float angle)
 	D3DXMatrixRotationZ(&_rotation, D3DXToRadian(angle));
 }
 
+void GameObject::setTranslation(D3DXVECTOR2 vec)
+{
+	D3DXMatrixTranslation(&_translation, vec.x, vec.y, 0);
+}
+
 void GameObject::Rotation(float angle)
 {
 	setAngle(angle);
@@ -89,35 +94,25 @@ void GameObject::Transform(float Rotation, D3DXVECTOR2 Scale, D3DXVECTOR2 Transl
 	D3DXMATRIX oldMatrix;
 	sprite_handler->GetTransform(&oldMatrix);
 	sprite_handler->SetTransform(&mMatrix);
-	Render();
+	Render(&_anchorPoint);
 	sprite_handler->SetTransform(&oldMatrix);
 }
 
 void GameObject::Render(D3DXVECTOR3* AnchorPoint)
 {
-	RECT cameraSheet;
-	cameraSheet.top = (_sprite->index() / _sprite->sprites_per_row())*_sprite->height() + 1;
-	cameraSheet.bottom = cameraSheet.top + _sprite->height() + 1;
-	cameraSheet.left = 2 + (_sprite->index() % _sprite->sprites_per_row())* _sprite->width();
-	cameraSheet.right = cameraSheet.left + _sprite->width() - 2;
-
-	if (AnchorPoint == NULL)
-	{
-		AnchorPoint = new D3DXVECTOR3(_width / 2, _height / 2, 0);
-	}
-	D3DXVECTOR3 position;
-
-	sprite_handler->Draw(
-		_sprite->image(),
-		&cameraSheet,
-		AnchorPoint,
-		NULL,
-		D3DCOLOR_XRGB(255, 255, 255)
-	);
-
 }
 
-void GameObject::Update()
+void GameObject::Translation(D3DXVECTOR2 vec)
+{
+	setTranslation(vec);
+	D3DXMATRIX oldMatrix;
+	sprite_handler->GetTransform(&oldMatrix);
+	sprite_handler->SetTransform(&_translation);
+	Render(&_anchorPoint);
+	sprite_handler->SetTransform(&oldMatrix);
+}
+
+void GameObject::Update(float t)
 {
 }
 

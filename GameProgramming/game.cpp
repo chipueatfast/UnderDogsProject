@@ -234,7 +234,7 @@ void Game::PhysicsUpdate()
 	
 	 
 }
-void Game::GraphicUpdate()
+void Game::GraphicUpdate(float t)
 {
 	////has the animation delay reached threshold
 	//mario->set_animcount(mario->animcount() + 1);
