@@ -19,6 +19,9 @@
     <Filter Include="Aladdin\States">
       <UniqueIdentifier>{07d255f8-519e-4d5c-b1bc-d08421833ec5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{543f807f-62f0-4e89-9e2d-0585e952ddca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="winmain.cpp">
@@ -63,6 +66,9 @@
     <ClCompile Include="Scene1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MyCamera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dxgraphics.h">
@@ -103,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="Scene1.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MyCamera.h">
+      <Filter>Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 #define _SCENE1_H
 #include "game.h"
 #include "Aladdin.h"
+#include "MyCamera.h"
 class Scene1: public Game
 {
 private:

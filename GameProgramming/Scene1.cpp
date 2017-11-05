@@ -1,7 +1,7 @@
 #include "Scene1.h"
 #include "dxinput.h"
 
-#define CHARACTER_VX 2
+
 //test sprite
 
 HRESULT result;
@@ -16,6 +16,7 @@ long start = GetTickCount();
 //initializes the game
 Scene1::Scene1()
 {
+	
 }
 
 void Scene1::Key_Pressed(int KeyCode)
@@ -24,9 +25,22 @@ void Scene1::Key_Pressed(int KeyCode)
 	{
 	case DIK_SPACE:
 	{
-		character->Flip();
-	}
-	break;
+		character->setState("Idle1");
+		MyCamera::GetInstance()->setVx(0);
+		MyCamera::GetInstance()->Stop();
+	}; break;
+	case DIK_LEFT:
+	{
+		character->Move(DIK_LEFT);
+		MyCamera::GetInstance()->setVx(-25);
+		MyCamera::GetInstance()->Move();
+	}; break;
+	case DIK_RIGHT:
+	{
+		character->Move(DIK_RIGHT);
+		MyCamera::GetInstance()->setVx(25);
+		MyCamera::GetInstance()->Move();
+	}; break;
 	}
 }
 
@@ -35,10 +49,18 @@ void Scene1::InputUpdate()
 	Poll_Keyboard();
 	ProcessKeyboard();
 	//check for left arrow
-	if (Key_Hold(DIK_LEFT));
-		//mario->set_x(mario->x() - CHARACTER_VX);
-	if (Key_Hold(DIK_RIGHT));
-		//mario->set_x(mario->x() + CHARACTER_VX);
+	//if (Key_Hold(DIK_LEFT));
+	//{
+	//	//character->Move(DIK_LEFT);
+	//	MyCamera::GetInstance()->setVx(-15);
+	//	//MyCamera::GetInstance()->Move();
+	//};
+	//if (Key_Hold(DIK_RIGHT));
+	//{
+	//	//character->Move(DIK_RIGHT);
+	//	MyCamera::GetInstance()->setVx(15);
+	//	MyCamera::GetInstance()->Move();
+	//}
 }
 
 void Scene1::PhysicsUpdate()
@@ -55,7 +77,7 @@ void Scene1::GraphicUpdate(float t)
 	//has the animation delay reached threshold
 	//start rendering
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255,0,255), 0.0f, 0);
-	d3ddev->StretchRect(background, &viewRect, backbuffer, NULL,D3DTEXF_NONE);
+	d3ddev->StretchRect(background, &(MyCamera::GetInstance()->View()), backbuffer, NULL,D3DTEXF_NONE);
 	d3ddev->BeginScene();
 	//erase the entire background 
 	//d3ddev->StretchRect(back, NULL, backbuffer, NULL, D3DTEXF_NONE);
@@ -63,6 +85,7 @@ void Scene1::GraphicUpdate(float t)
 	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
 	character->Render(AnchorPoint::MIDDLE,false,true,true);
 	character->Update(t);
+	MyCamera::GetInstance()->Update(t);
 	//stop drawing 
 	sprite_handler->End();
 	//stop rendering 
@@ -80,14 +103,14 @@ int Scene1::Game_Init(HWND hwnd)
 	character = new Aladdin();
 	character->setPosition(100, 450);
 	character->setAnchor(AnchorPoint::BOTTOM_MID);
-	character->setScale(D3DXVECTOR2(2, 2));
+	//character->setScale(D3DXVECTOR2(2, 2));
 
 	background = LoadSurface("Res/map.png", D3DCOLOR_XRGB(255,0,255));
 
-	viewRect.top = 680 - SCREEN_HEIGHT/2;
-	viewRect.left = 0;
-	viewRect.bottom = viewRect.top + SCREEN_HEIGHT / 2;
-	viewRect.right = viewRect.left + SCREEN_WIDTH / 2;
+	//viewRect.top = 680 - SCREEN_HEIGHT/2;
+	//viewRect.left = 0;
+	//viewRect.bottom = viewRect.top + SCREEN_HEIGHT / 2;
+	//viewRect.right = viewRect.left + SCREEN_WIDTH / 2;
 
 
 	return 1;
@@ -106,12 +129,11 @@ void Scene1::Game_Run(HWND hwnd)
 		return;
 	//this keeps the game running at a steady frame rate
 	float delta = GetTickCount() - start;
-	if (delta >= 1000/10
-		)
+	if (delta >= 1000/10)
 	{
 		//reset timing
 		start = GetTickCount();
-		GraphicUpdate(delta);
+		GraphicUpdate(delta/200);
 	}
 	//display the back buffer on the screen
 	d3ddev->Present(NULL, NULL, NULL, NULL);

@@ -141,6 +141,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="MyCamera.cpp" />
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="Transition_check.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTime.h" />
+    <ClInclude Include="MyCamera.h" />
     <ClInclude Include="Scene1.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="Transition_check.h" />

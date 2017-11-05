@@ -1,2 +1,4 @@
-﻿  sprite.cpp
+﻿  Scene1.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\scene1.cpp(131): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
   GameProgramming.vcxproj -> C:\Users\15520\source\repos\UnderDogsProject-master\UnderDogsProject\x64\Debug\GameProgramming.exe

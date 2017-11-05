@@ -1,5 +1,6 @@
 #include "Aladdin.h"
 #include "dxgraphics.h"
+#include <dinput.h>
 
 
 Aladdin::Aladdin()
@@ -8,6 +9,8 @@ Aladdin::Aladdin()
 	_animadelay = 2.0f;
 	_animaCount = 0;
 	_health = 7;
+	_curface = Face::RIGHT;
+	_lastface = _curface;
 	_playerState = StateManager("D:\\AladdinSpriteXML.xml");
 	this->setSprite(new Sprite("Res\\Aladdin.png",40,50));
 }
@@ -33,6 +36,8 @@ void Aladdin::Update(float t)
 		// update lai anchorpoint do frame co bounding khac nhau
 		calAnchorPoint();
 	}
+
+	_lastface = _curface;
 }
 
 void Aladdin::Render(AnchorPoint type, bool isRotation, bool isScale, bool isTranslation)
@@ -60,7 +65,30 @@ void Aladdin::setState(string newState)
 
 void Aladdin::Move(int keycode)
 {
+	switch (keycode)
+	{
+	case DIK_LEFT:
+	{
+		if(CurrentState() != "Running")
+			setState("Running");
+		if (_lastface != _curface)
+			Flip();
+		_curface = Face::LEFT;
+		Run();
+	}; break;
+	case DIK_RIGHT:
+	{
+		if (CurrentState() != "Running")
+			setState("Running");
+		if (_lastface != _curface)
+			Flip();
+		_curface = Face::RIGHT;
+		Run();
+	}; break;
+	}
 }
+
+
 
 void Aladdin::Next()
 {
@@ -76,4 +104,21 @@ void Aladdin::Reset()
 
 void Aladdin::BeHitted()
 {
+}
+
+string Aladdin::CurrentState()
+{
+	return _playerState.curState().getName();
+}
+
+void Aladdin::Run()
+{
+	if(_curface == Face::RIGHT)
+	{
+		_vx = CHARACTER_VX;
+	}
+	else
+	{
+		_vy = -CHARACTER_VX;
+	}
 }

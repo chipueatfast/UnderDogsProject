@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "StateManager.h"
 
+#define CHARACTER_VX 5
+
 using namespace std;
 
 
@@ -16,7 +18,11 @@ private:
 	StateManager _playerState;
 	int _index;
 	float _animadelay,_animaCount;
-	bool _isLookRight = true;
+	enum Face
+	{
+		LEFT,
+		RIGHT
+	} _curface,_lastface;
 public:
 	Aladdin();
 	~Aladdin();
@@ -31,15 +37,15 @@ public:
 	void Next();
 	void Reset();
 	void BeHitted();
+	string CurrentState();
+
+	void Run();
 
 	bool isLookRight() const
 	{
-		return _isLookRight;
-	}
-
-	void setIsLookRight(bool isLookRight)
-	{
-		_isLookRight = isLookRight;
+		if (_curface == Face::RIGHT)
+			return true;
+		return false;
 	}
 
 };
