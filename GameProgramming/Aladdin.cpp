@@ -28,27 +28,26 @@ void Aladdin::Update(float t)
 	{
 		Next();
 		_animaCount = 0;
-		_width = _playerState.curState().getListRect().at(_index).right- _playerState.curState().getListRect().at(_index).left;
-		_height = _playerState.curState().getListRect().at(_index).bottom- _playerState.curState().getListRect().at(_index).top;
-		switch(_anchor)
-		{
-		case BOTTOM_MID:
-		{
-			_anchorPoint = D3DXVECTOR3(_width/ 2, _height, 0);
-		}; break;
-		}
+		_width = _playerState.curState().getListRect().at(_index).right - _playerState.curState().getListRect().at(_index).left;
+		_height = _playerState.curState().getListRect().at(_index).bottom - _playerState.curState().getListRect().at(_index).top;
+		// update lai anchorpoint do frame co bounding khac nhau
+		calAnchorPoint();
 	}
 }
 
-void Aladdin::Render(D3DXVECTOR3* AnchorPoint)
+void Aladdin::Render(AnchorPoint type, bool isRotation, bool isScale, bool isTranslation)
 {
-	sprite_handler->Draw(
+	Transform(isRotation, isScale, isTranslation);
+
+		sprite_handler->Draw(
 		_sprite->image(),
 		&_playerState.curState().getListRect().at(_index),
-		AnchorPoint,
+		&_anchorPoint,
 		NULL,
 		D3DCOLOR_XRGB(255, 255, 255)
 	);
+
+	sprite_handler->SetTransform(old_matrix);
 
 }
 

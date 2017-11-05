@@ -3,10 +3,6 @@
 
 #define CHARACTER_VX 2
 //test sprite
-LPDIRECT3DTEXTURE9 mario_image[2];
-Sprite* mario;
-LPDIRECT3DSURFACE9 back;
-
 
 HRESULT result;
 
@@ -27,7 +23,9 @@ void Scene1::Key_Pressed(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-		//
+	{
+		character->Flip();
+	}
 	break;
 	}
 }
@@ -39,7 +37,7 @@ void Scene1::InputUpdate()
 	//check for left arrow
 	if (Key_Hold(DIK_LEFT));
 		//mario->set_x(mario->x() - CHARACTER_VX);
-		if (Key_Hold(DIK_RIGHT));
+	if (Key_Hold(DIK_RIGHT));
 		//mario->set_x(mario->x() + CHARACTER_VX);
 }
 
@@ -56,13 +54,14 @@ void Scene1::GraphicUpdate(float t)
 {
 	//has the animation delay reached threshold
 	//start rendering
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0);
+	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255,0,255), 0.0f, 0);
+	d3ddev->StretchRect(background, &viewRect, backbuffer, NULL,D3DTEXF_NONE);
 	d3ddev->BeginScene();
 	//erase the entire background 
-	d3ddev->StretchRect(back, NULL, backbuffer, NULL, D3DTEXF_NONE);
+	//d3ddev->StretchRect(back, NULL, backbuffer, NULL, D3DTEXF_NONE);
 	//start sprite handler 
 	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
-	character->Translation(D3DXVECTOR2(100,100));
+	character->Render(AnchorPoint::MIDDLE,false,true,true);
 	character->Update(t);
 	//stop drawing 
 	sprite_handler->End();
@@ -79,8 +78,18 @@ int Scene1::Game_Init(HWND hwnd)
 		return 0;
 	}
 	character = new Aladdin();
-	character->setPosition(100, 100);
+	character->setPosition(100, 450);
 	character->setAnchor(AnchorPoint::BOTTOM_MID);
+	character->setScale(D3DXVECTOR2(2, 2));
+
+	background = LoadSurface("Res/map.png", D3DCOLOR_XRGB(255,0,255));
+
+	viewRect.top = 680 - SCREEN_HEIGHT/2;
+	viewRect.left = 0;
+	viewRect.bottom = viewRect.top + SCREEN_HEIGHT / 2;
+	viewRect.right = viewRect.left + SCREEN_WIDTH / 2;
+
+
 	return 1;
 
 	

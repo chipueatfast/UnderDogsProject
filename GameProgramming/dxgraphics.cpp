@@ -9,6 +9,7 @@ LPDIRECT3D9 d3d = NULL;
 LPDIRECT3DDEVICE9 d3ddev = NULL;
 LPDIRECT3DSURFACE9 backbuffer = NULL;
 LPD3DXSPRITE sprite_handler = nullptr;
+D3DXMATRIX* old_matrix = NULL;
 
 int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 {
@@ -53,6 +54,7 @@ int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 	HRESULT result;
 	//create sprite handler object
 	result = D3DXCreateSprite(d3ddev, &sprite_handler);
+	sprite_handler->GetTransform(old_matrix); 
 	if (result != D3D_OK)
 		return 0;
 	return 1;

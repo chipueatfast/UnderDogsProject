@@ -16,13 +16,14 @@ private:
 	StateManager _playerState;
 	int _index;
 	float _animadelay,_animaCount;
+	bool _isLookRight = true;
 public:
 	Aladdin();
 	~Aladdin();
 
 	void Init();
 	void Update(float t);
-	void Render(D3DXVECTOR3* AnchorPoint) override ;
+	void Render(AnchorPoint type = AnchorPoint::MIDDLE, bool isRotation = false, bool isScale = false, bool isTranslation = true) override ;
 
 	void setState(string newState);
 	void Move(int keycode);
@@ -30,6 +31,17 @@ public:
 	void Next();
 	void Reset();
 	void BeHitted();
+
+	bool isLookRight() const
+	{
+		return _isLookRight;
+	}
+
+	void setIsLookRight(bool isLookRight)
+	{
+		_isLookRight = isLookRight;
+	}
+
 };
 
 #endif //  _ALADDIN_H_

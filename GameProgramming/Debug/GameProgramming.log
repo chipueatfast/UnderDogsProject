@@ -1,1 +1,34 @@
-﻿LINK : fatal error LNK1104: cannot open file 'gdi32.lib'
+﻿  winmain.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\winmain.cpp(171): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+  StateManager.cpp
+  sprite.cpp
+  Transition_check.cpp
+  State.cpp
+  Scene1.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\scene1.cpp(40): warning C4390: ';': empty controlled statement found; is this the intent?
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\scene1.cpp(42): warning C4390: ';': empty controlled statement found; is this the intent?
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\scene1.cpp(99): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
+  GameTime.cpp
+  GameObject.cpp
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\gameobject.cpp(23): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\gameobject.cpp(24): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\gameobject.cpp(25): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\gameobject.cpp(26): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  GameManager.cpp
+  game.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  dxinput.cpp
+  c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  dxgraphics.cpp
+  Aladdin.cpp
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\aladdin.cpp(37): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+  AABB.cpp
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\aabb.cpp(9): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\aabb.cpp(10): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\aabb.cpp(11): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\15520\source\repos\underdogsproject-master\underdogsproject\gameprogramming\aabb.cpp(12): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  Generating Code...
+Debug\AABB.obj : fatal error LNK1112: module machine type 'x86' conflicts with target machine type 'x64'
+C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\VC\VCTargets\Microsoft.CppCommon.targets(651,5): error MSB6006: "link.exe" exited with code 1112.

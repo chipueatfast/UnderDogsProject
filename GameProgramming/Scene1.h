@@ -11,6 +11,8 @@ private:
 	virtual void PhysicsUpdate() override;
 	virtual void GraphicUpdate(float t) override;
 	Aladdin* character;
+	LPDIRECT3DSURFACE9 background;
+	RECT viewRect;
 public:
 	int Game_Init(HWND) override;
 	void Game_Run(HWND) override;

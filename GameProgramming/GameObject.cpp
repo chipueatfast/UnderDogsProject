@@ -6,7 +6,7 @@ GameObject::GameObject()
 	_width = 0;
 	_height = 0;
 	setScale(D3DXVECTOR2(1, 1));
-	D3DXMatrixTranslation(&_translation, _position.x, _position.y, 0);
+	_translation = D3DXVECTOR2(_position.x, _position.y);
 	setAngle(0);
 	_sprite = new Sprite();
 }
@@ -33,88 +33,105 @@ D3DXVECTOR3 GameObject::getPosition()
 void GameObject::setPosition(D3DXVECTOR3 vec3)
 {
 	_position = vec3;
-	D3DXMatrixTranslation(&_translation, _position.x, _position.y, 0);
+	_translation = D3DXVECTOR2(_position.x, _position.y);// test
 }
 void GameObject::setPosition(float x, float y)
 {
 	_position = D3DXVECTOR3(x, y, 0);
-	D3DXMatrixTranslation(&_translation, x, y, 0);
+	_translation = D3DXVECTOR2(_position.x, _position.y); // test
 }
 
 void GameObject::setScale(D3DXVECTOR2 scale)
 {
-	D3DXMatrixScaling(&_scale, scale.x, scale.y, .0f);
+	_scale = scale;
 }
 
 void GameObject::setAngle(float angle)
 {
-	D3DXMatrixRotationZ(&_rotation, D3DXToRadian(angle));
+	_angle = angle;
 }
 
 void GameObject::setTranslation(D3DXVECTOR2 vec)
 {
-	D3DXMatrixTranslation(&_translation, vec.x, vec.y, 0);
+	_translation = vec;
 }
 
-void GameObject::Rotation(float angle)
-{
-	setAngle(angle);
-	D3DXMATRIX oldMatrix;
-	sprite_handler->GetTransform(&oldMatrix);
-	sprite_handler->SetTransform(&(_rotation*_translation));
-	Render();
-	sprite_handler->SetTransform(&oldMatrix);
-}
 
-void GameObject::Scale(D3DXVECTOR2 scale)
-{
-	setScale(scale);
-	D3DXMATRIX oldMatrix;
-	sprite_handler->GetTransform(&oldMatrix);
-	sprite_handler->SetTransform(&(_scale*_translation));
-	Render();
-	sprite_handler->SetTransform(&oldMatrix);
-}
 void GameObject::Flip()
 {
-	Scale(D3DXVECTOR2(-1, 1));
+	_scale.x = _scale.x*(-1);
 }
 
-void GameObject::Transform(float Rotation, D3DXVECTOR2 Scale, D3DXVECTOR2 Translation)
+void GameObject::Transform(bool isRotation, bool isScale, bool isTranslation)
 {
 	D3DXMATRIX  mMatrix;
-	float mRotation = Rotation;
-	D3DXVECTOR2 mTranslation = Translation;
-	D3DXVECTOR2 mScale = Scale;
-	D3DXVECTOR2 mRotationCenter;
-	mRotationCenter = D3DXVECTOR2(this->x(), this->y());
+	float mRotation;
+	D3DXVECTOR2 mTranslation;
+	D3DXVECTOR2 mScale;
+	if (isRotation == true)
+		mRotation = _angle;
+	else
+		mRotation = 0;
+	if (isTranslation == true)
+		mTranslation = _translation;
+	else
+		mTranslation = D3DXVECTOR2(0, 0);
+	if (isScale == true)
+		mScale = _scale;
+	else
+		mScale = D3DXVECTOR2(1, 1);
 
-	D3DXMatrixTransformation2D(&mMatrix, &mRotationCenter, 0, &mScale, &mRotationCenter,
-		mRotation, &mTranslation);
-	D3DXMATRIX oldMatrix;
-	sprite_handler->GetTransform(&oldMatrix);
+	D3DXMATRIX rota, trans, scale;
+	D3DXMatrixScaling(&scale, mScale.x, mScale.y, 1);
+	D3DXMatrixTranslation(&trans, mTranslation.x, mTranslation.y, 0);
+	D3DXMatrixRotationX(&rota, mRotation);
+
+	mMatrix = scale*trans*rota;
+
 	sprite_handler->SetTransform(&mMatrix);
-	Render(&_anchorPoint);
-	sprite_handler->SetTransform(&oldMatrix);
 }
 
-void GameObject::Render(D3DXVECTOR3* AnchorPoint)
+void GameObject::Render(AnchorPoint type, bool isRotation, bool isScale, bool isTranslation)
 {
+
 }
 
-void GameObject::Translation(D3DXVECTOR2 vec)
-{
-	setTranslation(vec);
-	D3DXMATRIX oldMatrix;
-	sprite_handler->GetTransform(&oldMatrix);
-	sprite_handler->SetTransform(&_translation);
-	Render(&_anchorPoint);
-	sprite_handler->SetTransform(&oldMatrix);
-}
 
 void GameObject::Update(float t)
 {
 }
+
+void GameObject::calAnchorPoint()
+{
+	switch (_anchor)
+	{
+	case MIDDLE:
+	{
+		_anchorPoint = D3DXVECTOR3(_width / 2, _height / 2, 0);
+	}; break;
+	case BOTTOM_MID:
+	{
+		_anchorPoint = D3DXVECTOR3(_width / 2, _height, 0);
+	}; break;
+	}
+}
+D3DXVECTOR3 GameObject::calAnchorPoint(AnchorPoint type)
+{
+	D3DXVECTOR3 anchorPoint;
+	switch (type)
+	{
+	case MIDDLE:
+	{
+		anchorPoint = D3DXVECTOR3(_width / 2, _height / 2, 0);
+	}; break;
+	case BOTTOM_MID:
+	{
+		anchorPoint = D3DXVECTOR3(_width / 2, _height, 0);
+	}; break;
+	}
+	return anchorPoint;
+}
+
 
 
 
