@@ -121,7 +121,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	}
 	//initialize DirectSound 
-	if (!Init_DirectSound(hWnd)) 
+	if (!DirectSound_Init(hWnd)) 
 	{ 
 		MessageBox(hWnd, "Error initializing DirectSound", "Error", MB_OK); 
 		return 0; 

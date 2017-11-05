@@ -49,7 +49,6 @@ float CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 		txExit = -std::numeric_limits<float>::infinity();
 		if (staticX1 > movingX2 || staticX2 < movingX1)
 		{
-
 			return 1.0f;
 		}
 	}
@@ -63,6 +62,10 @@ float CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 		//time moving enter static
 		txEntry = dxEntry / MovingObj->vx();
 		txExit = dxExit / MovingObj->vx();
+		if (txEntry<0)
+		{
+			txEntry = 0;
+		}
 
 	}
 	if (MovingObj->vx() < 0)
@@ -72,6 +75,11 @@ float CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 
 		txEntry = dxEntry / MovingObj->vx();
 		txExit = dxExit / MovingObj->vx();
+		if (txEntry>0)
+		{
+			txEntry = 0;
+		}
+
 	}
 	if (MovingObj->vy() > 0)
 	{

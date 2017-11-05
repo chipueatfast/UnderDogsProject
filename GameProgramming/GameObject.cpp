@@ -34,6 +34,15 @@ void GameObject::setPosition(D3DXVECTOR3 vec3)
 {
 	_position = vec3;
 	D3DXMatrixTranslation(&_translation, _position.x, _position.y, 0);
+	if (_sprite!= NULL)
+	{
+		RECT temp_rect;
+		temp_rect.top = y();
+		temp_rect.bottom = y() + height();
+		temp_rect.left = x();
+		temp_rect.right = x() + width();
+		_boundingBox = temp_rect;	
+	}
 }
 void GameObject::setPosition(float x, float y)
 {
@@ -100,7 +109,15 @@ void GameObject::Transform(float Rotation, D3DXVECTOR2 Scale, D3DXVECTOR2 Transl
 
 void GameObject::Render(D3DXVECTOR3* AnchorPoint)
 {
+	sprite_handler->Draw(
+		_sprite->image(),
+		NULL,
+		&_anchorPoint,
+		&_position,
+		D3DCOLOR_XRGB(255, 255, 255)
+	);
 }
+
 
 void GameObject::Translation(D3DXVECTOR2 vec)
 {

@@ -117,7 +117,7 @@ public:
 
 	void Flip();
 	void Transform(float Rotation = 0, D3DXVECTOR2 Scale = D3DXVECTOR2(1, 1), D3DXVECTOR2 Translation = D3DXVECTOR2(0, 0));
-	virtual void Render(D3DXVECTOR3* AnchorPoint = NULL) = 0;
+	virtual void Render(D3DXVECTOR3* AnchorPoint = NULL);
 	void Translation(D3DXVECTOR2 vec);
 	void Update(float t);
 };

@@ -120,7 +120,6 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Aladdin.cpp" />
-    <ClCompile Include="dsutil.cpp" />
     <ClCompile Include="dxaudio.cpp" />
     <ClCompile Include="dxgraphics.cpp" />
     <ClCompile Include="dxinput.cpp" />
@@ -139,11 +138,9 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Aladdin.h" />
-    <ClInclude Include="dsutil.h" />
     <ClInclude Include="dxaudio.h" />
     <ClInclude Include="dxgraphics.h" />
     <ClInclude Include="dxinput.h" />
-    <ClInclude Include="dxutil.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />

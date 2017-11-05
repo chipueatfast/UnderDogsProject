@@ -1,6 +1,6 @@
 ﻿  Scene1.cpp
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(128): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(140): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(144): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(156): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.exe
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.pdb (Partial PDB)

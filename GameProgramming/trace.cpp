@@ -8,17 +8,17 @@
 
 char* __trace_file = "C:\\temp\\trace.log";
 int __trace = 1;
-HRESULT DXTRACE(const LPWSTR format, HRESULT hr)
+void trace(const LPWSTR format, ...)
 {
 	if (!__trace)
-		return hr;
+		return;
 	FILE *f = stderr;
 	if (__trace_file != NULL)
 	{
 		if (fopen_s(&f, __trace_file, "a") != 0)
 		{
 			fprintf(stderr, "WARNING: Failed to open trace file '%s' for writing! \n", __trace_file);
-			return hr;
+			return;
 		}
 
 	}
