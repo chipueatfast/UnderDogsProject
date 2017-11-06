@@ -10,6 +10,7 @@ class StateManager
 private:
 	State _curState;
 public:
+
 	State curState() const
 	{
 		return _curState;

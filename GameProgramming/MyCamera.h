@@ -11,7 +11,17 @@ private:
 	D3DXVECTOR3 _position;
 	bool _isStop = true;
 	float _vx, _vy;
+	long _curMapWidth, _curMapHeight;
 public:
+	void setCurMapWidth(long curMapWidth)
+	{
+		_curMapWidth = curMapWidth;
+	}
+
+	void setCurMapHeight(long curMapHeight)
+	{
+		_curMapHeight = curMapHeight;
+	}
 
 	MyCamera();
 	void Update(float t);

@@ -27,20 +27,24 @@ void MyCamera::Update(float t)
 		_position.y += _vy*t;
 	}
 
-	_viewRect.top = (680 - SCREEN_HEIGHT)/* - (Global::GetHeight()/2 -position.y)*/;
+	_viewRect.top = (_curMapHeight/2 - SCREEN_HEIGHT)/* - (Global::GetHeight()/2 -position.y)*/;
 	_viewRect.bottom = _viewRect.top + SCREEN_HEIGHT;
 	if (_position.x <= SCREEN_WIDTH / 2)
 	{
 		_viewRect.left = 0;
 		_viewRect.right = _width;
+		if(_vx < 0)
+				_isStop = true;
 	}
 	else
 	{
-		if (_position.x >= 1291 -SCREEN_WIDTH / 2)
+		if (_position.x >= _curMapWidth -SCREEN_WIDTH / 2)
 		{
-			_viewRect.right = 1291;
-			_viewRect.left = 1291 - SCREEN_WIDTH;
-
+			_viewRect.right = _curMapWidth;
+			_viewRect.left = _curMapWidth - SCREEN_WIDTH;
+			if (_vx > 0)
+				_isStop = true;
+			
 		}
 		else
 		{

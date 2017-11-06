@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "StateManager.h"
 
-#define CHARACTER_VX 5
+#define CHARACTER_VX 25
 
 using namespace std;
 
@@ -35,11 +35,13 @@ public:
 	void Move(int keycode);
 
 	void Next();
+	void Next2(); // ko rs _index;
 	void Reset();
 	void BeHitted();
 	string CurrentState();
 
 	void Run();
+	void Stop() { _vx = 0; };
 
 	bool isLookRight() const
 	{

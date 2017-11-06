@@ -13,6 +13,8 @@ private:
 	virtual void GraphicUpdate(float t) override;
 	Aladdin* character;
 	LPDIRECT3DSURFACE9 background;
+	LPDIRECT3DTEXTURE9 mapETC[2];
+	D3DXIMAGE_INFO* mapinfo;
 	RECT viewRect;
 public:
 	int Game_Init(HWND) override;
