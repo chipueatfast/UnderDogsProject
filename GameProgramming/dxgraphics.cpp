@@ -67,20 +67,18 @@ int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 		return 0;
 	return 1;
 }
-LPDIRECT3DSURFACE9 LoadSurface(char *filename, D3DCOLOR transcolor)
+LPDIRECT3DSURFACE9 LoadSurface(char *filename, D3DCOLOR transcolor, D3DXIMAGE_INFO* info)
 {
 	LPDIRECT3DSURFACE9 image = NULL;
-
 	HRESULT result;
-	D3DXIMAGE_INFO info;
 	//get width and height from bitmap file
-	result = D3DXGetImageInfoFromFile(filename, &info);
+	result = D3DXGetImageInfoFromFile(filename, info);
 	if (result != D3D_OK)
 		return NULL;
 	//create surface
 	result = d3ddev->CreateOffscreenPlainSurface(
-		info.Width, //width of the surface
-		info.Height, //height of the surface
+		info->Width, //width of the surface
+		info->Height, //height of the surface
 		D3DFMT_X8R8G8B8, //surface format
 		D3DPOOL_DEFAULT, //memory pool to use
 		&image, //pointer to the surface

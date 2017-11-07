@@ -43,7 +43,7 @@ void Game::ProcessKeyboard()
 	}
 }
 
-void Game::CollisionDetect(int, int)
+void Game::CollisionDetect()
 {
 }
 
@@ -68,6 +68,12 @@ void Game::GraphicUpdate(float t)
 {
 	
 }
+
+Game::Game()
+{
+	_info = new D3DXIMAGE_INFO();
+}
+
 //frees memory and cleans up before the game ends
 void Game::Game_End(HWND hwnd)
 {

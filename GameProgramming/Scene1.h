@@ -13,7 +13,7 @@ private:
 	D3DXIMAGE_INFO* mapinfo;
 	RECT viewRect;
 
-	virtual void CollisionDetect(int, int) override;
+	virtual void CollisionDetect() override;
 	virtual void Key_Pressed(int KeyCode) override;
 	virtual void InputUpdate() override;
 	virtual void PhysicsUpdate() override;

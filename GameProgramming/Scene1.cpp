@@ -6,7 +6,7 @@
 #include "GameObjectList1.h"
 #include "Camera.h"
 
-#define CHARACTER_VX 1
+
 #define GRAVITY 0
 
 LPDIRECT3DSURFACE9 back;
@@ -46,7 +46,7 @@ int Scene1::Game_Init(HWND hwnd)
 	GameObjectList1::GetInstance()->Add(mainCharacter);
 
 	mapinfo = new D3DXIMAGE_INFO();
-	background = LoadSurface("Res/background.png", D3DCOLOR_XRGB(63, 72, 204));
+	background = LoadSurface("Res/background.png", D3DCOLOR_XRGB(63, 72, 204), _info);
 
 	mapETC[0] = LoadTexture("Res/map.png", D3DCOLOR_XRGB(63, 72, 204), mapinfo);
 	mapETC[1] = LoadTexture("Res/map.png", D3DCOLOR_XRGB(63, 72, 204), mapinfo);
@@ -87,42 +87,46 @@ void Scene1::InputUpdate()
 {
 	Poll_Keyboard();
 	ProcessKeyboard();
+	bool isNoKeyHold = 1;
+	//check for left arrow
 	if (Key_Hold(DIK_UP))
 	{
-		//isNoKeyHold = 0;
+		isNoKeyHold = 0;
 		mainCharacter->setState("IdleUp");
 		mainCharacter->Stop();
 		MyCamera::GetInstance()->Stop();
 	};
 	if (Key_Hold(DIK_DOWN))
 	{
-		//isNoKeyHold = 0;
+		isNoKeyHold = 0;
 		mainCharacter->setState("IdleDown");
 		mainCharacter->Stop();
 		MyCamera::GetInstance()->Stop();
 	}
 	if (Key_Hold(DIK_LEFT))
 	{
-		mainCharacter->set_vx(-CHARACTER_VX);
-		mainCharacter->setPosition(mainCharacter->x() + mainCharacter->vx(), mainCharacter->y());
+		isNoKeyHold = 0;
+		mainCharacter->Move(DIK_LEFT);
 		MyCamera::GetInstance()->setVx(-CHARACTER_VX);
-		MyCamera::GetInstance()->Move();
-		return;
 	}
 	if (Key_Hold(DIK_RIGHT))
 	{
-		mainCharacter->set_vx(CHARACTER_VX);
-		mainCharacter->setPosition(mainCharacter->x() + mainCharacter->vx(), mainCharacter->y());	
+		isNoKeyHold = 0;
+		mainCharacter->Move(DIK_RIGHT);
 		MyCamera::GetInstance()->setVx(CHARACTER_VX);
-		MyCamera::GetInstance()->Move();
-		return;
 	}
-	mainCharacter->set_vx(0);
+
+	if (isNoKeyHold == 1)
+	{
+		mainCharacter->setState("Idle1");
+		mainCharacter->Stop();
+		MyCamera::GetInstance()->Stop();
+	}
 }
 
-void Scene1::CollisionDetect(int width, int height)
+void Scene1::CollisionDetect()
 {
-	Quadtree* quadtree = Quadtree::CreateQuadtree(width, height);
+	Quadtree* quadtree = Quadtree::CreateQuadtree(mapinfo->Width, mapinfo->Height);
 
 	std::list<GameObject*>* return_object_list = new std::list<GameObject*>();
 	std::list<GameObject*>* GO_list = GameObjectList1::GetInstance()->GetGOList();
@@ -158,24 +162,25 @@ void Scene1::CollisionDetect(int width, int height)
 }
 void Scene1::PhysicsUpdate()
 {
-	mainCharacter->set_vy(GRAVITY);
-	if (mainCharacter->vx() > 0)
-		mainCharacter->setState("Running");
-	if (mainCharacter->vx() < 0)
-	{
-		mainCharacter->setState("Running");
-		//mainCharacter->Flip();
-	}
-	if (mainCharacter->vx()==0)
-		mainCharacter->setState("Idle1");
+	//mainCharacter->set_vy(GRAVITY);
+	//if (mainCharacter->vx() > 0)
+	//	mainCharacter->setState("Run");
+	//if (mainCharacter->vx() < 0)
+	//{
+	//	mainCharacter->setState("Run");
+	//	//mainCharacter->Flip();
+	//}
+	//if (mainCharacter->vx()==0)
+	//	mainCharacter->setState("Idle1");
 	/*float gravityCheck = CheckCollision(mainCharacter, ground);
 	mainCharacter->setPosition(mainCharacter->x(), mainCharacter->y() + mainCharacter->vy()*gravityCheck);*/
-	CollisionDetect(640, 460);
+	CollisionDetect();
 }
 
 void Scene1::GraphicUpdate(float t)
 {
 	mainCharacter->Update(t);
+	MyCamera::GetInstance()->Update(t);
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	d3ddev->StretchRect(background, NULL, backbuffer, NULL, D3DTEXF_NONE);
 	viewRect = MyCamera::GetInstance()->View();
@@ -188,8 +193,11 @@ void Scene1::GraphicUpdate(float t)
 	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
 	sprite_handler->Draw(mapETC[0], &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
 	//load animation, cap nhat lai anchor point theo frame
-	mainCharacter->Render(MIDDLE);
-	MyCamera::GetInstance()->Update(t);
+	mainCharacter->Render(MIDDLE,false,true,true);
+	trace(L"Camera : %.2f", MyCamera().GetInstance()->vx());
+	trace(L"Character : %.2f", mainCharacter->vx());
+	//trace(L"\n\nCamera : %.1f , %.1f", MyCamera::GetInstance()->Position().x, MyCamera::GetInstance()->Position().y);
+	//trace(L"\nchar : %.1f , %.1f", mainCharacter->x(), mainCharacter->y());
 	/*ground->Render();*/
 #pragma region Draw map_front
 	viewRect.top += mapinfo->Height / 2;
@@ -215,18 +223,18 @@ void Scene1::Game_Run(HWND hwnd, int dt)
 		return;
 	//this keeps the game running at a steady frame rate
 	float t = GetTickCount() - start;
-	if (t >= 1000/15)
+	if (t >= 1000/FPS)
 	{
 		//reset timing
 		start = GetTickCount();
-		GraphicUpdate(t);
+		GraphicUpdate(t/FPS);
 	}
 	//display the back buffer on the screen
 	d3ddev->Present(NULL, NULL, NULL, NULL);
 	//check for escape key (to exit program)
 	if (KEY_PRESSED(VK_ESCAPE))
 		PostMessage(hwnd, WM_DESTROY, 0, 0);
-	Sleep(6 - GameTime::GetInstance()->GetCounter());
+	//Sleep(6 - GameTime::GetInstance()->GetCounter());
 }
 
 void Scene1::Game_End(HWND)

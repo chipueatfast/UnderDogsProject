@@ -43,7 +43,7 @@ void Aladdin::Update(float t)
 
 
 	}
-	_lastface = _curface;
+	//_lastface = _curface;
 
 	_position.x += _vx*t;
 	_position.y += _vy*t;
@@ -59,20 +59,23 @@ void Aladdin::Update(float t)
 	if (_position.x < SCREEN_WIDTH / 2)
 	{
 		setTranslation(D3DXVECTOR2(_position.x, _position.y));
+		MyCamera::GetInstance()->Stop();
 	}
 	else
 	{
-		if (_position.x >= 4773 - SCREEN_WIDTH / 2)
+		if (_position.x > 4773 - SCREEN_WIDTH / 2)
 		{
 			setTranslation(D3DXVECTOR2(SCREEN_WIDTH - (-_position.x + 4773), _position.y));
+			MyCamera::GetInstance()->Stop();
 		}
 		else
 		{
-			if (_vx != 0)
+			//if (_vx != 0)
+			MyCamera::GetInstance()->Move();
 				setTranslation(D3DXVECTOR2(SCREEN_WIDTH / 2, _position.y));
-			else
+			/*else
 			{
-				int fix_range;
+				int fix_range;	
 				if (_curface == Face::LEFT)
 					fix_range = 40;
 				else
@@ -80,7 +83,7 @@ void Aladdin::Update(float t)
 					fix_range = -40;
 				}
 				setTranslation(D3DXVECTOR2(SCREEN_WIDTH / 2 + fix_range, _position.y));
-			}
+			}*/
 		}
 	}
 
@@ -126,8 +129,10 @@ void Aladdin::Move(int keycode)
 
 		_curface = Face::LEFT;
 		if (_lastface != _curface)
+		{
 			Flip();
-
+			_lastface = _curface;
+		}
 		Run();
 	}; break;
 	case DIK_RIGHT:
@@ -136,8 +141,10 @@ void Aladdin::Move(int keycode)
 
 		_curface = Face::RIGHT;
 		if (_lastface != _curface)
+		{
 			Flip();
-
+			_lastface = _curface;
+		}
 		Run();
 	}; break;
 	}
