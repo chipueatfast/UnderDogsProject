@@ -14,15 +14,56 @@ using namespace std;
 class Aladdin : public GameObject
 {
 private:
+	string _mainState, _subState, _handState;
+public:
+	string hand_state() const
+	{
+		return _handState;
+	}
+
+	void set_hand_state(const string& cs)
+	{
+		_handState = cs;
+	}
+
+	string main_state() const
+	{
+		return _mainState;
+	}
+
+	void set_main_state(const string& cs)
+	{
+		_mainState = cs;
+	}
+
+	string sub_state() const
+	{
+		return _subState;
+	}
+
+	void set_sub_state(const string& cs)
+	{
+		_subState = cs;
+	}
+
+private:
 	int _health;
-	StateManager _playerState;
+	StateManager* _playerState;
+public:
+	StateManager* player_state() const
+	{
+		return _playerState;
+	}
+
+	void set_player_state(StateManager* state_manager)
+	{
+		_playerState = state_manager;
+	}
+
+private:
 	int _index;
 	float _animadelay, _animaCount;
-	enum Face
-	{
-		LEFT,
-		RIGHT
-	} _curface, _lastface;
+	
 public:
 	Aladdin();
 	~Aladdin();
@@ -32,7 +73,6 @@ public:
 	void Render(AnchorPoint type = AnchorPoint::MIDDLE, bool isRotation = false, bool isScale = false, bool isTranslation = true) override;
 
 	void setState(string newState);
-	void Move(int keycode);
 
 	void Next();
 	void Next2(); // ko rs _index;

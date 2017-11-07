@@ -13,8 +13,21 @@ Aladdin::Aladdin()
 	_health = 7;
 	_curface = Face::RIGHT;
 	_lastface = _curface;
-	_playerState = StateManager("Res\\AladdinSpriteXML.xml");
+	_mainState = "0";
+	_subState = "0";
+	_handState = "0";
+	_playerState = new StateManager("Res\\AladdinSpriteXML.xml");
 	this->setSprite(new Sprite("Res\\Aladdin.png", 40, 50));
+	_playerState->AddToDictState("000", "Idle1");
+	_playerState->AddToDictState("001", "IdleThrow");
+	_playerState->AddToDictState("002", "IdleSlash");
+	_playerState->AddToDictState("100", "Run");
+	_playerState->AddToDictState("300", "IdleDown");
+	_playerState->AddToDictState("200", "IdleUp");
+	_playerState->AddToDictState("002", "IdleSlash");
+	_playerState->AddToDictState("102", "RunSlash");
+	_playerState->AddToDictState("202", "IdleUpSlash");
+	_playerState->AddToDictState("302", "IdleDownSlash");
 }
 
 
@@ -31,15 +44,20 @@ void Aladdin::Update(float t)
 	_animaCount += t;
 	if (_animaCount >= _animadelay)
 	{
-		if (_playerState.curState().getName() == "IdleUp" || _playerState.curState().getName() == "IdleDown")
+		if (_playerState->curState().getName() == "IdleUp" || _playerState->curState().getName() == "IdleDown")
 			Next2();
 		else
 			Next();
 		_animaCount = 0;
-		_width = _playerState.curState().getListRect().at(_index).right - _playerState.curState().getListRect().at(_index).left;
-		_height = _playerState.curState().getListRect().at(_index).bottom - _playerState.curState().getListRect().at(_index).top;
+		_width = _playerState->curState().getListRect().at(_index).right - _playerState->curState().getListRect().at(_index).left;
+		_height = _playerState->curState().getListRect().at(_index).bottom - _playerState->curState().getListRect().at(_index).top;
 		// update lai anchorpoint do frame co bounding khac nhau
 		calAnchorPoint();
+		this->player_state()->set_life_span(this->player_state()->life_span() - 1);
+		if (this->player_state()->life_span() == 0)
+		{
+			this->set_hand_state("0");
+		}
 
 
 	}
@@ -98,7 +116,7 @@ void Aladdin::Render(AnchorPoint type, bool isRotation, bool isScale, bool isTra
 
 	sprite_handler->Draw(
 		_sprite->image(),
-		&_playerState.curState().getListRect().at(_index),
+		&_playerState->curState().getListRect().at(_index),
 		&_anchorPoint,
 		NULL,
 		D3DCOLOR_XRGB(255, 255, 255)
@@ -110,51 +128,20 @@ void Aladdin::Render(AnchorPoint type, bool isRotation, bool isScale, bool isTra
 
 void Aladdin::setState(string newState)
 {
-	if (_playerState.curState().getName() != newState)
+	if (_playerState->curState().getName() != _playerState->dict_state()[newState])
 	{
-		_playerState.setState(newState);
+		_playerState->setState(newState);
 		Reset();
 	}
 
 }
 
 
-void Aladdin::Move(int keycode)
-{
-	switch (keycode)
-	{
-	case DIK_LEFT:
-	{
-		setState("Run");
-
-		_curface = Face::LEFT;
-		if (_lastface != _curface)
-		{
-			Flip();
-			_lastface = _curface;
-		}
-		Run();
-	}; break;
-	case DIK_RIGHT:
-	{
-		setState("Run");
-
-		_curface = Face::RIGHT;
-		if (_lastface != _curface)
-		{
-			Flip();
-			_lastface = _curface;
-		}
-		Run();
-	}; break;
-	}
-}
-
 
 
 void Aladdin::Next()
 {
-	int size = _playerState.curState().getListRect().size() - 1;
+	int size = _playerState->curState().getListRect().size() - 1;
 	if (size > 0)
 		_index = (_index + 1) % size;
 	else
@@ -164,7 +151,7 @@ void Aladdin::Next()
 
 void Aladdin::Next2()
 {
-	int size = _playerState.curState().getListRect().size() - 1;
+	int size = _playerState->curState().getListRect().size() - 1;
 	if (_index < size)
 		_index++;
 }
@@ -180,8 +167,10 @@ void Aladdin::BeHitted()
 
 string Aladdin::CurrentState()
 {
-	return _playerState.curState().getName();
+	return _playerState->curState().getName();
 }
+
+
 
 void Aladdin::Run()
 {

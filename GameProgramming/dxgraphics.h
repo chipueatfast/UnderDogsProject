@@ -6,7 +6,7 @@
 #include <d3dx9.h>
 //function prototypes
 int Init_Direct3D(HWND, int, int, int);
-LPDIRECT3DSURFACE9 LoadSurface(char *, D3DCOLOR, D3DXIMAGE_INFO*);
+LPDIRECT3DSURFACE9 LoadSurface(char *, D3DCOLOR);
 LPDIRECT3DTEXTURE9 LoadTexture(char *, D3DCOLOR, D3DXIMAGE_INFO*);
 //variable declarations
 extern LPDIRECT3D9 d3d;

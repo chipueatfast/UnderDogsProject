@@ -10,6 +10,7 @@ class State
 private:
 	std::vector<RECT> _srcRect;
 	std::string _name;
+
 public:
 	State();
 	~State();

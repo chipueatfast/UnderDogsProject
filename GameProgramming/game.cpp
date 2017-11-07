@@ -71,7 +71,6 @@ void Game::GraphicUpdate(float t)
 
 Game::Game()
 {
-	_info = new D3DXIMAGE_INFO();
 }
 
 //frees memory and cleans up before the game ends

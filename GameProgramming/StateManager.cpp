@@ -1,5 +1,4 @@
 #include "StateManager.h"
-#include "Transition_check.h"
 
 
 
@@ -13,9 +12,14 @@ StateManager::~StateManager()
 
 }
 
+void StateManager::AddToDictState(string key, string data)
+{
+	_dictState[key] = data;
+	return;
+}
+
 StateManager::StateManager(char* xmlpath)
 {
-
 	xml_document fileXml;
 	xml_parse_result result = fileXml.load_file(xmlpath);
 	xml_node root = fileXml.child("Animations");
@@ -24,7 +28,6 @@ StateManager::StateManager(char* xmlpath)
 	{
 
 		string name = nodeAnimation.attribute("name").value();
-		_listStateName.push_back(name);
 		vector <RECT> srcRect;
 		for (xml_node nodeRec = nodeAnimation.first_child(); nodeRec; nodeRec = nodeRec.next_sibling())
 		{
@@ -36,16 +39,20 @@ StateManager::StateManager(char* xmlpath)
 			srcRect.push_back(rect); 
 		}
 		_mapState[name] = State(name, srcRect);
+		_lifeSpan = 12;
 
 	}
 	_curState = _mapState["Idle1"];
 }
 
 
-void StateManager::setState(string targetState)
+void StateManager::setState(string stateCode)
 {
-	if (checker(_curState.getName(), targetState) == true)
-	{
+	if (_dictState[stateCode] != "")
+	{	
+		string targetState = _dictState[stateCode];
+		_lifeSpan = _mapState[targetState].getListRect().size();
 		_curState = _mapState[targetState];
 	}
+
 }

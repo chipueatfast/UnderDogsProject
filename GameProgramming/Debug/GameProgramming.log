@@ -1,5 +1,8 @@
 ﻿  Scene1.cpp
   c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(225): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(240): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
+  Aladdin.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  Generating Code...
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.exe
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.pdb (Partial PDB)

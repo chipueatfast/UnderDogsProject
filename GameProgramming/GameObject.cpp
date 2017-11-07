@@ -26,6 +26,18 @@ void GameObject::setSprite(Sprite * t)
 	temp_rect.right = x() + width();
 	_boundingBox = temp_rect;
 }
+
+bool GameObject::CheckFlip()
+{
+
+	if (_curface != _lastface)
+	{
+		_lastface = _curface;
+		return true;
+	}
+	else return false;
+}
+
 D3DXVECTOR3 GameObject::getPosition()
 {
 	return _position;

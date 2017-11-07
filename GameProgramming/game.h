@@ -26,7 +26,7 @@ class Game
 protected:
 	CSound* _soundTheme;
 
-	D3DXIMAGE_INFO* _info;
+
 	void ProcessKeyboard(); //for making action by pressing (not hold) button, a part of input update
 	virtual void CollisionDetect();
 	virtual void Key_Pressed(int KeyCode);

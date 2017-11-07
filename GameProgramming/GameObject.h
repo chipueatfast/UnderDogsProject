@@ -18,7 +18,26 @@ enum AnchorPoint
 
 class GameObject
 {
+
+
+public:
+	enum Face
+	{
+		LEFT,
+		RIGHT
+	};
+	Face curface() const
+	{
+		return _curface;
+	}
+
+	void set_curface(Face face)
+	{
+		_curface = face;
+	}
+
 protected:
+	Face _curface, _lastface;
 	Sprite* _sprite;
 	int _width, _height;
 	float _vx, _vy;
@@ -27,6 +46,7 @@ public:
 	{
 		return _vx;
 	}
+
 
 	void set_vx(float vx)
 	{
@@ -106,6 +126,7 @@ public:
 	{
 		return _position.y;
 	}
+	bool CheckFlip();
 	D3DXVECTOR3 getPosition();
 	void setPosition(D3DXVECTOR3 vec3);
 	void setPosition(float x, float y);

@@ -136,7 +136,6 @@
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="trace.cpp" />
-    <ClCompile Include="Transition_check.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -157,7 +156,6 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="trace.h" />
-    <ClInclude Include="Transition_check.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

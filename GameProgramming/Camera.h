@@ -33,7 +33,7 @@ public:
 	static MyCamera* GetInstance();
 	D3DXVECTOR3 Position();
 	RECT View();
-	void Stop() { _isStop = true; }
+	void Stop() { _vx = 0; _isStop = true; }
 	void Move() { _isStop = false; }
 	void LookUp();
 public:

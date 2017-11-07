@@ -46,7 +46,7 @@ int Scene1::Game_Init(HWND hwnd)
 	GameObjectList1::GetInstance()->Add(mainCharacter);
 
 	mapinfo = new D3DXIMAGE_INFO();
-	background = LoadSurface("Res/background.png", D3DCOLOR_XRGB(63, 72, 204), _info);
+	background = LoadSurface("Res/background.png", D3DCOLOR_XRGB(63, 72, 204));
 
 	mapETC[0] = LoadTexture("Res/map.png", D3DCOLOR_XRGB(63, 72, 204), mapinfo);
 	mapETC[1] = LoadTexture("Res/map.png", D3DCOLOR_XRGB(63, 72, 204), mapinfo);
@@ -77,9 +77,13 @@ void Scene1::Key_Pressed(int KeyCode)
 	switch (KeyCode)
 	{
 	case DIK_SPACE:
-	//mario->set_y(mario->y() - 20);
-	PlaySound(_soundJump);
-	break;
+		PlaySound(_soundJump);
+		break;
+	case DIK_X:
+		mainCharacter->set_hand_state("2");
+		break;
+
+	
 	}
 }
 
@@ -87,41 +91,42 @@ void Scene1::InputUpdate()
 {
 	Poll_Keyboard();
 	ProcessKeyboard();
-	bool isNoKeyHold = 1;
 	//check for left arrow
 	if (Key_Hold(DIK_UP))
 	{
-		isNoKeyHold = 0;
-		mainCharacter->setState("IdleUp");
+		mainCharacter->set_main_state("2");
 		mainCharacter->Stop();
 		MyCamera::GetInstance()->Stop();
+		return;
 	};
+	
 	if (Key_Hold(DIK_DOWN))
 	{
-		isNoKeyHold = 0;
-		mainCharacter->setState("IdleDown");
 		mainCharacter->Stop();
 		MyCamera::GetInstance()->Stop();
+		mainCharacter->set_main_state("3");
+		return;
 	}
 	if (Key_Hold(DIK_LEFT))
 	{
-		isNoKeyHold = 0;
-		mainCharacter->Move(DIK_LEFT);
-		MyCamera::GetInstance()->setVx(-CHARACTER_VX);
+		mainCharacter->set_main_state("1");
+		mainCharacter->set_vx(-CHARACTER_VX);
+		MyCamera::GetInstance()->setVx(mainCharacter->vx());
+		return;
 	}
 	if (Key_Hold(DIK_RIGHT))
 	{
-		isNoKeyHold = 0;
-		mainCharacter->Move(DIK_RIGHT);
-		MyCamera::GetInstance()->setVx(CHARACTER_VX);
+		mainCharacter->set_main_state("1");
+		mainCharacter->set_vx(CHARACTER_VX);
+		MyCamera::GetInstance()->setVx(mainCharacter->vx());
+		return;
 	}
-
-	if (isNoKeyHold == 1)
-	{
-		mainCharacter->setState("Idle1");
-		mainCharacter->Stop();
-		MyCamera::GetInstance()->Stop();
-	}
+	mainCharacter->set_main_state("0");
+	mainCharacter->set_sub_state("0");
+	mainCharacter->Stop();
+	MyCamera::GetInstance()->Stop();
+	return;
+	
 }
 
 void Scene1::CollisionDetect()
@@ -179,6 +184,21 @@ void Scene1::PhysicsUpdate()
 
 void Scene1::GraphicUpdate(float t)
 {
+	mainCharacter->setState(mainCharacter->main_state() + mainCharacter->sub_state() + mainCharacter->hand_state());
+	if (mainCharacter->vx()!=0)
+	{
+		if(mainCharacter->vx() > 0)
+		{
+			mainCharacter->set_curface(GameObject::Face::RIGHT);
+		}
+		else
+		{
+			mainCharacter->set_curface(GameObject::Face::LEFT);
+		}
+		if (mainCharacter->CheckFlip())
+			mainCharacter->Flip();
+	}
+	
 	mainCharacter->Update(t);
 	MyCamera::GetInstance()->Update(t);
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
@@ -188,26 +208,21 @@ void Scene1::GraphicUpdate(float t)
 	//back = LoadSurface("c.bmp", D3DCOLOR_XRGB(0, 0, 0));
 	//erase the entire background 
 	d3ddev->StretchRect(back, NULL, backbuffer, NULL, D3DTEXF_NONE);
-	//start sprite handler 
-	
+	//start sprite handler 	
 	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
 	sprite_handler->Draw(mapETC[0], &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
-	//load animation, cap nhat lai anchor point theo frame
 	mainCharacter->Render(MIDDLE,false,true,true);
-	trace(L"Camera : %.2f", MyCamera().GetInstance()->vx());
-	trace(L"Character : %.2f", mainCharacter->vx());
-	//trace(L"\n\nCamera : %.1f , %.1f", MyCamera::GetInstance()->Position().x, MyCamera::GetInstance()->Position().y);
-	//trace(L"\nchar : %.1f , %.1f", mainCharacter->x(), mainCharacter->y());
-	/*ground->Render();*/
 #pragma region Draw map_front
 	viewRect.top += mapinfo->Height / 2;
 	viewRect.bottom += mapinfo->Height / 2;
 	sprite_handler->Draw(mapETC[1], &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
 #pragma endregion
-
 	sprite_handler->End();
 	//stop rendering 
 	d3ddev->EndScene();
+	
+		
+
 }
 
 
@@ -234,7 +249,7 @@ void Scene1::Game_Run(HWND hwnd, int dt)
 	//check for escape key (to exit program)
 	if (KEY_PRESSED(VK_ESCAPE))
 		PostMessage(hwnd, WM_DESTROY, 0, 0);
-	//Sleep(6 - GameTime::GetInstance()->GetCounter());
+
 }
 
 void Scene1::Game_End(HWND)
