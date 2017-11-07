@@ -42,6 +42,11 @@ void Game::ProcessKeyboard()
 
 	}
 }
+
+void Game::CollisionDetect(int, int)
+{
+}
+
 void Game::Key_Pressed(int KeyCode)
 {
 	

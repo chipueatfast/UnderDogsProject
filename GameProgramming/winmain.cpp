@@ -1,17 +1,19 @@
 //updated on 02-11, chipu
-
+#pragma once
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
 
 #include"GameManager.h"
 #include "dxinput.h"
 #include "GameTime.h"
-#include <Windows.h>
+
 #include <WinUser.h>
+#include <Windows.h>
 #include <stdio.h>
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <time.h>
+
 
 #include "dxgraphics.h"
 #include "game.h"

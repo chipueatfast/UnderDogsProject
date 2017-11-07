@@ -2,6 +2,7 @@
 #define  _GAME_OBJECT_H_
 //update 02-11 chipu
 #include "sprite.h"
+
 enum AnchorPoint
 {
 	TOP_LEFT,
@@ -55,9 +56,9 @@ public:
 protected:
 	RECT _boundingBox;
 	D3DXVECTOR3 _position;
-	D3DXMATRIX _scale;
-	D3DXMATRIX _translation;
-	D3DXMATRIX _rotation;
+	D3DXVECTOR2 _scale;
+	D3DXVECTOR2 _translation;
+	float _angle;
 	AnchorPoint _anchor;
 public:
 	AnchorPoint anchor() const
@@ -111,15 +112,13 @@ public:
 	void setScale(D3DXVECTOR2 scale);
 	void setAngle(float angle);
 	void setTranslation(D3DXVECTOR2 vec);
-
-	void Rotation(float angel);
-	void Scale(D3DXVECTOR2 scale);
-
 	void Flip();
-	void Transform(float Rotation = 0, D3DXVECTOR2 Scale = D3DXVECTOR2(1, 1), D3DXVECTOR2 Translation = D3DXVECTOR2(0, 0));
-	virtual void Render(D3DXVECTOR3* AnchorPoint = NULL);
-	void Translation(D3DXVECTOR2 vec);
+	virtual void Render(AnchorPoint type = AnchorPoint::MIDDLE, bool isRotation = false, bool isScale = false, bool isTranslation = true) = 0;
 	void Update(float t);
+protected:
+	void calAnchorPoint(); // tinh lai gia tri anchor cua class
+	D3DXVECTOR3 calAnchorPoint(AnchorPoint type); // tra ve anchorpoint theo type truyen vao
+	void Transform(bool isRotation, bool isScale, bool isTranslation); // apply matrix transform vao spriteHandler
 };
 
 #endif // ! _GAME_OBJECT_H_

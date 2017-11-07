@@ -9,6 +9,7 @@ LPDIRECT3D9 d3d = NULL;
 LPDIRECT3DDEVICE9 d3ddev = NULL;
 LPDIRECT3DSURFACE9 backbuffer = NULL;
 LPD3DXSPRITE sprite_handler = nullptr;
+D3DXMATRIX old_matrix;
 
 int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 {
@@ -53,6 +54,15 @@ int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 	HRESULT result;
 	//create sprite handler object
 	result = D3DXCreateSprite(d3ddev, &sprite_handler);
+
+	// create default matrix
+	D3DXMATRIX rota, trans, scale;
+	D3DXMatrixScaling(&scale, 1, 1, 1);
+	D3DXMatrixTranslation(&trans, 0, 0, 0);
+	D3DXMatrixRotationX(&rota, 0);
+
+	old_matrix = rota*scale*trans;
+
 	if (result != D3D_OK)
 		return 0;
 	return 1;
@@ -60,20 +70,21 @@ int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 LPDIRECT3DSURFACE9 LoadSurface(char *filename, D3DCOLOR transcolor)
 {
 	LPDIRECT3DSURFACE9 image = NULL;
-	D3DXIMAGE_INFO info;
+
 	HRESULT result;
+	D3DXIMAGE_INFO info;
 	//get width and height from bitmap file
 	result = D3DXGetImageInfoFromFile(filename, &info);
 	if (result != D3D_OK)
 		return NULL;
-		//create surface
-		result = d3ddev->CreateOffscreenPlainSurface(
-			info.Width, //width of the surface
-			info.Height, //height of the surface
-			D3DFMT_X8R8G8B8, //surface format
-			D3DPOOL_DEFAULT, //memory pool to use
-			&image, //pointer to the surface
-			NULL); //reserved (always NULL)
+	//create surface
+	result = d3ddev->CreateOffscreenPlainSurface(
+		info.Width, //width of the surface
+		info.Height, //height of the surface
+		D3DFMT_X8R8G8B8, //surface format
+		D3DPOOL_DEFAULT, //memory pool to use
+		&image, //pointer to the surface
+		NULL); //reserved (always NULL)
 	if (result != D3D_OK)
 		return NULL;
 	//load surface from file into newly created surface
@@ -91,24 +102,24 @@ LPDIRECT3DSURFACE9 LoadSurface(char *filename, D3DCOLOR transcolor)
 		return NULL;
 	return image;
 }
-LPDIRECT3DTEXTURE9 LoadTexture(char *filename, D3DCOLOR transcolor)
+LPDIRECT3DTEXTURE9 LoadTexture(char *filename, D3DCOLOR transcolor, D3DXIMAGE_INFO* info)
 {
 	//the texture pointer
 	LPDIRECT3DTEXTURE9 texture = NULL;
 	//the struct for reading bitmap file info
-	D3DXIMAGE_INFO info;
+
 	//standard windows return value
 	HRESULT result;
 	//get width and height from bitmap file
-	result = D3DXGetImageInfoFromFile(filename, &info);
+	result = D3DXGetImageInfoFromFile(filename, info);
 	if (result != D3D_OK)
 		return NULL;
 	//create the new texture by loading a bitmap image file
 	D3DXCreateTextureFromFileEx(
 		d3ddev, //Direct3D device object
 		filename, //bitmap filename
-		info.Width,
-		info.Height,
+		info->Width,
+		info->Height,
 		1, //mip-map levels (1 for no chain)
 		D3DPOOL_DEFAULT, //type of surface(standard)
 		D3DFMT_UNKNOWN, //surface format (default)
@@ -116,11 +127,11 @@ LPDIRECT3DTEXTURE9 LoadTexture(char *filename, D3DCOLOR transcolor)
 		D3DX_DEFAULT, //image filter
 		D3DX_DEFAULT, //mip filter
 		transcolor, //colorkey for transparency
-		&info, //source image
+		info, //source image
 		NULL, //color palette
 		&texture); //destination texture
-	//make sure the bitmap texture was loaded correctly
+				   //make sure the bitmap texture was loaded correctly
 	if (result != D3D_OK)
 		return NULL;
-	return texture;	
+	return texture;
 }

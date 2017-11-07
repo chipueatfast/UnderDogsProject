@@ -27,6 +27,7 @@ protected:
 	CSound* _soundTheme;
 
 	void ProcessKeyboard(); //for making action by pressing (not hold) button, a part of input update
+	virtual void CollisionDetect(int, int);
 	virtual void Key_Pressed(int KeyCode);
 	virtual void InputUpdate();
 	virtual void PhysicsUpdate();

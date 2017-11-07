@@ -97,6 +97,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions); NOGDI</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -120,13 +121,16 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Aladdin.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="dxaudio.cpp" />
     <ClCompile Include="dxgraphics.cpp" />
     <ClCompile Include="dxinput.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="GameObjectList1.cpp" />
     <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Scene1.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="State.cpp" />
@@ -138,13 +142,16 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Aladdin.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="dxaudio.h" />
     <ClInclude Include="dxgraphics.h" />
     <ClInclude Include="dxinput.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="GameObjectList1.h" />
     <ClInclude Include="GameTime.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Scene1.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="State.h" />

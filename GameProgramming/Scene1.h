@@ -8,6 +8,12 @@ class Scene1: public Game
 private:
 	Aladdin* mainCharacter;
 	CSound* _soundJump;
+	LPDIRECT3DSURFACE9 background;
+	LPDIRECT3DTEXTURE9 mapETC[2];
+	D3DXIMAGE_INFO* mapinfo;
+	RECT viewRect;
+
+	virtual void CollisionDetect(int, int) override;
 	virtual void Key_Pressed(int KeyCode) override;
 	virtual void InputUpdate() override;
 	virtual void PhysicsUpdate() override;

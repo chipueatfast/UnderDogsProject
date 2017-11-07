@@ -127,3 +127,20 @@ float CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 
 
 }
+
+CollisionPair::CollisionPair(GameObject* Obj1, GameObject* Obj2)
+{
+	_obj1 = Obj1;
+	_obj2 = Obj2;
+	_collisionIndex = CheckCollision(Obj1, Obj2);
+
+}
+CollisionPair::~CollisionPair()
+{
+	delete _obj1, _obj2;
+}
+
+bool CollisionPair::IsIndentical(CollisionPair* cp1, CollisionPair* cp2)
+{
+	return ((cp1->obj1() == cp2->obj1() && cp1->obj2() == cp2->obj2()) || (cp1->obj1() == cp2->obj2() && cp1->obj1() == cp2->obj2()));
+}

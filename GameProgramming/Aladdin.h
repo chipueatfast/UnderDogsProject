@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "StateManager.h"
 
+#define CHARACTER_VX 25
+
 using namespace std;
 
 
@@ -15,31 +17,39 @@ private:
 	int _health;
 	StateManager _playerState;
 	int _index;
-	float _animadelay,_animaCount;
+	float _animadelay, _animaCount;
+	enum Face
+	{
+		LEFT,
+		RIGHT
+	} _curface, _lastface;
 public:
-	float animadelay() const
-	{
-		return _animadelay;
-	}
-
-	void set_animadelay(float animadelay)
-	{
-		_animadelay = animadelay;
-	}
-
 	Aladdin();
 	~Aladdin();
 
 	void Init();
 	void Update(float t);
-	void Render(D3DXVECTOR3* AnchorPoint) override ;
+	void Render(AnchorPoint type = AnchorPoint::MIDDLE, bool isRotation = false, bool isScale = false, bool isTranslation = true) override;
 
 	void setState(string newState);
 	void Move(int keycode);
 
 	void Next();
+	void Next2(); // ko rs _index;
 	void Reset();
 	void BeHitted();
+	string CurrentState();
+
+	void Run();
+	void Stop() { _vx = 0; };
+
+	bool isLookRight() const
+	{
+		if (_curface == Face::RIGHT)
+			return true;
+		return false;
+	}
+
 };
 
 #endif //  _ALADDIN_H_
