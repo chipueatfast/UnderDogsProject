@@ -29,6 +29,7 @@ Aladdin::Aladdin()
 	_playerState->AddToDictState("102", "RunSlash");
 	_playerState->AddToDictState("202", "IdleUpSlash");
 	_playerState->AddToDictState("302", "IdleDownSlash");
+	_playerState->AddToDictState("130", "Push");
 }
 
 
@@ -40,7 +41,24 @@ void Aladdin::Init()
 {
 }
 
-void Aladdin::Update(float t)
+void Aladdin::PhysicUpdate(float t)
+{
+	setPosition(x() + _vx*t, y() + _vy*t);
+	if (_position.x < 0)
+	{
+		_position.x = 0;
+	}
+	if (_position.x > 4773)
+	{
+		_position.x = 4773;
+	}
+
+
+
+}
+
+
+void Aladdin::GraphicUpdate(float t)
 {
 	_animaCount += t;
 	if (_animaCount >= _animadelay)
@@ -50,8 +68,6 @@ void Aladdin::Update(float t)
 		else
 			Next();
 		_animaCount = 0;
-		_width = _playerState->curState().getListRect().at(_index).right - _playerState->curState().getListRect().at(_index).left;
-		_height = _playerState->curState().getListRect().at(_index).bottom - _playerState->curState().getListRect().at(_index).top;
 		// update lai anchorpoint do frame co bounding khac nhau
 		calAnchorPoint();
 		this->player_state()->set_life_span(this->player_state()->life_span() - 1);
@@ -63,35 +79,6 @@ void Aladdin::Update(float t)
 
 	}
 	//_lastface = _curface;
-
-	_position.x += _vx*t;
-	_position.y += _vy*t;
-	if (_position.x < 0)
-	{
-		_position.x = 0;
-	}
-	if (_position.x > 4773)
-	{
-		_position.x = 4773;
-	}
-
-
-	//float distance = MyCamera::GetInstance()->Position().x - _position.x;
-	////if ((abs(distance) > SCREEN_WIDTH / 3 ))
-	////{
-	////	MyCamera::GetInstance()->Stop();
-	////}
-	//	if ((distance < SCREEN_WIDTH /3 && _vx < 0) || (distance > -SCREEN_WIDTH / 3 && _vx > 0)) // ktra nv co vuot qua range cua CAM ko 
-	//		MyCamera::GetInstance()->Stop();
-
-	//	if ((distance > 0 && distance < SCREEN_WIDTH / 3 && _vx > 0)
-	//		|| (distance > -SCREEN_WIDTH / 3 && distance < 0 && _vx < 0))
-	//	{
-	//		MyCamera::GetInstance()->Move();
-	//		trace(L"Distance : %.2f", distance);
-	//	}
-	//
-	//	setTranslation(D3DXVECTOR2(SCREEN_WIDTH / 2 - distance, _position.y));
 	
 	if (_position.x < SCREEN_WIDTH / 2)
 	{
@@ -150,6 +137,9 @@ void Aladdin::setState(string newState)
 	if (_playerState->curState().getName() != _playerState->dict_state()[newState])
 	{
 		_playerState->setState(newState);
+		_width = _playerState->curState().getListRect().at(0).right - _playerState->curState().getListRect().at(0).left;
+		_height = _playerState->curState().getListRect().at(0).bottom - _playerState->curState().getListRect().at(0).top;
+
 		Reset();
 	}
 

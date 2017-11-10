@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "StateManager.h"
 
-#define CHARACTER_VX 0.5f
+#define CHARACTER_VX 0.2f
 
 using namespace std;
 
@@ -69,7 +69,8 @@ public:
 	~Aladdin();
 
 	void Init();
-	void Update(float t);
+	void PhysicUpdate(float t);
+	void GraphicUpdate(float t);
 	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true);
 
 	void setState(string newState);

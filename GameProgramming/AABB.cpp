@@ -13,6 +13,16 @@ RECT getSweptBroadphaseRect(const GameObject* MovingObj)
 	return rect;
 }
 
+RECT CalculateBoundingBox(int x, int y, int width, int height)
+{
+	RECT temp_rect;
+	temp_rect.left = x;
+	temp_rect.right = x + width;
+	temp_rect.top = y;
+	temp_rect.bottom = y + height;
+	return temp_rect;
+}
+
 float CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 {
 	float dxEntry, dxExit, txEntry, txExit;

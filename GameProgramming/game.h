@@ -31,7 +31,7 @@ protected:
 	virtual void CollisionDetect();
 	virtual void Key_Pressed(int KeyCode);
 	virtual void InputUpdate();
-	virtual void PhysicsUpdate();
+	virtual void PhysicsUpdate(float);
 	virtual void GraphicUpdate(float t);
 public:
 	Game();

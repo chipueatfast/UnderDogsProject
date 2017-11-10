@@ -3,13 +3,12 @@
 #ifndef _AABB_H
 #define _AABB_H
 #include"GameObject.h"
+RECT CalculateBoundingBox(int, int, int, int);
 RECT GetSweptBroadphaseRect(const RECT&);
 float CheckCollision(GameObject*, GameObject*); //moving vs static
 class CollisionPair
 {
 private:
-	
-
 	float _collisionIndex;
 	GameObject* _obj1, *_obj2;
 

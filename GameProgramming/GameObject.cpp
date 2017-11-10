@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "dxgraphics.h"
+#include "game.h"
 //new on 02-11, zPhong
 GameObject::GameObject()
 {
@@ -19,12 +20,7 @@ void GameObject::setSprite(Sprite * t)
 	_sprite = t;
 	_width = t->width();
 	_height = t->height();
-	RECT temp_rect;
-	temp_rect.top = y();
-	temp_rect.bottom = y() + height();
-	temp_rect.left = x();
-	temp_rect.right = x() + width();
-	_boundingBox = temp_rect;
+	_boundingBox = CalculateBoundingBox(x(), y(), _width, _height);
 }
 
 bool GameObject::CheckFlip()
@@ -51,6 +47,7 @@ void GameObject::setPosition(float x, float y)
 {
 	_position = D3DXVECTOR3(x, y, 0);
 	_translation = D3DXVECTOR2(_position.x, _position.y); // test
+	_boundingBox = CalculateBoundingBox(x, y, _width, _height);
 }
 
 void GameObject::setScale(D3DXVECTOR2 scale)

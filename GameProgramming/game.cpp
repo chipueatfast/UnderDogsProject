@@ -57,7 +57,7 @@ void Game::InputUpdate()
 {
 	
 }
-void Game::PhysicsUpdate()
+void Game::PhysicsUpdate(float t)
 {
 	
 	

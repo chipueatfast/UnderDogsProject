@@ -44,10 +44,12 @@ int Scene1::Game_Init(HWND hwnd)
 	apple = new GameObject();
 	ApplePrefab::Instantiate(apple, 1000, 400);
 	GameObjectList1::GetInstance()->Add(apple);
+	apple->setAnchor(TOP_LEFT);
+
 
 
 	mainCharacter = new Aladdin();
-	mainCharacter->setAnchor(AnchorPoint::TOP_MID);
+	mainCharacter->setAnchor(AnchorPoint::BOTTOM_MID);
 	mainCharacter->setPosition(100, 400);
 	//GameObjectList1::GetInstance()->Add(mainCharacter);
 
@@ -60,14 +62,6 @@ int Scene1::Game_Init(HWND hwnd)
 	MyCamera::GetInstance()->setCurMapHeight(mapinfo->Height);
 
 	//LoadListObjectXml("Res/AgrabahMarketMap.xml");
-
-	//Sprite* sprite_ground;
-	//sprite_ground = new Sprite("ground.png", 890, 250);
-	/*ground = new GameObject(); 
-	ground->setPosition(0, 300);
-	ground->setAnchor(TOP_LEFT);
-	ground->setSprite(sprite_ground);
-	GameObjectList1::GetInstance()->Add(ground);*/
 	 
 	//return okay
 	return 1;
@@ -130,7 +124,6 @@ void Scene1::InputUpdate()
 	return;
 	
 }
-
 void Scene1::CollisionDetect()
 {
 	Quadtree* quadtree = Quadtree::CreateQuadtree(mapinfo->Width, mapinfo->Height);
@@ -138,7 +131,6 @@ void Scene1::CollisionDetect()
 	std::list<GameObject*>* return_object_list = new std::list<GameObject*>();
 	std::list<GameObject*>* GO_list = GameObjectList1::GetInstance()->GetGOList();
 	std::list<CollisionPair*>* CP_list = new list<CollisionPair*>();
-	bool havCollide = false;
 	//for (list<GameObject*>::iterator i = GO_list->begin(); i != GO_list->end(); i++)
 	//{
 	//	//Get all objects that can collide  with current entity
@@ -155,19 +147,21 @@ void Scene1::CollisionDetect()
 					CP_list->push_back(new CollisionPair(mainCharacter, *x));
 			delete temp_cp;*/
 			float collisionIndex = CheckCollision(mainCharacter, *x);
-			/*if (collisionIndex < 1 && collisionIndex >= 0)
+			if (collisionIndex < 1 && collisionIndex >= 0)
 			{
-				mainCharacter->setPosition(mainCharacter->x(), mainCharacter->y() + mainCharacter->vy()* collisionIndex);
-				havCollide = true;
-			}*/
+				mainCharacter->set_vx(0);
+				MyCamera::GetInstance()->setVx(0);
+				mainCharacter->setPosition(mainCharacter->x() - 1, mainCharacter->y());
+				MyCamera::GetInstance()->setPosition(D3DXVECTOR3(MyCamera::GetInstance()->Position().x - 1, MyCamera::GetInstance()->Position().y, 0));
+				mainCharacter->set_sub_state("3");
+				PlaySound(_soundJump);
+			}
 		}
-		if (havCollide==false)
-			mainCharacter->setPosition(mainCharacter->x(), mainCharacter->y() + mainCharacter->vy());
 		delete CP_list;
 	//}
 
 }
-void Scene1::PhysicsUpdate()
+void Scene1::PhysicsUpdate(float t)
 {
 	//mainCharacter->set_vy(GRAVITY);
 	//if (mainCharacter->vx() > 0)
@@ -182,14 +176,10 @@ void Scene1::PhysicsUpdate()
 	/*float gravityCheck = CheckCollision(mainCharacter, ground);
 	mainCharacter->setPosition(mainCharacter->x(), mainCharacter->y() + mainCharacter->vy()*gravityCheck);*/
 	CollisionDetect();
-}
-
-void Scene1::GraphicUpdate(float t)
-{
 	mainCharacter->setState(mainCharacter->main_state() + mainCharacter->sub_state() + mainCharacter->hand_state());
-	if (mainCharacter->vx()!=0)
+	if (mainCharacter->vx() != 0)
 	{
-		if(mainCharacter->vx() > 0)
+		if (mainCharacter->vx() > 0)
 		{
 			mainCharacter->set_curface(GameObject::Face::RIGHT);
 		}
@@ -200,8 +190,15 @@ void Scene1::GraphicUpdate(float t)
 		if (mainCharacter->CheckFlip())
 			mainCharacter->Flip();
 	}
+
+	mainCharacter->PhysicUpdate(t);
 	
-	mainCharacter->Update(t);
+}
+
+void Scene1::GraphicUpdate(float t)
+{
+
+	mainCharacter->GraphicUpdate(t);
 	MyCamera::GetInstance()->Update(t);
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	d3ddev->StretchRect(background, NULL, backbuffer, NULL, D3DTEXF_NONE);
@@ -226,10 +223,6 @@ void Scene1::GraphicUpdate(float t)
 		temp_object->setAnchor(AnchorPoint::TOP_LEFT);
 		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
 		temp_object->Render();
-
-		//float dis = temp_object->x() - mainCharacter->x();
-		//if(dis == 0)
-			//trace(L"\nApple : %.2f,%.2f", temp_object->x(), temp_object->y());
 	}
 	trace(L"\n\nCharacter : %.2f \nCamera : %.2f", mainCharacter->vx(), MyCamera::GetInstance()->vx());
 	
@@ -305,7 +298,7 @@ void Scene1::Game_Run(HWND hwnd, int dt)
 {
 	GameTime::GetInstance()->StartCounter();
 	InputUpdate();
-	PhysicsUpdate();
+
 	//make sure the Direct3D device is valid
 	if (d3ddev == NULL)
 		return;
@@ -318,7 +311,7 @@ void Scene1::Game_Run(HWND hwnd, int dt)
 		start =now;
 		if (t < FIXED_TIME)
 			Sleep(100 - FIXED_TIME);
-			
+		PhysicsUpdate(FIXED_TIME);
 		GraphicUpdate(FIXED_TIME);
 	}
 	//display the back buffer on the screen

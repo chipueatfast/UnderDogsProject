@@ -19,7 +19,7 @@ private:
 	virtual void CollisionDetect() override;
 	virtual void Key_Pressed(int KeyCode) override;
 	virtual void InputUpdate() override;
-	virtual void PhysicsUpdate() override;
+	virtual void PhysicsUpdate(float) override;
 	virtual void GraphicUpdate(float t) override;
 	void LoadListObjectXml(char *xmlpath) ;
 public:
