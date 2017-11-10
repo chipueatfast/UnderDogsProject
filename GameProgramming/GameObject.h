@@ -2,6 +2,9 @@
 #define  _GAME_OBJECT_H_
 //update 02-11 chipu
 #include "sprite.h"
+#include <d3dx9.h>
+#include <string>
+#include "StateManager.h"
 
 enum AnchorPoint
 {
@@ -18,9 +21,20 @@ enum AnchorPoint
 
 class GameObject
 {
-
+private:
+	StateManager* _stateManager;
 
 public:
+	StateManager* state_manager() const
+	{
+		return _stateManager;
+	}
+
+	void set_state_manager(StateManager* state_manager)
+	{
+		_stateManager = state_manager;
+	}
+
 	enum Face
 	{
 		LEFT,
@@ -72,8 +86,17 @@ public:
 	{
 		_boundingBox = tag_rect;
 	}
-
+	char * get_name() const
+	{
+		return _name;
+	}
+	void set_name(char* name)
+	{
+		_name = name;
+	}
+	 
 protected:
+	char *_name; 
 	RECT _boundingBox;
 	D3DXVECTOR3 _position;
 	D3DXVECTOR2 _scale;
@@ -89,6 +112,7 @@ public:
 	void setAnchor(AnchorPoint anchor)
 	{
 		_anchor = anchor;
+		calAnchorPoint();
 	}
 
 protected:
@@ -134,7 +158,7 @@ public:
 	void setAngle(float angle);
 	void setTranslation(D3DXVECTOR2 vec);
 	void Flip();
-	virtual void Render(AnchorPoint type = AnchorPoint::MIDDLE, bool isRotation = false, bool isScale = false, bool isTranslation = true) = 0;
+	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true) ;
 	void Update(float t);
 protected:
 	void calAnchorPoint(); // tinh lai gia tri anchor cua class

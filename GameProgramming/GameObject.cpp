@@ -103,8 +103,19 @@ void GameObject::Transform(bool isRotation, bool isScale, bool isTranslation)
 	sprite_handler->SetTransform(&mMatrix);
 }
 
-void GameObject::Render(AnchorPoint type, bool isRotation, bool isScale, bool isTranslation)
+void GameObject::Render(bool isRotation, bool isScale, bool isTranslation)
 {
+	
+	Transform(isRotation, isScale, isTranslation);
+	sprite_handler->Draw(
+		_sprite->image(),
+		NULL,
+		&_anchorPoint,
+		NULL,
+		D3DCOLOR_XRGB(255, 255, 255)
+	);
+
+	sprite_handler->SetTransform(&old_matrix);
 
 }
 
@@ -117,13 +128,42 @@ void GameObject::calAnchorPoint()
 {
 	switch (_anchor)
 	{
+	case TOP_LEFT:
+	{
+		_anchorPoint = D3DXVECTOR3(0, 0, 0);
+	}; break;
+	case TOP_MID:
+	{
+		_anchorPoint = D3DXVECTOR3(_width / 2, 0, 0);
+	}; break;
+	case TOP_RIGHT:
+	{
+		_anchorPoint = D3DXVECTOR3(_width, 0, 0);
+	}; break;
+	case MID_LEFT:
+	{
+		_anchorPoint = D3DXVECTOR3(0, _height / 2, 0);
+	}; break;
 	case MIDDLE:
 	{
 		_anchorPoint = D3DXVECTOR3(_width / 2, _height / 2, 0);
 	}; break;
+	case MID_RIGHT:
+	{
+		_anchorPoint = D3DXVECTOR3(_width, _height / 2, 0);
+	}; break;
+	case BOTTOM_LEFT:
+	{
+		_anchorPoint = D3DXVECTOR3(0, _height, 0);
+	}; break;
+
 	case BOTTOM_MID:
 	{
 		_anchorPoint = D3DXVECTOR3(_width / 2, _height, 0);
+	}; break;
+	case BOTTOM_RIGHT:
+	{
+		_anchorPoint = D3DXVECTOR3(_width, _height, 0);
 	}; break;
 	}
 }
@@ -132,13 +172,42 @@ D3DXVECTOR3 GameObject::calAnchorPoint(AnchorPoint type)
 	D3DXVECTOR3 anchorPoint;
 	switch (type)
 	{
+	case TOP_LEFT:
+	{
+		anchorPoint = D3DXVECTOR3(0, 0, 0);
+	}; break;
+	case TOP_MID:
+	{
+		anchorPoint = D3DXVECTOR3(_width / 2, 0, 0);
+	}; break;
+	case TOP_RIGHT:
+	{
+		anchorPoint = D3DXVECTOR3(_width, 0, 0);
+	}; break;
+	case MID_LEFT:
+	{
+		anchorPoint = D3DXVECTOR3(0, _height / 2, 0);
+	}; break;
 	case MIDDLE:
 	{
 		anchorPoint = D3DXVECTOR3(_width / 2, _height / 2, 0);
 	}; break;
+	case MID_RIGHT:
+	{
+		anchorPoint = D3DXVECTOR3(_width, _height / 2, 0);
+	}; break;
+	case BOTTOM_LEFT:
+	{
+		anchorPoint = D3DXVECTOR3(0, _height, 0);
+	}; break;
+
 	case BOTTOM_MID:
 	{
 		anchorPoint = D3DXVECTOR3(_width / 2, _height, 0);
+	}; break;
+	case BOTTOM_RIGHT:
+	{
+		_anchorPoint = D3DXVECTOR3(_width, _height, 0);
 	}; break;
 	}
 	return anchorPoint;

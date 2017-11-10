@@ -3,6 +3,7 @@
 #include <dinput.h>
 #include "game.h"
 #include "Camera.h"
+#include "trace.h"
 
 
 Aladdin::Aladdin()
@@ -74,23 +75,41 @@ void Aladdin::Update(float t)
 		_position.x = 4773;
 	}
 
+
+	//float distance = MyCamera::GetInstance()->Position().x - _position.x;
+	////if ((abs(distance) > SCREEN_WIDTH / 3 ))
+	////{
+	////	MyCamera::GetInstance()->Stop();
+	////}
+	//	if ((distance < SCREEN_WIDTH /3 && _vx < 0) || (distance > -SCREEN_WIDTH / 3 && _vx > 0)) // ktra nv co vuot qua range cua CAM ko 
+	//		MyCamera::GetInstance()->Stop();
+
+	//	if ((distance > 0 && distance < SCREEN_WIDTH / 3 && _vx > 0)
+	//		|| (distance > -SCREEN_WIDTH / 3 && distance < 0 && _vx < 0))
+	//	{
+	//		MyCamera::GetInstance()->Move();
+	//		trace(L"Distance : %.2f", distance);
+	//	}
+	//
+	//	setTranslation(D3DXVECTOR2(SCREEN_WIDTH / 2 - distance, _position.y));
+	
 	if (_position.x < SCREEN_WIDTH / 2)
 	{
-		setTranslation(D3DXVECTOR2(_position.x, _position.y));
+		setTranslation(D3DXVECTOR2(_position.x - MyCamera::GetInstance()->View().left, _position.y - MyCamera::GetInstance()->View().top));
 		MyCamera::GetInstance()->Stop();
 	}
 	else
 	{
 		if (_position.x > 4773 - SCREEN_WIDTH / 2)
 		{
-			setTranslation(D3DXVECTOR2(SCREEN_WIDTH - (-_position.x + 4773), _position.y));
+			setTranslation(D3DXVECTOR2(_position.x - MyCamera::GetInstance()->View().left/*SCREEN_WIDTH - (-_position.x + 4773)*/, _position.y - MyCamera::GetInstance()->View().top));
 			MyCamera::GetInstance()->Stop();
 		}
 		else
 		{
 			//if (_vx != 0)
 			MyCamera::GetInstance()->Move();
-				setTranslation(D3DXVECTOR2(SCREEN_WIDTH / 2, _position.y));
+				setTranslation(D3DXVECTOR2(_position.x - MyCamera::GetInstance()->View().left, _position.y - MyCamera::GetInstance()->View().top));
 			/*else
 			{
 				int fix_range;	
@@ -108,7 +127,7 @@ void Aladdin::Update(float t)
 
 }
 
-void Aladdin::Render(AnchorPoint type, bool isRotation, bool isScale, bool isTranslation)
+void Aladdin::Render(bool isRotation, bool isScale, bool isTranslation)
 {
 	//D3DXMATRIX oldmatrix;
 	//sprite_handler->GetTransform(&oldmatrix);

@@ -3,6 +3,8 @@
 #define _CAMERA_H
 //06-11 zPhong
 
+#define FRICTION 0.1f
+
 #include "d3d9.h"
 #include "d3dx9.h"
 
@@ -16,7 +18,16 @@ private:
 	bool _isStop = true;
 	float _vx, _vy;
 	long _curMapWidth, _curMapHeight;
+	float _additonDis;
+
 public:
+
+
+	void setPosition(const D3DXVECTOR3& position)
+	{
+		_position = position;
+	}
+
 	void setCurMapWidth(long curMapWidth)
 	{
 		_curMapWidth = curMapWidth;
@@ -33,18 +44,18 @@ public:
 	static MyCamera* GetInstance();
 	D3DXVECTOR3 Position();
 	RECT View();
-	void Stop() { _vx = 0; _isStop = true; }
+	void Stop() { _vx = 0; }
 	void Move() { _isStop = false; }
 	void LookUp();
 public:
 	float vx() const
 	{
-		return _vx;
+		return _vx;// *(1 + FRICTION);
 	}
 
 	void setVx(float vx)
 	{
-		_vx = vx;
+		_vx = vx;// *(1 + FRICTION);
 	}
 
 	float vy() const

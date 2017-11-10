@@ -1,24 +1,26 @@
-#include "Scene1.h"
+﻿#include "Scene1.h"
 #include "dxinput.h"
 #include "GameTime.h"
 #include "trace.h"
 #include "Quadtree.h"
 #include "GameObjectList1.h"
 #include "Camera.h"
+#include "ApplePrefab.h"
 
 
 #define GRAVITY 0
+#define FIXED_TIME 100
 
 LPDIRECT3DSURFACE9 back;
 GameObject* character;
 //GameObject* ground;
 
 HRESULT result;
-
+GameObject* apple;
 
 
 //timing variable
-long start = GetTickCount();
+DWORD start = GetTickCount();
 //initializes the game
 Scene1::Scene1()
 {
@@ -39,11 +41,15 @@ int Scene1::Game_Init(HWND hwnd)
 		return 0;
 	}	
 	//Init components
+	apple = new GameObject();
+	ApplePrefab::Instantiate(apple, 1000, 400);
+	GameObjectList1::GetInstance()->Add(apple);
+
 
 	mainCharacter = new Aladdin();
-	mainCharacter->setAnchor(AnchorPoint::BOTTOM_MID);
-	mainCharacter->setPosition(100, 450);
-	GameObjectList1::GetInstance()->Add(mainCharacter);
+	mainCharacter->setAnchor(AnchorPoint::TOP_MID);
+	mainCharacter->setPosition(100, 400);
+	//GameObjectList1::GetInstance()->Add(mainCharacter);
 
 	mapinfo = new D3DXIMAGE_INFO();
 	background = LoadSurface("Res/background.png", D3DCOLOR_XRGB(63, 72, 204));
@@ -53,23 +59,19 @@ int Scene1::Game_Init(HWND hwnd)
 	MyCamera::GetInstance()->setCurMapWidth(mapinfo->Width);
 	MyCamera::GetInstance()->setCurMapHeight(mapinfo->Height);
 
+	//LoadListObjectXml("Res/AgrabahMarketMap.xml");
+
 	//Sprite* sprite_ground;
 	//sprite_ground = new Sprite("ground.png", 890, 250);
-	/*ground = new GameObject();
-	
+	/*ground = new GameObject(); 
 	ground->setPosition(0, 300);
 	ground->setAnchor(TOP_LEFT);
 	ground->setSprite(sprite_ground);
 	GameObjectList1::GetInstance()->Add(ground);*/
-
-	
-	
-	
-
+	 
 	//return okay
 	return 1;
-
-	
+	 
 }
 
 void Scene1::Key_Pressed(int KeyCode)
@@ -153,11 +155,11 @@ void Scene1::CollisionDetect()
 					CP_list->push_back(new CollisionPair(mainCharacter, *x));
 			delete temp_cp;*/
 			float collisionIndex = CheckCollision(mainCharacter, *x);
-			if (collisionIndex < 1 && collisionIndex >= 0)
+			/*if (collisionIndex < 1 && collisionIndex >= 0)
 			{
 				mainCharacter->setPosition(mainCharacter->x(), mainCharacter->y() + mainCharacter->vy()* collisionIndex);
 				havCollide = true;
-			}
+			}*/
 		}
 		if (havCollide==false)
 			mainCharacter->setPosition(mainCharacter->x(), mainCharacter->y() + mainCharacter->vy());
@@ -211,12 +213,35 @@ void Scene1::GraphicUpdate(float t)
 	//start sprite handler 	
 	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
 	sprite_handler->Draw(mapETC[0], &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
-	mainCharacter->Render(MIDDLE,false,true,true);
+	mainCharacter->Render(false,true,true);
+	/*for (GameObject* anObject : GameObjectList1::GetInstance()->GetGOList())
+	{		
+		anObject->setAnchor(AnchorPoint::TOP_LEFT);
+		anObject->setTranslation(D3DXVECTOR2(anObject->x() - viewRect.left,anObject->y() - viewRect.top));
+		anObject->Render();
+	}*/
+	for (auto i = GameObjectList1::GetInstance()->GetGOList()->begin(); i != GameObjectList1::GetInstance()->GetGOList()->end(); i++)
+	{
+		GameObject* temp_object = *i;
+		temp_object->setAnchor(AnchorPoint::TOP_LEFT);
+		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
+		temp_object->Render();
+
+		//float dis = temp_object->x() - mainCharacter->x();
+		//if(dis == 0)
+			//trace(L"\nApple : %.2f,%.2f", temp_object->x(), temp_object->y());
+	}
+	trace(L"\n\nCharacter : %.2f \nCamera : %.2f", mainCharacter->vx(), MyCamera::GetInstance()->vx());
+	
 #pragma region Draw map_front
 	viewRect.top += mapinfo->Height / 2;
 	viewRect.bottom += mapinfo->Height / 2;
-	sprite_handler->Draw(mapETC[1], &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
+	sprite_handler->Draw(mapETC[1], &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255)); 
 #pragma endregion
+	sprite_handler->End();
+	sprite_handler-> Begin(D3DXSPRITE_ALPHABLEND);
+
+
 	sprite_handler->End();
 	//stop rendering 
 	d3ddev->EndScene();
@@ -224,7 +249,55 @@ void Scene1::GraphicUpdate(float t)
 		
 
 }
+ 
+void Scene1::LoadListObjectXml(char* xmlpath) 
+{
+	//Khởi tạo list object mới
+	object_list = new list<GameObject*>;
+	xml_document fileXml;
+	xml_parse_result result = fileXml.load_file(xmlpath);
+	xml_node root = fileXml.child("map");
+	//tạo map lưu tên và link hình tương ứng
+	map<string, char* > mapPath;
+	for (xml_node node : root.children("tileset"))
+	{
+		string name = node.attribute("name").value();
 
+		string path = node.child("image").attribute("source").value();
+		char* cPath = new char[path.length() + 1];
+		memcpy(cPath, path.c_str(), path.length() + 1);
+
+		mapPath[name] = cPath;
+	}
+
+	//Thêm vào object list 
+	for (xml_node node : root.children("objectgroup"))
+	{
+		string name = node.attribute("name").value();
+		char* objectName = new char[name.length() + 1];
+		memcpy(objectName, name.c_str(), name.length() + 1); 
+		string path = "";
+		if (mapPath.count(name) != 0)
+			path = mapPath[name]; 
+		char* objectPath = new char[path.length() + 1];
+		memcpy(objectPath, path.c_str(), path.length() + 1); 
+		float anchorTransform = 0; 
+		for (xml_node object = node.first_child(); object; object = object.next_sibling())
+		{ 
+			GameObject* anObject = new GameObject(); 
+			anObject->set_width(atoi(object.attribute("width").value()));
+			anObject->set_height(atoi(object.attribute("height").value()));
+			if (name != "Ground" && name != "HorizontalBar" && name != "Rope" && name != "Wall")
+				anchorTransform = anObject->height();
+			//anchor point của ground , horizontalbar,.. là trái trên, còn lại là trái duoi1 nên
+			anObject->setPosition(atoi(object.attribute("x").value()), atoi(object.attribute("y").value())-anchorTransform); 
+			anObject->set_name(objectName); 
+			Sprite* sprite= new Sprite(objectPath, anObject->width(), anObject->height());
+			anObject->setSprite(sprite);
+			object_list->push_back(anObject);
+		}
+	} 
+}
 
 
 //the main game loop content
@@ -236,13 +309,17 @@ void Scene1::Game_Run(HWND hwnd, int dt)
 	//make sure the Direct3D device is valid
 	if (d3ddev == NULL)
 		return;
+	DWORD now = GetTickCount();
 	//this keeps the game running at a steady frame rate
-	float t = GetTickCount() - start;
+	float t = now - start;
 	if (t >= 1000/FPS)
 	{
 		//reset timing
-		start = GetTickCount();
-		GraphicUpdate(t/FPS);
+		start =now;
+		if (t < FIXED_TIME)
+			Sleep(100 - FIXED_TIME);
+			
+		GraphicUpdate(FIXED_TIME);
 	}
 	//display the back buffer on the screen
 	d3ddev->Present(NULL, NULL, NULL, NULL);
@@ -254,9 +331,6 @@ void Scene1::Game_Run(HWND hwnd, int dt)
 
 void Scene1::Game_End(HWND)
 {
-
-
-
 }
 
 

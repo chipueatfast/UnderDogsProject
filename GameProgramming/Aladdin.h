@@ -6,7 +6,7 @@
 #include "GameObject.h"
 #include "StateManager.h"
 
-#define CHARACTER_VX 25
+#define CHARACTER_VX 0.5f
 
 using namespace std;
 
@@ -70,7 +70,7 @@ public:
 
 	void Init();
 	void Update(float t);
-	void Render(AnchorPoint type = AnchorPoint::MIDDLE, bool isRotation = false, bool isScale = false, bool isTranslation = true) override;
+	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true);
 
 	void setState(string newState);
 

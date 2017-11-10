@@ -76,6 +76,10 @@
       <ExecutablePath>$(ExecutablePath);$(DXSDK_DIR)Utilities\bin\x86</ExecutablePath>
     </ExecutablePath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
@@ -121,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Aladdin.cpp" />
+    <ClCompile Include="ApplePrefab.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="dxaudio.cpp" />
     <ClCompile Include="dxgraphics.cpp" />
@@ -141,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Aladdin.h" />
+    <ClInclude Include="ApplePrefab.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="dxaudio.h" />
     <ClInclude Include="dxgraphics.h" />

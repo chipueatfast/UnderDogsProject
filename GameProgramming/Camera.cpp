@@ -1,9 +1,8 @@
-
-
 #include "dxgraphics.h"
 #include "game.h"
 #include <map>
 #include "Camera.h"
+#include "trace.h"
 
 MyCamera* MyCamera::_instance = NULL;
 
@@ -15,6 +14,7 @@ MyCamera::MyCamera()
 	_position = D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
 	_vx = 0;
 	_vy = 0;
+	_additonDis = 0;
 
 }
 
@@ -23,10 +23,23 @@ MyCamera::MyCamera()
 
 void MyCamera::Update(float t)
 {
+	//_vx -= _vx*FRICTION;
+
 	if (_isStop == false)
 	{
-		_position.x += _vx*t;
+		_position.x += (_vx)*t;
 		_position.y += _vy*t;
+		//trace(L"\n\nAddition : %.2f", _additonDis);
+		//trace(L"pos : %.2f", _position.x);
+	}
+
+	if (_position.x < SCREEN_WIDTH / 2)
+	{
+		_position.x = SCREEN_WIDTH / 2;
+	}
+	if (_position.x > 4773 - SCREEN_WIDTH / 2)
+	{
+		_position.x = 4773 - SCREEN_WIDTH / 2;
 	}
 
 	_viewRect.top = (_curMapHeight / 2 - SCREEN_HEIGHT)/* - (Global::GetHeight()/2 -position.y)*/;
@@ -35,8 +48,6 @@ void MyCamera::Update(float t)
 	{
 		_viewRect.left = 0;
 		_viewRect.right = _width;
-		if (_vx < 0)
-			_isStop = true;
 	}
 	else
 	{
@@ -44,9 +55,6 @@ void MyCamera::Update(float t)
 		{
 			_viewRect.right = _curMapWidth;
 			_viewRect.left = _curMapWidth - SCREEN_WIDTH;
-			if (_vx > 0)
-				_isStop = true;
-
 		}
 		else
 		{
