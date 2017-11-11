@@ -8,7 +8,8 @@ void ApplePrefab::Instantiate(GameObject* gameObject, int x, int y)
 	gameObject->setPosition(x, y);
 	gameObject->setSprite(new Sprite("Res\\apple.png", 11, 12));
 	gameObject->set_state_manager(new StateManager("Res\\Apple.xml"));
-	gameObject->state_manager()->AddToDictState("0", "Apple");
+	gameObject->state_manager()->AddToDictState("000", "Apple");
+	gameObject->state_manager()->setState("000");
 
 }
 

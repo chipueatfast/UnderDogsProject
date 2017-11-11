@@ -5,7 +5,7 @@
 
 #include "Quadtree.h"
 #include <ios>
-#include "GameObjectList1.h"
+#include "GameManager.h"
 
 
 Quadtree::Quadtree()
@@ -146,7 +146,7 @@ void Quadtree::Retrieve(std::list<GameObject*>* return_objects_list, GameObject*
 Quadtree* Quadtree::CreateQuadtree(int width, int height)
 {
 	Quadtree* quadtree = new Quadtree(1, initialize(0, width, 0, height));
-	std::list<GameObject*>* gameobject_list = GameObjectList1::GetInstance()->GetGOList();
+	std::list<GameObject*>* gameobject_list = GameManager::GetInstance()->GetCurrentScene()->game_object_list();
 	for (auto i = gameobject_list->begin(); i != gameobject_list->end(); i++)
 	{
 		quadtree->Insert(*i);

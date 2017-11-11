@@ -3,7 +3,6 @@
 #include "GameTime.h"
 #include "trace.h"
 #include "Quadtree.h"
-#include "GameObjectList1.h"
 #include "Camera.h"
 #include "ApplePrefab.h"
 
@@ -28,7 +27,7 @@ Scene1::Scene1()
 int Scene1::Game_Init(HWND hwnd)
 {
 	//init sound files
-	
+	_gameObjectList = new list<GameObject*>();
 	_soundTheme = LoadSound("alarm_beep.WAVE");
 	_soundJump = LoadSound("Cuica-1.wave");
 	if (_soundTheme == NULL)
@@ -43,8 +42,9 @@ int Scene1::Game_Init(HWND hwnd)
 	//Init components
 	apple = new GameObject();
 	ApplePrefab::Instantiate(apple, 1000, 400);
-	GameObjectList1::GetInstance()->Add(apple);
 	apple->setAnchor(TOP_LEFT);
+	_gameObjectList->push_back(apple);
+
 
 
 
@@ -78,7 +78,11 @@ void Scene1::Key_Pressed(int KeyCode)
 	case DIK_X:
 		mainCharacter->set_hand_state("2");
 		break;
+	case DIK_C:
+		mainCharacter->set_hand_state("1");
+		mainCharacter->FireApple();
 
+		break;
 	
 	}
 }
@@ -129,7 +133,7 @@ void Scene1::CollisionDetect()
 	Quadtree* quadtree = Quadtree::CreateQuadtree(mapinfo->Width, mapinfo->Height);
 
 	std::list<GameObject*>* return_object_list = new std::list<GameObject*>();
-	std::list<GameObject*>* GO_list = GameObjectList1::GetInstance()->GetGOList();
+	std::list<GameObject*>* GO_list = _gameObjectList;
 	std::list<CollisionPair*>* CP_list = new list<CollisionPair*>();
 	//for (list<GameObject*>::iterator i = GO_list->begin(); i != GO_list->end(); i++)
 	//{
@@ -154,7 +158,7 @@ void Scene1::CollisionDetect()
 				mainCharacter->setPosition(mainCharacter->x() - 1, mainCharacter->y());
 				MyCamera::GetInstance()->setPosition(D3DXVECTOR3(MyCamera::GetInstance()->Position().x - 1, MyCamera::GetInstance()->Position().y, 0));
 				mainCharacter->set_sub_state("3");
-				PlaySound(_soundJump);
+			//	PlaySound(_soundJump);
 			}
 		}
 		delete CP_list;
@@ -217,14 +221,15 @@ void Scene1::GraphicUpdate(float t)
 		anObject->setTranslation(D3DXVECTOR2(anObject->x() - viewRect.left,anObject->y() - viewRect.top));
 		anObject->Render();
 	}*/
-	for (auto i = GameObjectList1::GetInstance()->GetGOList()->begin(); i != GameObjectList1::GetInstance()->GetGOList()->end(); i++)
+	for (auto i = _gameObjectList->begin(); i != _gameObjectList->end(); i++)
 	{
 		GameObject* temp_object = *i;
 		temp_object->setAnchor(AnchorPoint::TOP_LEFT);
 		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
 		temp_object->Render();
 	}
-	trace(L"\n\nCharacter : %.2f \nCamera : %.2f", mainCharacter->vx(), MyCamera::GetInstance()->vx());
+	mainCharacter->DrawBullet();
+	//trace(L"\n\nCharacter : %.2f \nCamera : %.2f", mainCharacter->vx(), MyCamera::GetInstance()->vx());
 	
 #pragma region Draw map_front
 	viewRect.top += mapinfo->Height / 2;

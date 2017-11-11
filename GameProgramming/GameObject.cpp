@@ -4,6 +4,7 @@
 //new on 02-11, zPhong
 GameObject::GameObject()
 {
+	_stateManager = new StateManager();
 	_width = 0;
 	_height = 0;
 	setScale(D3DXVECTOR2(1, 1));
@@ -102,11 +103,13 @@ void GameObject::Transform(bool isRotation, bool isScale, bool isTranslation)
 
 void GameObject::Render(bool isRotation, bool isScale, bool isTranslation)
 {
-	
+	//D3DXMATRIX oldmatrix;
+	//sprite_handler->GetTransform(&oldmatrix);
 	Transform(isRotation, isScale, isTranslation);
+
 	sprite_handler->Draw(
 		_sprite->image(),
-		NULL,
+		&_stateManager->curState().getListRect().at(_index),
 		&_anchorPoint,
 		NULL,
 		D3DCOLOR_XRGB(255, 255, 255)
@@ -119,6 +122,22 @@ void GameObject::Render(bool isRotation, bool isScale, bool isTranslation)
 
 void GameObject::Update(float t)
 {
+}
+
+void GameObject::Next()
+{
+	int size = _stateManager->curState().getListRect().size() - 1;
+	if (size > 0)
+		_index = (_index + 1) % size;
+	else
+		_index = 0;
+}
+
+void GameObject::Next2()
+{
+	int size = _stateManager->curState().getListRect().size() - 1;
+	if (_index < size)
+		_index++;
 }
 
 void GameObject::calAnchorPoint()

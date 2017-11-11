@@ -5,17 +5,33 @@
 #include <vector>
 #include "GameObject.h"
 #include "StateManager.h"
+#include <list>
 
 #define CHARACTER_VX 0.2f
 
 using namespace std;
-
+class AppleBullet : public GameObject
+{
+public:
+	AppleBullet(int x, int y, Face face);
+};
 
 class Aladdin : public GameObject
 {
 private:
 	string _mainState, _subState, _handState;
+	list<AppleBullet*>* _bulletList;
 public:
+	list<AppleBullet*>* bullet_list() const
+	{
+		return _bulletList;
+	}
+
+	void set_bullet_list(list<AppleBullet*>* apple_bullets)
+	{
+		_bulletList = apple_bullets;
+	}
+
 	string hand_state() const
 	{
 		return _handState;
@@ -48,35 +64,20 @@ public:
 
 private:
 	int _health;
-	StateManager* _playerState;
-public:
-	StateManager* player_state() const
-	{
-		return _playerState;
-	}
-
-	void set_player_state(StateManager* state_manager)
-	{
-		_playerState = state_manager;
-	}
-
-private:
-	int _index;
-	float _animadelay, _animaCount;
-	
 public:
 	Aladdin();
 	~Aladdin();
+
+	void FireApple();
 
 	void Init();
 	void PhysicUpdate(float t);
 	void GraphicUpdate(float t);
 	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true);
+	void DrawBullet();
 
 	void setState(string newState);
 
-	void Next();
-	void Next2(); // ko rs _index;
 	void Reset();
 	void BeHitted();
 	string CurrentState();
@@ -92,5 +93,7 @@ public:
 	}
 
 };
+
+
 
 #endif //  _ALADDIN_H_

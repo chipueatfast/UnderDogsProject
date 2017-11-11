@@ -4,6 +4,10 @@
 #include "game.h"
 #include "Camera.h"
 #include "trace.h"
+#include "GameManager.h"
+#define BULLET_VX 4.0f
+#define BULLET_VY 1.0f
+
 
 
 Aladdin::Aladdin()
@@ -17,24 +21,30 @@ Aladdin::Aladdin()
 	_mainState = "0";
 	_subState = "0";
 	_handState = "0";
-	_playerState = new StateManager("Res\\AladdinSpriteXML.xml");
+	_stateManager = new StateManager("Res\\AladdinSpriteXML.xml");
 	this->setSprite(new Sprite("Res\\Aladdin.png", 40, 50));
-	_playerState->AddToDictState("000", "Idle1");
-	_playerState->AddToDictState("001", "IdleThrow");
-	_playerState->AddToDictState("002", "IdleSlash");
-	_playerState->AddToDictState("100", "Run");
-	_playerState->AddToDictState("300", "IdleDown");
-	_playerState->AddToDictState("200", "IdleUp");
-	_playerState->AddToDictState("002", "IdleSlash");
-	_playerState->AddToDictState("102", "RunSlash");
-	_playerState->AddToDictState("202", "IdleUpSlash");
-	_playerState->AddToDictState("302", "IdleDownSlash");
-	_playerState->AddToDictState("130", "Push");
+	_stateManager->AddToDictState("000", "Idle1");
+	_stateManager->AddToDictState("001", "IdleThrow");
+	_stateManager->AddToDictState("002", "IdleSlash");
+	_stateManager->AddToDictState("100", "Run");
+	_stateManager->AddToDictState("300", "IdleDown");
+	_stateManager->AddToDictState("200", "IdleUp");
+	_stateManager->AddToDictState("002", "IdleSlash");
+	_stateManager->AddToDictState("102", "RunSlash");
+	_stateManager->AddToDictState("202", "IdleUpSlash");
+	_stateManager->AddToDictState("302", "IdleDownSlash");
+	_stateManager->AddToDictState("130", "Push");
+	_bulletList = new list<AppleBullet*>();
 }
 
 
 Aladdin::~Aladdin()
 {
+}
+
+void Aladdin::FireApple()
+{
+	_bulletList->push_back(new AppleBullet(this->x(), this->y(), curface()));
 }
 
 void Aladdin::Init()
@@ -53,6 +63,13 @@ void Aladdin::PhysicUpdate(float t)
 		_position.x = 4773;
 	}
 
+	for (list<AppleBullet*>::iterator i = _bulletList->begin(); i != _bulletList->end(); i++)
+	{
+		AppleBullet* temp_obj = *i;
+		temp_obj->set_vy(temp_obj->vy()*1.1f);
+		temp_obj->setPosition(temp_obj->x() + temp_obj->vx(), temp_obj->y() + temp_obj->vy());
+	}
+
 
 
 }
@@ -63,15 +80,15 @@ void Aladdin::GraphicUpdate(float t)
 	_animaCount += t;
 	if (_animaCount >= _animadelay)
 	{
-		if (_playerState->curState().getName() == "IdleUp" || _playerState->curState().getName() == "IdleDown")
+		if (_stateManager->curState().getName() == "IdleUp" || _stateManager->curState().getName() == "IdleDown")
 			Next2();
 		else
 			Next();
 		_animaCount = 0;
 		// update lai anchorpoint do frame co bounding khac nhau
 		calAnchorPoint();
-		this->player_state()->set_life_span(this->player_state()->life_span() - 1);
-		if (this->player_state()->life_span() == 0)
+		this->state_manager()->set_life_span(this->state_manager()->life_span() - 1);
+		if (this->state_manager()->life_span() == 0)
 		{
 			this->set_hand_state("0");
 		}
@@ -110,8 +127,6 @@ void Aladdin::GraphicUpdate(float t)
 			}*/
 		}
 	}
-
-
 }
 
 void Aladdin::Render(bool isRotation, bool isScale, bool isTranslation)
@@ -122,7 +137,7 @@ void Aladdin::Render(bool isRotation, bool isScale, bool isTranslation)
 
 	sprite_handler->Draw(
 		_sprite->image(),
-		&_playerState->curState().getListRect().at(_index),
+		&_stateManager->curState().getListRect().at(_index),
 		&_anchorPoint,
 		NULL,
 		D3DCOLOR_XRGB(255, 255, 255)
@@ -132,13 +147,22 @@ void Aladdin::Render(bool isRotation, bool isScale, bool isTranslation)
 
 }
 
+void Aladdin::DrawBullet()
+{
+	for (list<AppleBullet*>::iterator i = _bulletList->begin(); i!=_bulletList->end(); i++)
+	{
+		AppleBullet* temp_obj = *i;
+		temp_obj->Render();
+	}
+}
+
 void Aladdin::setState(string newState)
 {
-	if (_playerState->curState().getName() != _playerState->dict_state()[newState])
+	if (_stateManager->curState().getName() != _stateManager->dict_state()[newState])
 	{
-		_playerState->setState(newState);
-		_width = _playerState->curState().getListRect().at(0).right - _playerState->curState().getListRect().at(0).left;
-		_height = _playerState->curState().getListRect().at(0).bottom - _playerState->curState().getListRect().at(0).top;
+		_stateManager->setState(newState);
+		_width = _stateManager->curState().getListRect().at(0).right - _stateManager->curState().getListRect().at(0).left;
+		_height = _stateManager->curState().getListRect().at(0).bottom - _stateManager->curState().getListRect().at(0).top;
 
 		Reset();
 	}
@@ -148,22 +172,6 @@ void Aladdin::setState(string newState)
 
 
 
-void Aladdin::Next()
-{
-	int size = _playerState->curState().getListRect().size() - 1;
-	if (size > 0)
-		_index = (_index + 1) % size;
-	else
-		_index = 0;
-
-}
-
-void Aladdin::Next2()
-{
-	int size = _playerState->curState().getListRect().size() - 1;
-	if (_index < size)
-		_index++;
-}
 
 void Aladdin::Reset()
 {
@@ -176,7 +184,7 @@ void Aladdin::BeHitted()
 
 string Aladdin::CurrentState()
 {
-	return _playerState->curState().getName();
+	return _stateManager->curState().getName();
 }
 
 
@@ -191,4 +199,21 @@ void Aladdin::Run()
 	{
 		_vx = -CHARACTER_VX;
 	}
+}
+
+AppleBullet::AppleBullet(int x, int y, Face face)
+{
+	if (face == Face::RIGHT)
+		_vx = BULLET_VX;
+	else
+		_vx = BULLET_VY;
+	_vy = BULLET_VY;
+	this->setAnchor(TOP_LEFT);
+	this->setPosition(x, y);
+	this->setSprite(new Sprite("Res\\Aladdin.png", 7, 6));
+	this->set_state_manager(new StateManager("Res\\AppleBullet.xml"));
+	this->state_manager()->AddToDictState("000", "flying");
+	this->state_manager()->AddToDictState("001", "popping");
+	this->state_manager()->setState("000");
+
 }

@@ -133,7 +133,6 @@
     <ClCompile Include="game.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="GameObjectList1.cpp" />
     <ClCompile Include="GameTime.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="Scene1.cpp" />
@@ -154,7 +153,6 @@
     <ClInclude Include="game.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="GameObjectList1.h" />
     <ClInclude Include="GameTime.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="Scene1.h" />

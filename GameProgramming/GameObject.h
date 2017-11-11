@@ -21,7 +21,7 @@ enum AnchorPoint
 
 class GameObject
 {
-private:
+protected:
 	StateManager* _stateManager;
 
 public:
@@ -117,6 +117,8 @@ public:
 
 protected:
 	D3DXVECTOR3 _anchorPoint;
+	int _index;
+	float _animadelay, _animaCount;
 
 public:
 
@@ -160,6 +162,8 @@ public:
 	void Flip();
 	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true) ;
 	void Update(float t);
+	void Next();
+	void Next2(); // ko rs _index;
 protected:
 	void calAnchorPoint(); // tinh lai gia tri anchor cua class
 	D3DXVECTOR3 calAnchorPoint(AnchorPoint type); // tra ve anchorpoint theo type truyen vao

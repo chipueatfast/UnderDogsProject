@@ -9,6 +9,7 @@
 #include "sprite.h"
 #include "AABB.h"
 #include "GameObject.h"
+#include <list>
 
 //application title
 #define APPTITLE "FrameworkStage"
@@ -26,7 +27,19 @@ class Game
 protected:
 	CSound* _soundTheme;
 
+	list<GameObject*>* _gameObjectList;
+public:
+	list<GameObject*>* game_object_list() const
+	{
+		return _gameObjectList;
+	}
 
+	void set_game_object_list(list<GameObject*>* game_objects)
+	{
+		_gameObjectList = game_objects;
+	}
+
+protected:
 	void ProcessKeyboard(); //for making action by pressing (not hold) button, a part of input update
 	virtual void CollisionDetect();
 	virtual void Key_Pressed(int KeyCode);
