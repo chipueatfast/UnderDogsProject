@@ -1,7 +1,10 @@
 #include "StateManager.h"
 
 
-
+State StateManager::GetStateByCode(string stateCode)
+{
+	return _mapState[(_dictState[stateCode])];
+}
 
 StateManager::StateManager()
 {

@@ -15,13 +15,11 @@ private:
 	LPDIRECT3DTEXTURE9 mapETC[2];
 	D3DXIMAGE_INFO* mapinfo;
 	RECT viewRect;
-	list<GameObject*>* object_list;
 	virtual void CollisionDetect() override;
 	virtual void Key_Pressed(int KeyCode) override;
 	virtual void InputUpdate() override;
 	virtual void PhysicsUpdate(float) override;
 	virtual void GraphicUpdate(float t) override;
-	void LoadListObjectXml(char *xmlpath) ;
 public:
 	int Game_Init(HWND) override;
 	void Game_Run(HWND, int) override;

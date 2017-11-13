@@ -11,6 +11,7 @@ private:
 	State _curState;
 	int _lifeSpan;
 public:
+	State GetStateByCode(string stateCode);
 	int life_span() const
 	{
 		return _lifeSpan;

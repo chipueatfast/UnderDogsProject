@@ -5,8 +5,8 @@
 #include "Camera.h"
 #include "trace.h"
 #include "GameManager.h"
-#define BULLET_VX 4.0f
-#define BULLET_VY 1.0f
+#define BULLET_VX 30.0f
+#define BULLET_VY 3.0f
 
 
 
@@ -18,11 +18,13 @@ Aladdin::Aladdin()
 	_health = 7;
 	_curface = Face::RIGHT;
 	_lastface = _curface;
+	_sword = new RECT();
 	_mainState = "0";
 	_subState = "0";
 	_handState = "0";
 	_stateManager = new StateManager("Res\\AladdinSpriteXML.xml");
 	this->setSprite(new Sprite("Res\\Aladdin.png", 40, 50));
+	_stateManager->AddToDictState("101", "RunThrow");
 	_stateManager->AddToDictState("000", "Idle1");
 	_stateManager->AddToDictState("001", "IdleThrow");
 	_stateManager->AddToDictState("002", "IdleSlash");
@@ -33,6 +35,7 @@ Aladdin::Aladdin()
 	_stateManager->AddToDictState("102", "RunSlash");
 	_stateManager->AddToDictState("202", "IdleUpSlash");
 	_stateManager->AddToDictState("302", "IdleDownSlash");
+	_stateManager->AddToDictState("301", "IdleDownThrow");
 	_stateManager->AddToDictState("130", "Push");
 	_bulletList = new list<AppleBullet*>();
 }
@@ -44,7 +47,18 @@ Aladdin::~Aladdin()
 
 void Aladdin::FireApple()
 {
-	_bulletList->push_back(new AppleBullet(this->x(), this->y(), curface()));
+	AppleBullet* temp = new AppleBullet(x(), y(), curface());
+	D3DXVECTOR3 newPos;
+	if (curface() == Face::RIGHT)
+		newPos = this->CalPositon(TOP_RIGHT);
+	else
+	{
+		newPos = this->CalPositon(TOP_LEFT);
+
+	}
+	temp->setPosition(newPos.x, newPos.y);
+	_bulletList->push_back(temp);
+
 }
 
 void Aladdin::Init()
@@ -66,12 +80,19 @@ void Aladdin::PhysicUpdate(float t)
 	for (list<AppleBullet*>::iterator i = _bulletList->begin(); i != _bulletList->end(); i++)
 	{
 		AppleBullet* temp_obj = *i;
-		temp_obj->set_vy(temp_obj->vy()*1.1f);
+		temp_obj->set_vy(temp_obj->vy()*1.3f);
 		temp_obj->setPosition(temp_obj->x() + temp_obj->vx(), temp_obj->y() + temp_obj->vy());
 	}
 
-
-
+	if (_handState == "2")
+	{
+		CalSword();
+		if (_stateManager->life_span() == 0)
+		{
+			_handState = "0";
+			DelSword();
+		}
+	}
 }
 
 
@@ -86,7 +107,7 @@ void Aladdin::GraphicUpdate(float t)
 			Next();
 		_animaCount = 0;
 		// update lai anchorpoint do frame co bounding khac nhau
-		calAnchorPoint();
+		CalAnchorPoint();
 		this->state_manager()->set_life_span(this->state_manager()->life_span() - 1);
 		if (this->state_manager()->life_span() == 0)
 		{
@@ -147,11 +168,13 @@ void Aladdin::Render(bool isRotation, bool isScale, bool isTranslation)
 
 }
 
-void Aladdin::DrawBullet()
+void Aladdin::DrawBullet(float deltaTime)
 {
 	for (list<AppleBullet*>::iterator i = _bulletList->begin(); i!=_bulletList->end(); i++)
 	{
 		AppleBullet* temp_obj = *i;
+		temp_obj->setTranslation(D3DXVECTOR2(temp_obj->x() - MyCamera::GetInstance()->View().left,temp_obj->y() - MyCamera::GetInstance()->View().top));
+		temp_obj->UpdateAnimate(false, deltaTime);
 		temp_obj->Render();
 	}
 }
@@ -161,11 +184,11 @@ void Aladdin::setState(string newState)
 	if (_stateManager->curState().getName() != _stateManager->dict_state()[newState])
 	{
 		_stateManager->setState(newState);
-		_width = _stateManager->curState().getListRect().at(0).right - _stateManager->curState().getListRect().at(0).left;
-		_height = _stateManager->curState().getListRect().at(0).bottom - _stateManager->curState().getListRect().at(0).top;
-
+		
 		Reset();
 	}
+	_width = _stateManager->curState().getListRect().at(_index).right - _stateManager->curState().getListRect().at(_index).left;
+	_height = _stateManager->curState().getListRect().at(_index).bottom - _stateManager->curState().getListRect().at(_index).top;
 
 }
 
@@ -203,10 +226,11 @@ void Aladdin::Run()
 
 AppleBullet::AppleBullet(int x, int y, Face face)
 {
+	_isPopping = false;
 	if (face == Face::RIGHT)
 		_vx = BULLET_VX;
 	else
-		_vx = BULLET_VY;
+		_vx = -BULLET_VX;
 	_vy = BULLET_VY;
 	this->setAnchor(TOP_LEFT);
 	this->setPosition(x, y);
@@ -217,3 +241,39 @@ AppleBullet::AppleBullet(int x, int y, Face face)
 	this->state_manager()->setState("000");
 
 }
+
+void Aladdin::CalSword()
+{
+
+	if (main_state() == "2")
+	{
+		_sword = &GetBoundingBox(main_state() + sub_state() + "2");
+		return;
+	}
+	RECT temp_rect1 = GetBoundingBox(main_state() + sub_state() + "2");
+	RECT temp_rect2 = GetBoundingBox(main_state() + sub_state() + "0");
+	_sword->top = _boundingBox.top;
+	_sword->bottom = _boundingBox.bottom;
+	if (curface()==Face::RIGHT)
+	{
+		_sword->left = temp_rect2.right;
+		_sword->right = temp_rect1.right;
+		return;
+	}
+	else 
+	{
+		_sword->left = temp_rect1.left;
+		_sword->right = temp_rect2.left;
+		return;
+	}
+
+}
+
+void Aladdin::DelSword()
+{
+	_sword->bottom = 0;
+	_sword->top = 0;
+	_sword->right = 0;
+	_sword->left = 0;
+}
+

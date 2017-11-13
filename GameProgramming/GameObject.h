@@ -25,6 +25,9 @@ protected:
 	StateManager* _stateManager;
 
 public:
+	RECT GetBoundingBox(string stateCode);
+
+	void UpdateAnimate(bool isRepeating, float deltaTime);
 	StateManager* state_manager() const
 	{
 		return _stateManager;
@@ -53,6 +56,13 @@ public:
 protected:
 	Face _curface, _lastface;
 	Sprite* _sprite;
+public:
+	Sprite* sprite() const
+	{
+		return _sprite;
+	}
+
+protected:
 	int _width, _height;
 	float _vx, _vy;
 public:
@@ -112,7 +122,7 @@ public:
 	void setAnchor(AnchorPoint anchor)
 	{
 		_anchor = anchor;
-		calAnchorPoint();
+		CalAnchorPoint();
 	}
 
 protected:
@@ -155,7 +165,9 @@ public:
 	bool CheckFlip();
 	D3DXVECTOR3 getPosition();
 	void setPosition(D3DXVECTOR3 vec3);
-	void setPosition(float x, float y);
+	virtual void setPosition(float x, float y);
+	D3DXVECTOR3 CalPositon(AnchorPoint anchor);
+	D3DXVECTOR3 CalAnchorPoint(AnchorPoint type);
 	void setScale(D3DXVECTOR2 scale);
 	void setAngle(float angle);
 	void setTranslation(D3DXVECTOR2 vec);
@@ -165,8 +177,7 @@ public:
 	void Next();
 	void Next2(); // ko rs _index;
 protected:
-	void calAnchorPoint(); // tinh lai gia tri anchor cua class
-	D3DXVECTOR3 calAnchorPoint(AnchorPoint type); // tra ve anchorpoint theo type truyen vao
+	void CalAnchorPoint(); // tinh lai gia tri anchor cua class
 	void Transform(bool isRotation, bool isScale, bool isTranslation); // apply matrix transform vao spriteHandler
 };
 

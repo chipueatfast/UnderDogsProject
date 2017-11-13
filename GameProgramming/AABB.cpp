@@ -38,6 +38,7 @@ float CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 	float staticY2 = staticY1 + StaticObj->height();
 
 	RECT dst_rect;
+	RECT tes_rct = getSweptBroadphaseRect(MovingObj);
 	IntersectRect(&dst_rect, &getSweptBroadphaseRect(MovingObj), &StaticObj->bounding_box());
 	if (dst_rect.bottom==0 && dst_rect.top==0 &&dst_rect.right==0 && dst_rect.left==0)
 	{
@@ -135,6 +136,14 @@ float CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 	}
 	return 1.0f;
 
+
+}
+
+bool SimpleIntersect(RECT* rect1, RECT* rect2)
+{
+	RECT temp_rect;
+	IntersectRect(&temp_rect, rect1, rect2);
+	return (temp_rect.top != 0 || temp_rect.bottom != 0 || temp_rect.right != 0 || temp_rect.left != 0);
 
 }
 

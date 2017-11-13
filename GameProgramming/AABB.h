@@ -6,6 +6,7 @@
 RECT CalculateBoundingBox(int, int, int, int);
 RECT GetSweptBroadphaseRect(const RECT&);
 float CheckCollision(GameObject*, GameObject*); //moving vs static
+bool SimpleIntersect(RECT* rect1, RECT* rect2);
 class CollisionPair
 {
 private:

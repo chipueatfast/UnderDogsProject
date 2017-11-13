@@ -1,10 +1,35 @@
 #include "GameObject.h"
 #include "dxgraphics.h"
 #include "game.h"
+
+RECT GameObject::GetBoundingBox(string stateCode)
+{
+	State t;
+	t = _stateManager->GetStateByCode(stateCode);
+	long width = t.getListRect().at(0).right - t.getListRect().at(0).left;
+	long height = t.getListRect().at(0).bottom - t.getListRect().at(0).top;
+	return CalculateBoundingBox(x(), y(), width, height);
+}
+
+void GameObject::UpdateAnimate(bool isRepeating, float deltaTime)
+{
+	_animaCount += deltaTime;
+	if (_animaCount >= _animadelay)
+	{
+		if (isRepeating == false)
+			Next2();
+		else
+			Next();
+		_animaCount = 0;
+		// update lai anchorpoint do frame co bounding khac nhau
+		CalAnchorPoint();
+	}
+}
+
 //new on 02-11, zPhong
 GameObject::GameObject()
 {
-	_stateManager = new StateManager();
+	_stateManager = NULL;
 	_width = 0;
 	_height = 0;
 	setScale(D3DXVECTOR2(1, 1));
@@ -18,10 +43,14 @@ GameObject::~GameObject()
 
 void GameObject::setSprite(Sprite * t)
 {
-	_sprite = t;
-	_width = t->width();
-	_height = t->height();
-	_boundingBox = CalculateBoundingBox(x(), y(), _width, _height);
+	if (t!=nullptr)
+	{
+		_sprite = t;
+		_width = t->width();
+		_height = t->height();
+		_boundingBox = CalculateBoundingBox(x(), y(), _width, _height);
+	}
+
 }
 
 bool GameObject::CheckFlip()
@@ -50,6 +79,56 @@ void GameObject::setPosition(float x, float y)
 	_translation = D3DXVECTOR2(_position.x, _position.y); // test
 	_boundingBox = CalculateBoundingBox(x, y, _width, _height);
 }
+D3DXVECTOR3 GameObject::CalPositon(AnchorPoint anchor)
+{
+	return _position - CalAnchorPoint(_anchor) + CalAnchorPoint(anchor);
+}
+D3DXVECTOR3 GameObject::CalAnchorPoint(AnchorPoint type)
+{
+	D3DXVECTOR3 anchorPoint;
+	switch (type)
+	{
+	case TOP_LEFT:
+	{
+		anchorPoint = D3DXVECTOR3(0, 0, 0);
+	}; break;
+	case TOP_MID:
+	{
+		anchorPoint = D3DXVECTOR3(_width / 2, 0, 0);
+	}; break;
+	case TOP_RIGHT:
+	{
+		anchorPoint = D3DXVECTOR3(_width, 0, 0);
+	}; break;
+	case MID_LEFT:
+	{
+		anchorPoint = D3DXVECTOR3(0, _height / 2, 0);
+	}; break;
+	case MIDDLE:
+	{
+		anchorPoint = D3DXVECTOR3(_width / 2, _height / 2, 0);
+	}; break;
+	case MID_RIGHT:
+	{
+		anchorPoint = D3DXVECTOR3(_width, _height / 2, 0);
+	}; break;
+	case BOTTOM_LEFT:
+	{
+		anchorPoint = D3DXVECTOR3(0, _height, 0);
+	}; break;
+
+	case BOTTOM_MID:
+	{
+		anchorPoint = D3DXVECTOR3(_width / 2, _height, 0);
+	}; break;
+	case BOTTOM_RIGHT:
+	{
+		_anchorPoint = D3DXVECTOR3(_width, _height, 0);
+	}; break;
+	}
+	return anchorPoint;
+}
+
 
 void GameObject::setScale(D3DXVECTOR2 scale)
 {
@@ -109,7 +188,7 @@ void GameObject::Render(bool isRotation, bool isScale, bool isTranslation)
 
 	sprite_handler->Draw(
 		_sprite->image(),
-		&_stateManager->curState().getListRect().at(_index),
+		_stateManager == NULL ? NULL : &_stateManager->curState().getListRect().at(_index),
 		&_anchorPoint,
 		NULL,
 		D3DCOLOR_XRGB(255, 255, 255)
@@ -140,7 +219,7 @@ void GameObject::Next2()
 		_index++;
 }
 
-void GameObject::calAnchorPoint()
+void GameObject::CalAnchorPoint()
 {
 	switch (_anchor)
 	{
@@ -182,49 +261,4 @@ void GameObject::calAnchorPoint()
 		_anchorPoint = D3DXVECTOR3(_width, _height, 0);
 	}; break;
 	}
-}
-D3DXVECTOR3 GameObject::calAnchorPoint(AnchorPoint type)
-{
-	D3DXVECTOR3 anchorPoint;
-	switch (type)
-	{
-	case TOP_LEFT:
-	{
-		anchorPoint = D3DXVECTOR3(0, 0, 0);
-	}; break;
-	case TOP_MID:
-	{
-		anchorPoint = D3DXVECTOR3(_width / 2, 0, 0);
-	}; break;
-	case TOP_RIGHT:
-	{
-		anchorPoint = D3DXVECTOR3(_width, 0, 0);
-	}; break;
-	case MID_LEFT:
-	{
-		anchorPoint = D3DXVECTOR3(0, _height / 2, 0);
-	}; break;
-	case MIDDLE:
-	{
-		anchorPoint = D3DXVECTOR3(_width / 2, _height / 2, 0);
-	}; break;
-	case MID_RIGHT:
-	{
-		anchorPoint = D3DXVECTOR3(_width, _height / 2, 0);
-	}; break;
-	case BOTTOM_LEFT:
-	{
-		anchorPoint = D3DXVECTOR3(0, _height, 0);
-	}; break;
-
-	case BOTTOM_MID:
-	{
-		anchorPoint = D3DXVECTOR3(_width / 2, _height, 0);
-	}; break;
-	case BOTTOM_RIGHT:
-	{
-		_anchorPoint = D3DXVECTOR3(_width, _height, 0);
-	}; break;
-	}
-	return anchorPoint;
 }

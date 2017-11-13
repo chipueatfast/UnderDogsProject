@@ -29,6 +29,7 @@ protected:
 
 	list<GameObject*>* _gameObjectList;
 public:
+	void LoadListObjectXml(char *xmlpath);
 	list<GameObject*>* game_object_list() const
 	{
 		return _gameObjectList;
@@ -42,6 +43,7 @@ public:
 protected:
 	void ProcessKeyboard(); //for making action by pressing (not hold) button, a part of input update
 	virtual void CollisionDetect();
+	virtual void OnScreenDetect();
 	virtual void Key_Pressed(int KeyCode);
 	virtual void InputUpdate();
 	virtual void PhysicsUpdate(float);

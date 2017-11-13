@@ -12,12 +12,40 @@
 using namespace std;
 class AppleBullet : public GameObject
 {
+	bool _isPopping;
 public:
+	bool is_popping() const
+	{
+		return _isPopping;
+	}
+
+	void set_is_popping(bool is_popping)
+	{
+		_isPopping = is_popping;
+	}
+
 	AppleBullet(int x, int y, Face face);
 };
 
 class Aladdin : public GameObject
 {
+private:
+	RECT* _sword;
+public:
+	RECT* sword() const
+	{
+		return _sword;
+	}
+
+	void set_sword(RECT* tag_rect)
+	{
+		_sword = tag_rect;
+	}
+	void CalSword();
+	void DelSword();
+
+
+
 private:
 	string _mainState, _subState, _handState;
 	list<AppleBullet*>* _bulletList;
@@ -74,7 +102,7 @@ public:
 	void PhysicUpdate(float t);
 	void GraphicUpdate(float t);
 	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true);
-	void DrawBullet();
+	void DrawBullet(float);
 
 	void setState(string newState);
 

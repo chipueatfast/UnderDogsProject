@@ -5,17 +5,17 @@
 #include "Quadtree.h"
 #include "Camera.h"
 #include "ApplePrefab.h"
+#include "GroundPrefab.h"
 
 
 #define GRAVITY 0
 #define FIXED_TIME 100
 
 LPDIRECT3DSURFACE9 back;
-GameObject* character;
-//GameObject* ground;
 
 HRESULT result;
 GameObject* apple;
+GameObject* ground;
 
 
 //timing variable
@@ -44,8 +44,10 @@ int Scene1::Game_Init(HWND hwnd)
 	ApplePrefab::Instantiate(apple, 1000, 400);
 	apple->setAnchor(TOP_LEFT);
 	_gameObjectList->push_back(apple);
-
-
+	//ground = new GameObject();
+	//GroundPrefab::Instantiate(ground, 0, 500, 1000, 1000);
+	//ground->setAnchor(BOTTOM_MID);
+	//_gameObjectList->push_back(ground);
 
 
 	mainCharacter = new Aladdin();
@@ -61,7 +63,7 @@ int Scene1::Game_Init(HWND hwnd)
 	MyCamera::GetInstance()->setCurMapWidth(mapinfo->Width);
 	MyCamera::GetInstance()->setCurMapHeight(mapinfo->Height);
 
-	//LoadListObjectXml("Res/AgrabahMarketMap.xml");
+	LoadListObjectXml("Res/AgrabahMarketMap.xml");
 	 
 	//return okay
 	return 1;
@@ -131,7 +133,6 @@ void Scene1::InputUpdate()
 void Scene1::CollisionDetect()
 {
 	Quadtree* quadtree = Quadtree::CreateQuadtree(mapinfo->Width, mapinfo->Height);
-
 	std::list<GameObject*>* return_object_list = new std::list<GameObject*>();
 	std::list<GameObject*>* GO_list = _gameObjectList;
 	std::list<CollisionPair*>* CP_list = new list<CollisionPair*>();
@@ -161,7 +162,29 @@ void Scene1::CollisionDetect()
 			//	PlaySound(_soundJump);
 			}
 		}
+		for (list<AppleBullet*>::iterator ab = mainCharacter->bullet_list()->begin(); ab!= mainCharacter->bullet_list()->end(); ab++)
+		{
+			quadtree->Retrieve(return_object_list, *ab);
+			for (list<GameObject*>::iterator g = return_object_list->begin(); g!=return_object_list->end(); g++)
+			{
+				float collisionIndex = CheckCollision(*ab, *g);
+				if (collisionIndex<1.0f && collisionIndex>=0.0f)
+				{
+					AppleBullet* temp_obj = *ab;
+					temp_obj->set_vx(0);
+					temp_obj->set_vy(0);
+					temp_obj->state_manager()->setState("001");
+					break;
+				}
+			}
+		}
 		delete CP_list;
+		for (list<GameObject*>::iterator g = return_object_list->begin(); g != return_object_list->end(); g++)
+		{
+			GameObject* temp_obj = *g;
+			if (SimpleIntersect(mainCharacter->sword(), &temp_obj->bounding_box()))
+				trace(L"Sword hitted!");
+		}
 	//}
 
 }
@@ -224,11 +247,13 @@ void Scene1::GraphicUpdate(float t)
 	for (auto i = _gameObjectList->begin(); i != _gameObjectList->end(); i++)
 	{
 		GameObject* temp_object = *i;
+
 		temp_object->setAnchor(AnchorPoint::TOP_LEFT);
 		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
-		temp_object->Render();
+		if (temp_object->sprite()->image()!= NULL)
+			temp_object->Render();
 	}
-	mainCharacter->DrawBullet();
+	mainCharacter->DrawBullet(t);
 	//trace(L"\n\nCharacter : %.2f \nCamera : %.2f", mainCharacter->vx(), MyCamera::GetInstance()->vx());
 	
 #pragma region Draw map_front
@@ -248,54 +273,6 @@ void Scene1::GraphicUpdate(float t)
 
 }
  
-void Scene1::LoadListObjectXml(char* xmlpath) 
-{
-	//Khởi tạo list object mới
-	object_list = new list<GameObject*>;
-	xml_document fileXml;
-	xml_parse_result result = fileXml.load_file(xmlpath);
-	xml_node root = fileXml.child("map");
-	//tạo map lưu tên và link hình tương ứng
-	map<string, char* > mapPath;
-	for (xml_node node : root.children("tileset"))
-	{
-		string name = node.attribute("name").value();
-
-		string path = node.child("image").attribute("source").value();
-		char* cPath = new char[path.length() + 1];
-		memcpy(cPath, path.c_str(), path.length() + 1);
-
-		mapPath[name] = cPath;
-	}
-
-	//Thêm vào object list 
-	for (xml_node node : root.children("objectgroup"))
-	{
-		string name = node.attribute("name").value();
-		char* objectName = new char[name.length() + 1];
-		memcpy(objectName, name.c_str(), name.length() + 1); 
-		string path = "";
-		if (mapPath.count(name) != 0)
-			path = mapPath[name]; 
-		char* objectPath = new char[path.length() + 1];
-		memcpy(objectPath, path.c_str(), path.length() + 1); 
-		float anchorTransform = 0; 
-		for (xml_node object = node.first_child(); object; object = object.next_sibling())
-		{ 
-			GameObject* anObject = new GameObject(); 
-			anObject->set_width(atoi(object.attribute("width").value()));
-			anObject->set_height(atoi(object.attribute("height").value()));
-			if (name != "Ground" && name != "HorizontalBar" && name != "Rope" && name != "Wall")
-				anchorTransform = anObject->height();
-			//anchor point của ground , horizontalbar,.. là trái trên, còn lại là trái duoi1 nên
-			anObject->setPosition(atoi(object.attribute("x").value()), atoi(object.attribute("y").value())-anchorTransform); 
-			anObject->set_name(objectName); 
-			Sprite* sprite= new Sprite(objectPath, anObject->width(), anObject->height());
-			anObject->setSprite(sprite);
-			object_list->push_back(anObject);
-		}
-	} 
-}
 
 
 //the main game loop content

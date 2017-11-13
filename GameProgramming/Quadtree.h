@@ -15,8 +15,21 @@ private:
 	int m_level;
 	RECT* m_region;
 	std::list<GameObject*>* m_object_list;
-	Quadtree** m_nodes;
 
+public:
+	
+	std::list<GameObject*>* object_list() const
+	{
+		return m_object_list;
+	}
+
+	void set_object_list(std::list<GameObject*>* game_objects)
+	{
+		m_object_list = game_objects;
+	}
+
+private:
+	Quadtree** m_nodes;
 	bool IsContaining(GameObject* gameObject);
 	void Split();
 
@@ -26,7 +39,8 @@ public:
 	Quadtree();
 	Quadtree(int level, RECT* region);
 	~Quadtree();
-
+	int _count_test;
+	void PrintAll();
 	void Clear();
 	void Insert(GameObject* gameObject);
 	void Retrieve(std::list<GameObject*>* return_objects_list, GameObject* gameObject);
