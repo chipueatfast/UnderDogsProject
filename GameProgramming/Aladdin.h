@@ -5,7 +5,9 @@
 #include <vector>
 #include "GameObject.h"
 #include "StateManager.h"
+#include "Camera.h"
 #include <list>
+#include "dxaudio.h"
 
 #define CHARACTER_VX 0.2f
 
@@ -27,6 +29,7 @@ public:
 	AppleBullet(int x, int y, Face face);
 };
 
+
 class Aladdin : public GameObject
 {
 private:
@@ -43,8 +46,6 @@ public:
 	}
 	void CalSword();
 	void DelSword();
-
-
 
 private:
 	string _mainState, _subState, _handState;
@@ -92,6 +93,9 @@ public:
 
 private:
 	int _health;
+	int _invicibleTime;
+
+	CSound* _soundAladdinBeHitted;
 public:
 	Aladdin();
 	~Aladdin();
@@ -101,8 +105,8 @@ public:
 	void Init();
 	void PhysicUpdate(float t);
 	void GraphicUpdate(float t);
-	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true);
-	void DrawBullet(float);
+	//void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true);
+	void DrawBullet();
 
 	void setState(string newState);
 
@@ -115,11 +119,21 @@ public:
 
 	bool isLookRight() const
 	{
-		if (_curface == Face::RIGHT)
+		if (_curFace== Face::RIGHT)
 			return true;
 		return false;
 	}
+	void set_vx(float vx)
+	{
+		_vx = vx;
+		MyCamera::GetInstance()->setVx(vx);
+	}
 
+	void set_vy(float vy)
+	{
+		_vy = vy;
+		MyCamera::GetInstance()->setVy(vy);
+	}
 };
 
 

@@ -1,10 +1,11 @@
 #pragma once
-#include "GameObject.h"
-#include "AABB.h"
+class GameObject;
 
-namespace GroundPrefab
+class GroundPrefab
 {
-	void Instantiate(GameObject* object, int x, int y, int width, int height);
-}
-
+public:
+	static void Instantiate(GameObject*, float, float, int, int);
+	GroundPrefab();
+	~GroundPrefab();
+};
 

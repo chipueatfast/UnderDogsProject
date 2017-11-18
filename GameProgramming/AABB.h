@@ -3,14 +3,41 @@
 #ifndef _AABB_H
 #define _AABB_H
 #include"GameObject.h"
-RECT CalculateBoundingBox(int, int, int, int);
+enum Side
+{
+	LEFT,
+	RIGHT,
+	UP,
+	DOWN,
+	NONE
+};
+struct CollisionResult
+{
+	float _collisionIndex;
+	Side _collisionSide;
+};
+//RECT CalculateBoundingBox(int, int, int, int);
+RECT CalculateBoundingBox(float x, float y, int width, int height, AnchorPoint anchor);
 RECT GetSweptBroadphaseRect(const RECT&);
-float CheckCollision(GameObject*, GameObject*); //moving vs static
+
 bool SimpleIntersect(RECT* rect1, RECT* rect2);
+CollisionResult CheckCollision(GameObject*, GameObject*); //moving vs static
 class CollisionPair
 {
 private:
-	float _collisionIndex;
+	CollisionResult _collisionResult;
+public:
+	CollisionResult collisionResult() const
+	{
+		return _collisionResult;
+	}
+
+	void setCollisionResult(const CollisionResult& collisionResult)
+	{
+		_collisionResult = collisionResult;
+	}
+
+private:
 	GameObject* _obj1, *_obj2;
 
 public:
@@ -38,16 +65,6 @@ public:
 	~CollisionPair();
 	static bool IsIndentical(CollisionPair* cp1, CollisionPair* cp2);
 
-
-	float collision_index() const
-	{
-		return _collisionIndex;
-	}
-
-	void set_collision_index(float collision_index)
-	{
-		_collisionIndex = collision_index;
-	}
 
 
 };

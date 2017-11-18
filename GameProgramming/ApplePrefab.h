@@ -4,7 +4,7 @@ class GameObject;
 class ApplePrefab
 {
 public:
-	static void Instantiate(GameObject*, int, int);
+	static void Instantiate(GameObject*,float,float, int, int);
 	ApplePrefab();
 	~ApplePrefab();
 };

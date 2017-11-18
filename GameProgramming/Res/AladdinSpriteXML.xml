@@ -106,7 +106,7 @@
     <sprite x="392" y="640" w="70" h="32" oX="392" oY="640" oW="673" oH="513" />
     <sprite x="475" y="642" w="45" h="30" oX="475" oY="642" oW="673" oH="513" />
   </Animation>
-  <Animation name="IdleStartJump" imagePath="AladdinSprite.png" width="1121" height="2718">
+  <Animation name="IdleJump" imagePath="AladdinSprite.png" width="1121" height="2718">
     <sprite x="8" y="846" w="59" h="42" oX="8" oY="846" oW="888" oH="256" />
     <sprite x="75" y="828" w="52" h="61" oX="75" oY="828" oW="888" oH="256" />
     <sprite x="137" y="829" w="54" h="60" oX="137" oY="829" oW="888" oH="256" />
@@ -138,7 +138,7 @@
     <sprite x="887" y="926" w="37" h="51" oX="887" oY="926" oW="1030" oH="1048" />
     <sprite x="1000" y="928" w="36" h="49" oX="1000" oY="928" oW="1030" oH="1048" />
   </Animation>
-  <Animation name="RunStartJump" imagePath="AladdinSprite.png" width="1121" height="2718">
+  <Animation name="RunJump" imagePath="AladdinSprite.png" width="1121" height="2718">
     <sprite x="10" y="705" w="41" h="41" oX="10" oY="705" oW="736" oH="294" />
     <sprite x="66" y="683" w="45" h="75" oX="66" oY="683" oW="736" oH="294" />
     <sprite x="124" y="686" w="57" h="56" oX="124" oY="686" oW="736" oH="294" />

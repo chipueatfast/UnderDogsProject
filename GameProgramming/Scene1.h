@@ -8,18 +8,26 @@
 
 class Scene1: public Game
 {
-private:
+private: 
 	Aladdin* mainCharacter;
 	CSound* _soundJump;
+	CSound* _soundSlash;
+	CSound* _soundThrowApple;
+	CSound* _soundCollectApple;
+	CSound* _soundCamel;
+	CSound* _soundSpringBoard;
 	LPDIRECT3DSURFACE9 background;
-	LPDIRECT3DTEXTURE9 mapETC[2];
-	D3DXIMAGE_INFO* mapinfo;
-	RECT viewRect;
+	LPDIRECT3DTEXTURE9 mapETC;
+	RECT viewRect; 
+	//GameObject * testObject = new GameObject();//object duoi dang co xml
+	//GameObject * namObject = new GameObject();//object duoi dang chi co mot hinh anh
+	map<string, int> mapIdName;
 	virtual void CollisionDetect() override;
 	virtual void Key_Pressed(int KeyCode) override;
 	virtual void InputUpdate() override;
 	virtual void PhysicsUpdate(float) override;
 	virtual void GraphicUpdate(float t) override;
+	void LoadListObjectXml(char *xmlpath) ;
 public:
 	int Game_Init(HWND) override;
 	void Game_Run(HWND, int) override;

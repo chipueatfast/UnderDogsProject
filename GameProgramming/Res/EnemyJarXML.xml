@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Animations>
+  <Animation name="EnemyJarIdle" imagePath="Enemy2.png" width="391" height="609">
+    <sprite x="3" y="379" w="35" h="38" oX="3" oY="379" oW="422" oH="241" />
+    <sprite x="45" y="385" w="39" h="31" oX="45" oY="385" oW="422" oH="241" />
+    <sprite x="92" y="366" w="32" h="63" oX="92" oY="366" oW="422" oH="241" />
+    <sprite x="131" y="370" w="33" h="48" oX="131" oY="370" oW="422" oH="241" />
+    <sprite x="170" y="371" w="37" h="45" oX="170" oY="371" oW="422" oH="241" />
+    <sprite x="210" y="371" w="37" h="45" oX="210" oY="371" oW="422" oH="241" />
+    <sprite x="131" y="370" w="33" h="48" oX="131" oY="370" oW="422" oH="241" />
+    <sprite x="92" y="366" w="32" h="63" oX="92" oY="366" oW="422" oH="241" />
+    <sprite x="45" y="385" w="39" h="31" oX="45" oY="385" oW="422" oH="241" />
+  </Animation>
+  <Animation name="EnemyJarRun" imagePath="Enemy2.png" width="391" height="609">
+    <sprite x="4" y="447" w="52" h="45" oX="4" oY="447" oW="545" oH="338" />
+    <sprite x="63" y="442" w="44" h="45" oX="63" oY="442" oW="545" oH="338" />
+    <sprite x="110" y="436" w="43" h="50" oX="110" oY="436" oW="545" oH="338" />
+    <sprite x="158" y="435" w="38" h="50" oX="158" oY="435" oW="545" oH="338" />
+    <sprite x="201" y="434" w="38" h="50" oX="201" oY="434" oW="545" oH="338" />
+    <sprite x="247" y="436" w="38" h="48" oX="247" oY="436" oW="545" oH="338" />
+    <sprite x="291" y="434" w="54" h="45" oX="291" oY="434" oW="545" oH="338" />
+    <sprite x="10" y="501" w="43" h="47" oX="10" oY="501" oW="545" oH="338" />
+    <sprite x="62" y="496" w="43" h="51" oX="62" oY="496" oW="545" oH="338" />
+    <sprite x="110" y="494" w="38" h="52" oX="110" oY="494" oW="545" oH="338" />
+    <sprite x="157" y="493" w="38" h="52" oX="157" oY="493" oW="545" oH="338" />
+    <sprite x="206" y="496" w="38" h="49" oX="206" oY="496" oW="545" oH="338" />
+  </Animation>
+  <Animation name="EnemyJarSlash" imagePath="Enemy2.png" width="391" height="609">
+    <sprite x="2" y="563" w="35" h="38" oX="2" oY="563" oW="597" oH="166" />
+    <sprite x="48" y="563" w="35" h="39" oX="48" oY="563" oW="597" oH="166" />
+    <sprite x="92" y="561" w="49" h="39" oX="92" oY="561" oW="597" oH="166" />
+    <sprite x="146" y="561" w="60" h="39" oX="146" oY="561" oW="597" oH="166" />
+  </Animation>
+  <Animations>

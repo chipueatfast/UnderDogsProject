@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Animations>
+  <Animation name="aaa" imagePath="Enemy1.png" width="500" height="1096" />
+  <Animation name="EnemyThinBeaten" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="5" y="2" w="44" h="57" oX="5" oY="2" oW="-302" oH="396" />
+    <sprite x="56" y="9" w="40" h="47" oX="56" oY="9" oW="-302" oH="396" />
+    <sprite x="109" y="0" w="39" h="72" oX="109" oY="0" oW="-302" oH="396" />
+    <sprite x="154" y="2" w="41" h="67" oX="154" oY="2" oW="-302" oH="396" />
+    <sprite x="204" y="3" w="46" h="61" oX="204" oY="3" oW="-302" oH="396" />
+    <sprite x="256" y="2" w="42" h="70" oX="256" oY="2" oW="-302" oH="396" />
+    <sprite x="303" y="7" w="46" h="48" oX="303" oY="7" oW="-302" oH="396" />
+    <sprite x="355" y="7" w="40" h="47" oX="355" oY="7" oW="-302" oH="396" />
+  </Animation>
+  <Animation name="EnemyThinRun" imagePath="Enemy1.png" width="500" height="1096" />
+  <Animation name="EnemyThinSlash" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="7" y="77" w="36" h="74" oX="7" oY="77" oW="288" oH="480" />
+    <sprite x="53" y="88" w="49" h="60" oX="53" oY="88" oW="288" oH="480" />
+    <sprite x="120" y="83" w="91" h="57" oX="120" oY="83" oW="288" oH="480" />
+    <sprite x="225" y="82" w="85" h="58" oX="225" oY="82" oW="288" oH="480" />
+    <sprite x="333" y="77" w="76" h="59" oX="333" oY="77" oW="288" oH="480" />
+    <sprite x="442" y="77" w="40" h="59" oX="442" oY="77" oW="288" oH="480" />
+    <sprite x="9" y="236" w="45" h="66" oX="9" oY="236" oW="288" oH="480" />
+  </Animation>
+  <Animation name="EnemyThinRun" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="11" y="159" w="44" h="66" oX="11" oY="159" oW="203" oH="394" />
+    <sprite x="62" y="158" w="45" h="65" oX="62" oY="158" oW="203" oH="394" />
+    <sprite x="112" y="156" w="45" h="64" oX="112" oY="156" oW="203" oH="394" />
+    <sprite x="257" y="154" w="42" h="66" oX="257" oY="154" oW="203" oH="394" />
+    <sprite x="165" y="153" w="44" h="64" oX="165" oY="153" oW="203" oH="394" />
+    <sprite x="356" y="152" w="35" h="64" oX="356" oY="152" oW="203" oH="394" />
+    <sprite x="301" y="152" w="49" h="66" oX="301" oY="152" oW="203" oH="394" />
+    <sprite x="213" y="148" w="36" h="65" oX="213" oY="148" oW="203" oH="394" />
+  </Animation>
+  <Animation name="EnemyThinIdle" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="5" y="2" w="44" h="57" oX="5" oY="2" oW="48" oH="44" />
+  </Animation>
+ </Animations>

@@ -4,6 +4,7 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include "dxgraphics.h"
+
 //variable declarations
 LPDIRECT3D9 d3d = NULL;
 LPDIRECT3DDEVICE9 d3ddev = NULL;
@@ -57,7 +58,7 @@ int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 
 	// create default matrix
 	D3DXMATRIX rota, trans, scale;
-	D3DXMatrixScaling(&scale, 1, 1, 1);
+	D3DXMatrixScaling(&scale, SCALE_RATE, SCALE_RATE, 1);
 	D3DXMatrixTranslation(&trans, 0, 0, 0);
 	D3DXMatrixRotationX(&rota, 0);
 

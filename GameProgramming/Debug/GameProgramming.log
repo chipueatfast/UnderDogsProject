@@ -1,5 +1,16 @@
 ﻿  Scene1.cpp
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(289): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemythinprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\gameobjectmove.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemymusprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemyfatprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemyjugprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemyjarprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\camelprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(94): warning C4244: 'argument': conversion from 'UINT' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(479): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(481): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(562): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.exe
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.pdb (Partial PDB)

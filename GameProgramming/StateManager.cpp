@@ -1,10 +1,7 @@
 #include "StateManager.h"
 
 
-State StateManager::GetStateByCode(string stateCode)
-{
-	return _mapState[(_dictState[stateCode])];
-}
+
 
 StateManager::StateManager()
 {
@@ -59,3 +56,10 @@ void StateManager::setState(string stateCode)
 	}
 
 }
+
+
+State StateManager::getStateByCode(string stateCode)
+{
+	return _mapState[(_dictState[stateCode])];
+}
+

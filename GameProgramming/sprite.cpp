@@ -26,7 +26,7 @@ Sprite::Sprite(LPCSTR FilePath, int Width, int Height)
 		D3DPOOL_DEFAULT,
 		D3DX_DEFAULT,
 		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(234, 0, 255),
+		D3DCOLOR_XRGB(255, 0, 234),
 		&info,
 		NULL,
 		&_image

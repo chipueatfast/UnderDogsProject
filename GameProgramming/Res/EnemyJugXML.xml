@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Animations>
+<Animation name="EnemyJugIdle" imagePath="Enemy2.png" width="391" height="609">
+    <sprite x="5" y="188" w="47" h="80" oX="5" oY="188" oW="258" oH="353" />
+    <sprite x="65" y="183" w="46" h="85" oX="65" oY="183" oW="258" oH="353" />
+    <sprite x="132" y="185" w="38" h="81" oX="132" oY="185" oW="258" oH="353" />
+    <sprite x="184" y="186" w="50" h="77" oX="184" oY="186" oW="258" oH="353" />
+    <sprite x="243" y="187" w="63" h="77" oX="243" oY="187" oW="258" oH="353" />
+    <sprite x="315" y="193" w="54" h="67" oX="315" oY="193" oW="258" oH="353" />
+  </Animation>
+  <Animation name="EnemyJugSlash1" imagePath="Enemy2.png" width="391" height="609">
+    <sprite x="1" y="278" w="54" h="79" oX="1" oY="278" oW="344" oH="177" />
+    <sprite x="63" y="273" w="49" h="84" oX="63" oY="273" oW="344" oH="177" />
+    <sprite x="128" y="276" w="62" h="79" oX="128" oY="276" oW="344" oH="177" />
+  </Animation>
+  <Animation name="EnemyJugSlash2" imagePath="Enemy2.png" width="391" height="609">
+    <sprite x="1" y="278" w="54" h="79" oX="1" oY="278" oW="344" oH="301" />
+    <sprite x="63" y="273" w="49" h="84" oX="63" oY="273" oW="344" oH="301" />
+    <sprite x="196" y="276" w="47" h="77" oX="196" oY="276" oW="344" oH="301" />
+    <sprite x="251" y="272" w="60" h="77" oX="251" oY="272" oW="344" oH="301" />
+  </Animation> 
+  <Animations>

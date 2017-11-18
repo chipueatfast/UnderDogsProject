@@ -17,7 +17,7 @@ private:
 	std::list<GameObject*>* m_object_list;
 
 public:
-	
+
 	std::list<GameObject*>* object_list() const
 	{
 		return m_object_list;
@@ -35,7 +35,7 @@ private:
 
 
 public:
-	static Quadtree* CreateQuadtree(int, int);
+	static Quadtree* CreateQuadtree(int, int, int, int);
 	Quadtree();
 	Quadtree(int level, RECT* region);
 	~Quadtree();

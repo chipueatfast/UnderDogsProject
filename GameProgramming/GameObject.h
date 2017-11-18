@@ -23,11 +23,13 @@ class GameObject
 {
 protected:
 	StateManager* _stateManager;
+	Sprite* _boundingRect;
 
 public:
-	RECT GetBoundingBox(string stateCode);
 
-	void UpdateAnimate(bool isRepeating, float deltaTime);
+	D3DXVECTOR3 CalPositon(AnchorPoint anchor);
+
+
 	StateManager* state_manager() const
 	{
 		return _stateManager;
@@ -35,8 +37,10 @@ public:
 
 	void set_state_manager(StateManager* state_manager)
 	{
+		
 		_stateManager = state_manager;
 	}
+
 
 	enum Face
 	{
@@ -45,27 +49,24 @@ public:
 	};
 	Face curface() const
 	{
-		return _curface;
+		return _curFace;
 	}
 
-	void set_curface(Face face)
+	void set_curFace(Face face)
 	{
-		_curface = face;
+		_curFace = face;
 	}
 
 protected:
-	Face _curface, _lastface;
+	Face _curFace, _lastFace;
 	Sprite* _sprite;
-public:
-	Sprite* sprite() const
-	{
-		return _sprite;
-	}
-
-protected:
 	int _width, _height;
 	float _vx, _vy;
+
 public:
+
+
+
 	float vx() const
 	{
 		return _vx;
@@ -96,17 +97,19 @@ public:
 	{
 		_boundingBox = tag_rect;
 	}
-	char * get_name() const
+	string get_name() const
 	{
 		return _name;
 	}
-	void set_name(char* name)
+	//Add code NamLe
+	void set_name(string name)
 	{
 		_name = name;
 	}
 	 
 protected:
-	char *_name; 
+	//Add code NamLe
+	string _name; 
 	RECT _boundingBox;
 	D3DXVECTOR3 _position;
 	D3DXVECTOR2 _scale;
@@ -128,7 +131,7 @@ public:
 protected:
 	D3DXVECTOR3 _anchorPoint;
 	int _index;
-	float _animadelay, _animaCount;
+	float _animaDelay, _animaCount;
 
 public:
 
@@ -163,22 +166,30 @@ public:
 		return _position.y;
 	}
 	bool CheckFlip();
-	D3DXVECTOR3 getPosition();
+	D3DXVECTOR3 Position();
 	void setPosition(D3DXVECTOR3 vec3);
-	virtual void setPosition(float x, float y);
-	D3DXVECTOR3 CalPositon(AnchorPoint anchor);
-	D3DXVECTOR3 CalAnchorPoint(AnchorPoint type);
+	void setPosition(float x, float y);
 	void setScale(D3DXVECTOR2 scale);
 	void setAngle(float angle);
 	void setTranslation(D3DXVECTOR2 vec);
+	
 	void Flip();
-	void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true) ;
+	virtual void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true) ;
 	void Update(float t);
+	//Add code
+	virtual void GraphicUpdate(float t);
 	void Next();
-	void Next2(); // ko rs _index;
+	void Next2(); // ko rs _index; 
+	void Reset();
+	void set_state(string newState);
+	void Transform(bool isRotation, bool isScale, bool isTranslation); // apply matrix transform vao spriteHandler
+	void UpdateAnimate(bool isRepeating);
+	void RenderBounding(D3DCOLOR color = D3DCOLOR_ARGB(0,255,255,255) , bool isRotation = false, bool isScale = false, bool isTranslation = true);
 protected:
 	void CalAnchorPoint(); // tinh lai gia tri anchor cua class
-	void Transform(bool isRotation, bool isScale, bool isTranslation); // apply matrix transform vao spriteHandler
+	D3DXVECTOR3 CalAnchorPoint(AnchorPoint type); // tra ve anchorpoint theo type truyen vao
+	RECT getBoundingBox(string stateCode);
+
 };
 
 #endif // ! _GAME_OBJECT_H_

@@ -8,26 +8,29 @@
 #include "d3d9.h"
 #include "d3dx9.h"
 
-class MyCamera
+class MyCamera : public GameObject
 {
 private:
 	static MyCamera* _instance;
-	int _width, _height;
 	RECT _viewRect;
-	D3DXVECTOR3 _position;
 	bool _isStop = true;
-	float _vx, _vy;
+	float _distanceUpDown;
+	
 	long _curMapWidth, _curMapHeight;
-	float _additonDis;
-
+ 	 
 public:
 
 
-	void setPosition(const D3DXVECTOR3& position)
+	long curMapWidth() const
 	{
-		_position = position;
+		return _curMapWidth;
 	}
 
+	long curMapHeight() const
+	{
+		return _curMapHeight;
+	}
+	 
 	void setCurMapWidth(long curMapWidth)
 	{
 		_curMapWidth = curMapWidth;
@@ -42,15 +45,16 @@ public:
 	void Update(float t);
 	~MyCamera();
 	static MyCamera* GetInstance();
-	D3DXVECTOR3 Position();
+
 	RECT View();
 	void Stop() { _vx = 0; }
 	void Move() { _isStop = false; }
-	void LookUp();
+	void LookUp(float t,bool toNormal);
+	void LookDown(float t, bool toNormal);
 public:
 	float vx() const
 	{
-		return _vx;// *(1 + FRICTION);
+		return _vx;//*(1 + FRICTION);
 	}
 
 	void setVx(float vx)
@@ -60,12 +64,18 @@ public:
 
 	float vy() const
 	{
-		return _vy;
+		return _vy; 
 	}
 
 	void setVy(float vy)
 	{
 		_vy = vy;
 	}
+
+	float getDistanceUpDown()
+	{
+		return _distanceUpDown;
+	}
+
 };
 #endif

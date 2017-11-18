@@ -1,12 +1,22 @@
 #include "GroundPrefab.h"
+#include "GameObject.h"
 
-void GroundPrefab::Instantiate(GameObject* object, int x, int y, int width, int height)
+
+void GroundPrefab::Instantiate(GameObject* gameObject, float x, float y, int width, int height)
 {
-	object->set_name("ground");
-	object->setPosition(x, y);
-	object->set_height(height);
-	object->set_width(width);
-	object->set_bounding_box(CalculateBoundingBox(x, y, width, height));
-	//object->setSprite(nullptr);
-	return;
+	gameObject->set_name("Ground");
+	gameObject->setPosition(x, y);
+	gameObject->setSprite(new Sprite("Res\\Ground.png", width, height));
+	/*gameObject->set_state_manager(new StateManager("Res\\Ground.xml"));
+	gameObject->state_manager()->AddToDictState("000", "Ground");
+	gameObject->state_manager()->setState("000");*/
+}
+
+GroundPrefab::GroundPrefab()
+{
+}
+
+
+GroundPrefab::~GroundPrefab()
+{
 }

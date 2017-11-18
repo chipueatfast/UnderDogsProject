@@ -1,0 +1,40 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <Animations>
+ <Animation name="EnemyFatIdle" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="2" y="921" w="37" h="43" oX="2" oY="921" oW="959" oH="333" />
+    <sprite x="48" y="918" w="40" h="49" oX="48" oY="918" oW="959" oH="333" />
+    <sprite x="96" y="920" w="34" h="45" oX="96" oY="920" oW="959" oH="333" />
+    <sprite x="141" y="919" w="37" h="43" oX="141" oY="919" oW="959" oH="333" />
+    <sprite x="183" y="918" w="54" h="45" oX="183" oY="918" oW="959" oH="333" />
+    <sprite x="239" y="912" w="52" h="51" oX="239" oY="912" oW="959" oH="333" />
+    <sprite x="300" y="914" w="40" h="48" oX="300" oY="914" oW="959" oH="333" />
+  </Animation> 
+  <Animation name="EnemyFatBeaten" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="2" y="975" w="55" h="51" oX="2" oY="975" oW="1026" oH="345" />
+    <sprite x="59" y="974" w="54" h="50" oX="59" oY="974" oW="1026" oH="345" />
+    <sprite x="118" y="973" w="51" h="49" oX="118" oY="973" oW="1026" oH="345" />
+    <sprite x="173" y="970" w="55" h="49" oX="173" oY="970" oW="1026" oH="345" />
+    <sprite x="233" y="972" w="65" h="47" oX="233" oY="972" oW="1026" oH="345" />
+    <sprite x="299" y="968" w="69" h="64" oX="299" oY="968" oW="1026" oH="345" />
+    <sprite x="299" y="968" w="69" h="64" oX="299" oY="968" oW="1026" oH="345" />
+    <sprite x="77" y="725" w="42" h="49" oX="77" oY="725" oW="1026" oH="345" />
+  </Animation>
+  <Animation name="EnemyFatRun" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="13" y="790" w="36" h="51" oX="13" oY="790" oW="823" oH="342" />
+    <sprite x="57" y="787" w="34" h="49" oX="57" oY="787" oW="823" oH="342" />
+    <sprite x="99" y="790" w="36" h="46" oX="99" oY="790" oW="823" oH="342" />
+    <sprite x="137" y="782" w="38" h="54" oX="137" oY="782" oW="823" oH="342" />
+    <sprite x="179" y="780" w="43" h="59" oX="179" oY="780" oW="823" oH="342" />
+    <sprite x="226" y="784" w="38" h="54" oX="226" oY="784" oW="823" oH="342" />
+    <sprite x="272" y="789" w="36" h="47" oX="272" oY="789" oW="823" oH="342" />
+    <sprite x="317" y="787" w="33" h="50" oX="317" oY="787" oW="823" oH="342" />
+  </Animation>
+  <Animation name="EnemyFatSlash" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="5" y="854" w="55" h="57" oX="5" oY="854" oW="921" oH="293" />
+    <sprite x="62" y="854" w="36" h="55" oX="62" oY="854" oW="921" oH="293" />
+    <sprite x="118" y="859" w="60" h="49" oX="118" oY="859" oW="921" oH="293" />
+    <sprite x="181" y="863" w="45" h="43" oX="181" oY="863" oW="921" oH="293" />
+    <sprite x="232" y="855" w="32" h="51" oX="232" oY="855" oW="921" oH="293" />
+    <sprite x="77" y="725" w="42" h="49" oX="77" oY="725" oW="921" oH="293" />
+  </Animation>
+</Animations>

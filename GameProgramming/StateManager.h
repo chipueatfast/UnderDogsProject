@@ -11,7 +11,6 @@ private:
 	State _curState;
 	int _lifeSpan;
 public:
-	State GetStateByCode(string stateCode);
 	int life_span() const
 	{
 		return _lifeSpan;
@@ -54,6 +53,7 @@ public:
 	void AddToDictState(string key, string data);
 	StateManager(char* xmlpath);
 	void setState(string stateCode);
+	State getStateByCode(string stateCode);
 };
 
 #endif // !_STATE_MANAGER_H_

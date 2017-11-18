@@ -32,7 +32,7 @@ Quadtree::~Quadtree()
 
 void Quadtree::PrintAll()
 {
-	if(m_nodes)
+	if (m_nodes)
 	{
 		for (int i = 0; i<4; i++)
 		{
@@ -42,15 +42,15 @@ void Quadtree::PrintAll()
 		_count_test++;
 		return;
 	}
-	
+
 }
 
 void Quadtree::Clear()
 {
 	//Clear all nodes
-	if(m_nodes!= nullptr)
+	if (m_nodes != nullptr)
 	{
-		for (int i=0; i<4; i++)
+		for (int i = 0; i<4; i++)
 		{
 			if (m_nodes[i] != nullptr)
 			{
@@ -79,7 +79,7 @@ bool Quadtree::IsContaining(GameObject* gameObject)
 
 RECT* initialize(int left, int right, int top, int bottom)
 {
-	RECT* temp_rect= new RECT();
+	RECT* temp_rect = new RECT();
 
 	temp_rect->left = left;
 	temp_rect->right = right;
@@ -92,11 +92,11 @@ void Quadtree::Split()
 {
 	m_nodes = new Quadtree*[4]();
 	m_nodes[0] = new Quadtree(m_level + 1, initialize(m_region->left, m_region->right / 2, m_region->top, m_region->bottom / 2));
-	
+
 	m_nodes[1] = new Quadtree(m_level + 1, initialize(m_region->right / 2, m_region->right, m_region->top, m_region->bottom / 2));
-	
+
 	m_nodes[2] = new Quadtree(m_level + 1, initialize(m_region->right / 2, m_region->right, m_region->bottom / 2, m_region->bottom));
-	
+
 	m_nodes[3] = new Quadtree(m_level + 1, initialize(m_region->left, m_region->right / 2, m_region->bottom / 2, m_region->bottom));
 
 }
@@ -106,7 +106,7 @@ void Quadtree::Insert(GameObject* gameObject)
 	//Insert gameobject into corresponding nodes
 	if (m_nodes)
 	{
-		for (int i=0; i<4; i++)
+		for (int i = 0; i<4; i++)
 		{
 			//m_nodes[i] = new Quadtree();
 			if (m_nodes[i]->IsContaining(gameObject))
@@ -140,15 +140,15 @@ void Quadtree::Insert(GameObject* gameObject)
 		}
 	}
 
-		
+
 }
 void Quadtree::Retrieve(std::list<GameObject*>* return_objects_list, GameObject* gameObject)
 {
 	if (m_nodes)
 	{
-		for(int  i=0; i<4; i++)
+		for (int i = 0; i<4; i++)
 		{
-			if(m_nodes[i]!=nullptr)
+			if (m_nodes[i] != nullptr)
 				if (m_nodes[i]->IsContaining(gameObject))
 					m_nodes[i]->Retrieve(return_objects_list, gameObject);
 		}
@@ -164,12 +164,12 @@ void Quadtree::Retrieve(std::list<GameObject*>* return_objects_list, GameObject*
 		}
 
 	}
-	
+
 }
 
-Quadtree* Quadtree::CreateQuadtree(int width, int height)
+Quadtree* Quadtree::CreateQuadtree(int x1, int y1, int width, int height)
 {
-	Quadtree* quadtree = new Quadtree(0, initialize(0, width, 0, height));
+	Quadtree* quadtree = new Quadtree(0, initialize(x1, width, y1, height));
 	std::list<GameObject*>* gameobject_list = GameManager::GetInstance()->GetCurrentScene()->game_object_list();
 	for (auto i = gameobject_list->begin(); i != gameobject_list->end(); i++)
 	{
