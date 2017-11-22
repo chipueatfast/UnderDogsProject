@@ -11,6 +11,8 @@
 #include "GameObject.h"
 #include <list>
 #include "Quadtree.h"
+#include "GameObjectMove.h"
+#include "WeaponObject.h"
 
 //application title
 #define APPTITLE "FrameworkStage"
@@ -22,7 +24,7 @@
 #define KEY_PRESSED(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 
 #define KEY_DOWN(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
 #define KEY_UP(vk_code)((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0)
-#define FIXED_TIME 100
+#define FIXED_TIME 1
 //function prototypes
 class Game
 {
@@ -30,7 +32,10 @@ protected:
 	CSound* _soundTheme;
 	D3DXIMAGE_INFO* mapinfo;
 
+	list<GameObjectMove*>* _healthHavingList;
 	list<GameObject*>* _gameObjectList;
+	list<GameObject*>* _onScreenList;
+	list<GameObject*>* _disposableList;
 public:
 	list<GameObject*>* game_object_list() const
 	{
@@ -47,6 +52,8 @@ protected:
 	void ProcessKeyboard(); //for making action by pressing (not hold) button, a part of input update
 
 	virtual list<GameObject*>* OnScreenDetect();
+	
+	virtual void DisposablePhysicUpdate(float);
 	virtual void CollisionDetect();
 	virtual void Key_Pressed(int KeyCode);
 	virtual void InputUpdate();

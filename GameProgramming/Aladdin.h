@@ -8,14 +8,17 @@
 #include "Camera.h"
 #include <list>
 #include "dxaudio.h"
+#include "GameObjectMove.h"
 
-#define CHARACTER_VX 0.2f
+#define CHARACTER_VX 20
 
 using namespace std;
 class AppleBullet : public GameObject
 {
 	bool _isPopping;
+	
 public:
+	
 	bool is_popping() const
 	{
 		return _isPopping;
@@ -30,27 +33,28 @@ public:
 };
 
 
-class Aladdin : public GameObject
+class Aladdin : public GameObjectMove
 {
-private:
-	RECT* _sword;
-public:
-	RECT* sword() const
-	{
-		return _sword;
-	}
 
-	void set_sword(RECT* tag_rect)
-	{
-		_sword = tag_rect;
-	}
-	void CalSword();
-	void DelSword();
 
 private:
-	string _mainState, _subState, _handState;
+	
 	list<AppleBullet*>* _bulletList;
+	int _appleCount;
+	CSound* _soundAppleEmty;
+	CSound* _soundThrowApple;
+	bool _isClimbing = false;
 public:
+	int appleCount() const
+	{
+		return _appleCount;
+	}
+
+	void setAppleCount(int appleCount)
+	{
+		_appleCount = appleCount;
+	}
+
 	list<AppleBullet*>* bullet_list() const
 	{
 		return _bulletList;
@@ -61,61 +65,47 @@ public:
 		_bulletList = apple_bullets;
 	}
 
-	string hand_state() const
-	{
-		return _handState;
-	}
-
-	void set_hand_state(const string& cs)
-	{
-		_handState = cs;
-	}
-
-	string main_state() const
-	{
-		return _mainState;
-	}
-
-	void set_main_state(const string& cs)
-	{
-		_mainState = cs;
-	}
-
-	string sub_state() const
-	{
-		return _subState;
-	}
-
-	void set_sub_state(const string& cs)
-	{
-		_subState = cs;
-	}
+	
 
 private:
 	int _health;
 	int _invicibleTime;
 
-	CSound* _soundAladdinBeHitted;
+	CSound* _soundAladdinBeBeaten;
 public:
 	Aladdin();
 	~Aladdin();
 
+	RECT NextBounding();
+	 
+
+	bool isClimbing() const
+	{
+		return _isClimbing;
+	}
+
+	void setIsClimbing(bool isClimbing)
+	{
+		_isClimbing = isClimbing;
+	}
 	void FireApple();
 
 	void Init();
-	void PhysicUpdate(float t);
-	void GraphicUpdate(float t);
+	void PhysicUpdate(float t) override;
+	void GraphicUpdate(float t) override;
 	//void Render(bool isRotation = false, bool isScale = false, bool isTranslation = true);
 	void DrawBullet();
 
 	void setState(string newState);
 
 	void Reset();
-	void BeHitted();
+	void BeBeaten();
 	string CurrentState();
 
 	void Run();
-	void Stop() { _vx = 0; };
+	void StopX() { _vx = 0; };
+	void StopY() { _vy = 0; };
+
 
 	bool isLookRight() const
 	{

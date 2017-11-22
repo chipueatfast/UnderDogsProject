@@ -54,50 +54,10 @@ list<GameObject*>* Game::OnScreenDetect()
 	
 }
 
-//void Game::LoadListObjectXml(char* xmlpath)
-//{
-//	xml_document fileXml;
-//	xml_parse_result result = fileXml.load_file(xmlpath);
-//	xml_node root = fileXml.child("map");
-//	map<string, char* > mapPath;
-//	for (xml_node node : root.children("tileset"))
-//	{
-//		string name = node.attribute("name").value();
-//
-//		string path = node.child("image").attribute("source").value();
-//		char* cPath = new char[path.length() + 1];
-//		memcpy(cPath, path.c_str(), path.length() + 1);
-//
-//		mapPath[name] = cPath;
-//	}
-//
-//
-//	for (xml_node node : root.children("objectgroup"))
-//	{
-//		string name = node.attribute("name").value();
-//		char* objectName = new char[name.length() + 1];
-//		memcpy(objectName, name.c_str(), name.length() + 1);
-//		string path = "";
-//		if (mapPath.count(name) != 0)
-//			path = mapPath[name];
-//		char* objectPath = new char[path.length() + 1];
-//		memcpy(objectPath, path.c_str(), path.length() + 1);
-//		float anchorTransform = 0;
-//		for (xml_node object = node.first_child(); object; object = object.next_sibling())
-//		{
-//			GameObject* anObject = new GameObject();
-//			anObject->set_width(atoi(object.attribute("width").value()));
-//			anObject->set_height(atoi(object.attribute("height").value()));
-//			if (name != "Ground" && name != "HorizontalBar" && name != "Rope" && name != "Wall")
-//				anchorTransform = anObject->height();
-//			anObject->setPosition(atoi(object.attribute("x").value()), atoi(object.attribute("y").value()) - anchorTransform);
-//			anObject->set_name(name);
-//			Sprite* sprite = new Sprite(objectPath, anObject->width(), anObject->height());
-//			anObject->setSprite(sprite);
-//			_gameObjectList->push_back(anObject);
-//		}
-//	}
-//}
+void Game::DisposablePhysicUpdate(float)
+{
+}
+
 
 void Game::CollisionDetect()
 {

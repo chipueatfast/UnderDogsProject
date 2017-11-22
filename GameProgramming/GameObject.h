@@ -24,8 +24,12 @@ class GameObject
 protected:
 	StateManager* _stateManager;
 	Sprite* _boundingRect;
-
+	bool _isRepeating = true;
 public:
+	void setIsRepeating(bool isRepeating)
+	{
+		_isRepeating = isRepeating;
+	}
 
 	D3DXVECTOR3 CalPositon(AnchorPoint anchor);
 
@@ -61,29 +65,29 @@ protected:
 	Face _curFace, _lastFace;
 	Sprite* _sprite;
 	int _width, _height;
-	float _vx, _vy;
+	int _vx, _vy;
 
 public:
 
 
 
-	float vx() const
+	int vx() const
 	{
 		return _vx;
 	}
 
 
-	void set_vx(float vx)
+	void set_vx(int vx)
 	{
 		_vx = vx;
 	}
 
-	float vy() const
+	int vy() const
 	{
 		return _vy;
 	}
 
-	void set_vy(float vy)
+	void set_vy(int vy)
 	{
 		_vy = vy;
 	}
@@ -116,7 +120,16 @@ protected:
 	D3DXVECTOR2 _translation;
 	float _angle;
 	AnchorPoint _anchor;
+	bool _isVisible = true;
 public:
+	void setVisible(bool isVisible)
+	{
+		_isVisible = isVisible;
+	}
+	bool Visbile()
+	{
+		return _isVisible;
+	}
 	AnchorPoint anchor() const
 	{
 		return _anchor;
@@ -134,6 +147,10 @@ protected:
 	float _animaDelay, _animaCount;
 
 public:
+	void setAnimaDelay(float animaDelay)
+	{
+		_animaDelay = animaDelay;
+	}
 
 	int width() const
 	{
@@ -183,7 +200,7 @@ public:
 	void Reset();
 	void set_state(string newState);
 	void Transform(bool isRotation, bool isScale, bool isTranslation); // apply matrix transform vao spriteHandler
-	void UpdateAnimate(bool isRepeating);
+	void UpdateAnimate();
 	void RenderBounding(D3DCOLOR color = D3DCOLOR_ARGB(0,255,255,255) , bool isRotation = false, bool isScale = false, bool isTranslation = true);
 protected:
 	void CalAnchorPoint(); // tinh lai gia tri anchor cua class

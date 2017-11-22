@@ -223,7 +223,7 @@
     <sprite x="181" y="1563" w="40" h="87" oX="181" oY="1563" oW="1625" oH="282" />
     <sprite x="236" y="1562" w="38" h="87" oX="236" oY="1562" oW="1625" oH="282" />
   </Animation>
-  <Animation name="ClimbStartJump" imagePath="AladdinSprite.png" width="1121" height="2718">
+  <Animation name="ClimbJump" imagePath="AladdinSprite.png" width="1121" height="2718">
     <sprite x="10" y="1870" w="34" h="72" oX="10" oY="1870" oW="1918" oH="123" />
     <sprite x="65" y="1873" w="24" h="76" oX="65" oY="1873" oW="1918" oH="123" />
     <sprite x="100" y="1874" w="36" h="70" oX="100" oY="1874" oW="1918" oH="123" />

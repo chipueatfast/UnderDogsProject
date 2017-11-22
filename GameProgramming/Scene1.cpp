@@ -24,10 +24,11 @@
 
 #include "FloatGroundPrefab.h"
 #include "SpringBoardPrefab.h"
+#include "BulletPrefab.h"
 
 
-#define GRAVITY 0.1f
-#define JUMP_FORCE -0.5f
+#define GRAVITY 10
+#define JUMP_FORCE -55
 
 
 
@@ -43,6 +44,9 @@ int Scene1::Game_Init(HWND hwnd)
 {
 	//init sound files
 	_gameObjectList = new list<GameObject*>();
+	_onScreenList = new list<GameObject*>();
+	_healthHavingList = new list<GameObjectMove*>();
+	_disposableList = new list<GameObject*>();
 	LoadListObjectXml("Res/Scene1XML.xml"); 
 	//LoadListObjectXml("Res/AgrabahMarketMap.xml");
 	mapIdName["Apple"] = 0;
@@ -58,18 +62,21 @@ int Scene1::Game_Init(HWND hwnd)
 	mapIdName["EnemyFat"] = 13;
 	mapIdName["EnemyJug"] = 14;
 	mapIdName["EnemyJar"] = 15;
+	mapIdName["ParabolKnife"] = 16;
+	mapIdName["StraightKnife"] = 17;
 #pragma region Sound
-	//_soundTheme = LoadSound("Res/Audio/LifeCollect.wave");
-	//_soundJump = LoadSound("Cuica-1.wave");
-	//_soundSlash = LoadSound("Res/Audio/IdleDownSplash.wave");
-	//_soundThrowApple = LoadSound("Res/Audio/AppleThrow.wave");
-	//_soundCollectApple = LoadSound("Res/Audio/AppleCollect.wave");
-	//_soundCamel = LoadSound("Res/Audio/Camel.wave");
-	//_soundSpringBoard = LoadSound("Res/Audio/SpringBroad.wave");
+	_soundTheme = LoadSound("Res/Audio/LifeCollect.wave");
+	_soundJump = LoadSound("Cuica-1.wave");
+	_soundSlash = LoadSound("Res/Audio/IdleDownSplash.wave");
+	
+	_soundCollectApple = LoadSound("Res/Audio/AppleCollect.wave");
+	_soundCamel = LoadSound("Res/Audio/Camel.wave");
+	_soundSpringBoard = LoadSound("Res/Audio/SpringBroad.wave");
+	_soundAppleCollision = LoadSound("Res/Audio/AppleThrowCollision.wave");
 #pragma endregion
-	//if (_soundTheme == NULL)
-	//	return 0;
-	////_soundTheme->Play(0, DSBPLAY_LOOPING);
+	if (_soundTheme == NULL)
+		return 0;
+	//_soundTheme->Play(0, DSBPLAY_LOOPING);
 
 	//initialize keyboard 
 	if (!Init_Keyboard(hwnd))
@@ -106,17 +113,30 @@ void Scene1::Key_Pressed(int KeyCode)
 		break;
 	case DIK_X:
 		mainCharacter->set_hand_state("2");
+		_soundSlash->Play();
 		break;
 	case DIK_C:
 		mainCharacter->set_hand_state("1");
 		mainCharacter->FireApple();
+		
 		break;
 	case DIK_Z:
 		if (mainCharacter->sub_state() != "1" && mainCharacter->sub_state() != "2")
 		{
 			mainCharacter->set_sub_state("2");
+			mainCharacter->setIsClimbing(false);
+
 			mainCharacter->set_vy(JUMP_FORCE);
+			/*	if (mainCharacter->main_state() == "4")
+			{
+			if (mainCharacter->vy() == 0)
+			{
+			MyCamera::GetInstance()->set_vy(0);
+			}
+			}*/
 		}
+		break;
+
 		break;
 
 	}
@@ -126,196 +146,272 @@ void Scene1::InputUpdate()
 {
 	Poll_Keyboard();
 	ProcessKeyboard();
+
 	if (Key_Hold(DIK_UP))
 	{
+		if (mainCharacter->main_state() == "4")
+		{
+			mainCharacter->set_vy(-CHARACTER_VX);
+			return;
+		}
+
 		mainCharacter->set_main_state("2");
-		mainCharacter->Stop();
-		MyCamera::GetInstance()->Stop();
+		mainCharacter->StopX();
+		MyCamera::GetInstance()->StopX();
 		return;
+
 	};
+
 	if (Key_Hold(DIK_DOWN))
 	{
-		mainCharacter->Stop();
-		MyCamera::GetInstance()->Stop();
+		if (mainCharacter->main_state() == "4")
+		{
+			mainCharacter->set_vy(CHARACTER_VX);
+			return;
+		}
+		mainCharacter->StopX();
+		MyCamera::GetInstance()->StopX();
 		mainCharacter->set_main_state("3");
 		return;
 	}
+
 	if (Key_Hold(DIK_LEFT))
 	{
-		mainCharacter->set_main_state("1");
-		mainCharacter->set_vx(-CHARACTER_VX);
-		MyCamera::GetInstance()->setVx(mainCharacter->vx());
+		if (mainCharacter->main_state() != "4")
+		{
+			mainCharacter->set_main_state("1");
+		}
+
+		if (mainCharacter->isClimbing() == false)
+			mainCharacter->set_vx(-CHARACTER_VX);
+		else
+			mainCharacter->set_vx(0);
 		return;
 	}
 	if (Key_Hold(DIK_RIGHT))
 	{
-		mainCharacter->set_main_state("1");
-		mainCharacter->set_vx(CHARACTER_VX);
-		MyCamera::GetInstance()->setVx(mainCharacter->vx());
+		if (mainCharacter->main_state() != "4")
+		{
+			mainCharacter->set_main_state("1");
+		}
+		if (mainCharacter->isClimbing() == false)
+			mainCharacter->set_vx(CHARACTER_VX);
+		else
+			mainCharacter->set_vx(0);
 		return;
 	}
 	if (Key_Hold(DIK_Z))
 	{
 		return;
 	}
-	mainCharacter->set_main_state("0");
-	mainCharacter->Stop();
-	MyCamera::GetInstance()->Stop();
+	if (mainCharacter->main_state() != "4" || (mainCharacter->main_state() == "4" && mainCharacter->isClimbing() == false))
+	{
+		mainCharacter->set_main_state("0");
+
+	}
+	if (mainCharacter->main_state() == "4" && mainCharacter->isClimbing() == true)
+		mainCharacter->StopY();
+
+	mainCharacter->StopX();
+	MyCamera::GetInstance()->StopX();
+
+	return;
 
 	return;
 
 
 }
 
+void Scene1::DisposablePhysicUpdate(float t)
+{
+	for (auto i = _disposableList->begin(); i!= _disposableList->end(); i++)
+	{		
+		GameObject* bullet= *i;
+		switch (mapIdName[bullet->get_name()])
+		{
+		case 17:
+			bullet->set_vy(0);
+			break;
+		}
+		bullet->setPosition(bullet->x() + bullet->vx()*t, bullet->y() + bullet->vy()*t);
+		if (find(_onScreenList->begin(), _onScreenList->end(), bullet) == _onScreenList->end())
+		{
+			//bullet->setVisible(false);
+			_gameObjectList->remove(bullet);
+			/*_disposableList->erase(i);*/
+			//listToDelete->push_back(bullet);
+		}		
+	}
+
+
+}
+
 void Scene1::CollisionDetect()
 {
+	Quadtree* quadtree = Quadtree::CreateQuadtree(MyCamera::GetInstance()->bounding_box().left, MyCamera::GetInstance()->bounding_box().top, MyCamera::GetInstance()->bounding_box().right, MyCamera::GetInstance()->bounding_box().bottom);
 
-	Quadtree* quadtree = Quadtree::CreateQuadtree(MyCamera::GetInstance()->View().left, MyCamera::GetInstance()->View().top, mapinfo->Width, mapinfo->Height/2);
 	std::list<GameObject*>* return_object_list = new std::list<GameObject*>();
-	quadtree->Retrieve(return_object_list, mainCharacter);
+	quadtree->Retrieve(return_object_list, MyCamera::GetInstance());
 	for (auto x = return_object_list->begin(); x != return_object_list->end(); x++)
-	//for(auto x = _gameObjectList->begin(); x != _gameObjectList->end();x++)
+		//for(auto x = _gameObjectList->begin(); x != _gameObjectList->end();x++)
 	{
-
 		GameObject *temp_obj = *x;
-		mainCharacter->set_bounding_box(CalculateBoundingBox(mainCharacter->x(), mainCharacter->y(), mainCharacter->width(), mainCharacter->height(), mainCharacter->anchor()));
-		temp_obj->set_bounding_box(CalculateBoundingBox(temp_obj->x(), temp_obj->y(), temp_obj->width(), temp_obj->height(), temp_obj->anchor()));
-
-
-		CollisionResult collisionResult = CheckCollision(mainCharacter, temp_obj);
-
-	
-		if (collisionResult._collisionIndex < 1 && collisionResult._collisionIndex >= 0)
+		if (temp_obj->Visbile() == true)
 		{
-			if (temp_obj->get_name() == "Wall")
+			mainCharacter->set_bounding_box(CalculateBoundingBox(mainCharacter->x(), mainCharacter->y(), mainCharacter->width(), mainCharacter->height(), mainCharacter->anchor()));
+			temp_obj->set_bounding_box(CalculateBoundingBox(temp_obj->x(), temp_obj->y(), temp_obj->width(), temp_obj->height(), temp_obj->anchor()));
+
+
+			CollisionResult collisionResult = CheckCollision(mainCharacter, temp_obj);
+
+
+			if (collisionResult._collisionIndex < 1 && collisionResult._collisionIndex >= 0)
 			{
-				if (collisionResult._collisionSide == LEFT)
+				//MainCharacter collision with others z
+				int collisionNameID = mapIdName[temp_obj->get_name()];
+				switch (collisionNameID)
 				{
-					mainCharacter->set_vx(0);
-					MyCamera::GetInstance()->setVx(0);
-					mainCharacter->setPosition(mainCharacter->x() - 1, mainCharacter->y());
-					MyCamera::GetInstance()->setPosition(D3DXVECTOR3(MyCamera::GetInstance()->Position().x - 1, MyCamera::GetInstance()->Position().y, 0));
-					mainCharacter->set_sub_state("3");
-				}
-				if (collisionResult._collisionSide == RIGHT)
-				{
-					mainCharacter->set_vx(0);
-					MyCamera::GetInstance()->setVx(0);
-					mainCharacter->setPosition(mainCharacter->x() + 1, mainCharacter->y());
-					MyCamera::GetInstance()->setPosition(D3DXVECTOR3(MyCamera::GetInstance()->Position().x + 1, MyCamera::GetInstance()->Position().y, 0));
-					mainCharacter->set_sub_state("3");
-				}
-			}
-			if (temp_obj->get_name() == "Ground")
-			{
-				if (collisionResult._collisionSide == DOWN)
-				{
-					//trace(L"Index: %f", collisionIndex);
-					mainCharacter->set_vy((-collisionResult._collisionIndex*mainCharacter->vy()));
-				}
-				if (collisionResult._collisionSide == UP)
-				{
-					mainCharacter->set_vy((collisionResult._collisionIndex*mainCharacter->vy()));
-				}
-				if(collisionResult._collisionSide== LEFT || collisionResult._collisionSide==RIGHT)
-				{
+				case 0://Apple
+					temp_obj->setVisible(false);
+					mainCharacter->setAppleCount(mainCharacter->appleCount() + 1);
+					//sound
+					_soundCollectApple->Play();
+					break;
+				case 1://Ground
+
+					if (collisionResult._collisionSide == UP)
+					{
+						mainCharacter->set_vy(-collisionResult._collisionIndex*mainCharacter->vy());
+					}
+					if (collisionResult._collisionSide == DOWN)
+					{
+						mainCharacter->set_vy((collisionResult._collisionIndex*mainCharacter->vy()));
+					}
+					if (collisionResult._collisionSide == LEFT || collisionResult._collisionSide == RIGHT)
+					{
 						mainCharacter->set_vx(0);
+					}
+					break;
+				case 2: //Wall
+
+					mainCharacter->set_vx(0);
+					mainCharacter->set_sub_state("3");
+					break;
+
+				case 3://Rope
+					if (mainCharacter->sub_state() == "1" || mainCharacter->isClimbing() == true)
+					{
+						mainCharacter->setIsClimbing(true);
+						if (mainCharacter->bounding_box().top >= temp_obj->bounding_box().top)
+						{
+							mainCharacter->setPosition(temp_obj->x(), mainCharacter->y());
+
+						}
+						else
+						{
+							if (mainCharacter->vy() < 0)
+								mainCharacter->set_vy(0);
+						}
+						mainCharacter->set_vx(0);
+						mainCharacter->set_main_state("4");
+						MyCamera::GetInstance()->setPosition(temp_obj->x(), MyCamera::GetInstance()->y());
+					}
+
+
+					mainCharacter->set_sub_state("0");
+
+					break;
+				case 4://HorizontalBar
+					break;
+				case 5://FloatGround
+					break;
+				case 6://SpringBoard
+					mainCharacter->set_sub_state("6");
+					mainCharacter->set_vy(JUMP_FORCE*0.8f);
+
+					_soundSpringBoard->Play();
+					break;
+				case 7://Camel
+					if (mainCharacter->sub_state() == "1" && collisionResult._collisionSide == DOWN)
+					{
+						mainCharacter->set_sub_state("2");
+						mainCharacter->setPosition(mainCharacter->x() + collisionResult._collisionIndex*mainCharacter->vx()*FIXED_TIME, mainCharacter->y() + collisionResult._collisionIndex*mainCharacter->vy()*FIXED_TIME);
+						mainCharacter->set_vy(JUMP_FORCE*0.8);
+						//event 
+						CamelPrefab::BeBeaten(temp_obj);
+						//sound
+						_soundCamel->Play();
+					}
+					break;
+				case 11:case 12:
+				case 13:case 14: case 15:
+					mainCharacter->BeBeaten();
+					break;
+
+				default: {}
 				}
 			}
-
-			if (temp_obj->get_name() == "Apple")
-			{
-				//collectApple & clear this apple from list
-				
-				//sound
-				//_soundCollectApple->Play();
-				
-			}
-
-			if (temp_obj->get_name() == "EnemyFat" || temp_obj->get_name() == "EnemyJug" || temp_obj->get_name() == "EnemyHand" || temp_obj->get_name() == "EnemyMus" || temp_obj->get_name() == "EnemyThin")
-			{
-				//- health of aladdin  
-				mainCharacter->BeHitted();
-
-				// sound
-			}
-			if (temp_obj->get_name() == "Camel" && mainCharacter->sub_state() == "2" && collisionResult._collisionSide == DOWN)
-			{
-				//event 
-				//temp_obj->set_state("CamelBeaten");
-				//sound
-				//_soundCamel->Play();
-			}
-			if (temp_obj->get_name() == "SpringBoard")
-			{
-				if (collisionResult._collisionSide == UP)
+		}
+		for (list<GameObject*>::iterator obj = _onScreenList->begin(); obj != _onScreenList->end(); obj++)
+		{
+			for(auto ab = mainCharacter->bullet_list()->begin(); ab!= mainCharacter->bullet_list()->end(); ab++ )
+			{ 
+				AppleBullet* x = *ab;
+				if (x->Visbile() == true)
 				{
-					mainCharacter->set_sub_state("2");
-					mainCharacter->set_vy(JUMP_FORCE);
-				}
-
-				//_soundSpringBoard->Play();
-			}
-#pragma region Test
-
-			LPCSTR side = LPCSTR();
-			switch (collisionResult._collisionSide)
-			{
-			case LEFT:
-			{
-				side = "LEFT";
-			}; break;
-			case RIGHT:
-			{
-				side = "RIGHT";
-			}; break;
-			case UP:
-			{
-				side = "UP";
-			}; break;
-			case DOWN:
-			{
-				side = "DOWN";
-			}; break;
-			case NONE:
-			{
-				side = "NONE";
-			}; break;
-			}
-
-			if (side != "UP")
-			{
-				OutputDebugString("\n");
-				OutputDebugString(side);
-			}
-			//PlaySound(_soundJump);
-#pragma endregion
-			for (list<AppleBullet*>::iterator ab = mainCharacter->bullet_list()->begin(); ab != mainCharacter->bullet_list()->end(); ab++)
-			{
-				quadtree->Retrieve(return_object_list, *ab);
-				for (list<GameObject*>::iterator g = return_object_list->begin(); g != return_object_list->end(); g++)
-				{
-					auto surfaceVector = new D3DVECTOR();
-					CollisionResult collisionIndex = CheckCollision(*ab, *g);
-					AppleBullet* temp_obj = *ab;
+					CollisionResult collisionIndex = CheckCollision(*ab, *obj);
 					if (collisionIndex._collisionIndex<1.0f && collisionIndex._collisionIndex > 0.0f)
 					{
-						
-						temp_obj->set_vx(collisionIndex._collisionIndex * temp_obj->vx());
-						temp_obj->set_vy(collisionIndex._collisionIndex * temp_obj->vy());
-						
+
+						x->set_vx(collisionIndex._collisionIndex * x->vx());
+						x->set_vy(collisionIndex._collisionIndex * x->vy());
 						break;
 					}
 					if (collisionIndex._collisionIndex == 0.0f)
 					{
-						temp_obj->set_is_popping(true);
-						temp_obj->state_manager()->setState("001");
-						temp_obj->set_vx(0);
-						temp_obj->set_vy(0);				
+						x->set_is_popping(true);
+						x->state_manager()->setState("001");
+						x->set_vx(0);
+						x->set_vy(0);
+						_soundAppleCollision->Play();
+						if (temp_obj->get_name() == "EnemyFat")
+						{
+
+							auto temp_obj2 = new GameObjectMove();
+							temp_obj2 = (GameObjectMove*)*obj;
+							if (temp_obj2->is_immune() == 0.0f)
+							{
+								temp_obj2->set_health(temp_obj2->health() - 1);
+								temp_obj2->set_is_immune(30);
+								if (temp_obj2->health() == 0)
+									temp_obj2->set_state("003");
+							}
+
+
+						}
 					}
 				}
 			}
+			//Process sword 
+			GameObject* temp_obj = *obj;
+			if (SimpleIntersect(mainCharacter->sword(), &temp_obj->bounding_box()))
+			{
+				if (temp_obj->get_name() == "EnemyFat" || temp_obj->get_name()=="EnemyMus")
+				{
+				
+					auto temp_obj2 = new GameObjectMove();
+					temp_obj2 = (GameObjectMove*)*obj;
+					if (temp_obj2->is_immune() == 0.0f)
+					{
+						temp_obj2->set_health(temp_obj2->health() - 1);
+						temp_obj2->set_is_immune(30);
+						if (temp_obj2->health() == 0)
+							temp_obj2->set_state("003");
+					}
 
+					
+				}
+			}
 		}
 	
 
@@ -326,28 +422,82 @@ void Scene1::CollisionDetect()
 }
 void Scene1::PhysicsUpdate(float t)
 {
-	mainCharacter->set_vy(mainCharacter->vy() + GRAVITY);
-
-	if (mainCharacter->vy() == GRAVITY)
+	/*if (mainCharacter->x() > 2300)
+		trace(L"laggy point!");*/
+	//trace(L"top: %d left: %d bottom: %d right:%d", MyCamera::GetInstance()->bounding_box().top, MyCamera::GetInstance()->bounding_box().left, MyCamera::GetInstance()->bounding_box().bottom, MyCamera::GetInstance()->bounding_box().right);
+	/*trace(L"----------");
+	for (auto i = _onScreenList->begin(); i != _onScreenList->end(); i++)
 	{
-		mainCharacter->set_sub_state("0");
+		GameObject* game_obj = *i;
+		if (SimpleIntersect(&game_obj->bounding_box(), &MyCamera::GetInstance()->bounding_box()))
+			trace(L"true");
+		else trace(L"false");
+	}*/
+	/*trace(L"%d", _onScreenList->size());*/
+
+	//handle physic of all enemies
+	for (auto i=_healthHavingList->begin(); i!= _healthHavingList->end(); i++)
+	{
+	
+		if (std::find(_onScreenList->begin(), _onScreenList->end(), (GameObject*)*i) != _onScreenList->end())
+		{
+			
+			GameObjectMove* game_obj = *i;
+			if (std::find(_onScreenList->begin(), _onScreenList->end(), game_obj->weapon_obj()) == _onScreenList->end())
+				game_obj->set_is_throwing(false);
+			if (mainCharacter->x() < game_obj->x())
+				game_obj->set_curFace(GameObject::LEFT);
+			else game_obj->set_curFace(GameObject::RIGHT);
+			if (game_obj->CheckFlip())
+				game_obj->Flip();
+			game_obj->PhysicUpdate(t);
+			switch (mapIdName[game_obj->get_name()])
+			{
+			case 13:
+				if (abs(mainCharacter->x() - game_obj->x())>80 && game_obj->is_throwing() == false)
+				{
+					game_obj->set_state("002");
+					WeaponObject* bullet = new WeaponObject();
+					bullet->set_owner_obj(game_obj);
+					D3DXVECTOR3 temp_pos = (game_obj->curface() == GameObject::RIGHT) ? game_obj->CalPositon(TOP_RIGHT) : game_obj->CalPositon(TOP_LEFT);
+
+					BulletPrefab::Instantiate(bullet, "Knife", temp_pos.x, temp_pos.y, game_obj->curface());
+
+					bullet->set_name("StraightKnife");
+					game_obj->set_weapon_obj(bullet);
+					_disposableList->push_back(bullet);
+					_gameObjectList->push_back(bullet);
+					_onScreenList->push_back(bullet);
+					game_obj->set_is_throwing(true);
+				}
+			/*case 14:
+				if (abs(mainCharacter->x()-game_obj->x())>250)
+				{
+					GameObject* bullet = new GameObject();
+					BulletPrefab::Instantiate(bullet, "Knife", game_obj->x(), game_obj->y(), game_obj->curface());
+					
+					bullet->set_name("ParabolKnife");
+					_disposableList->push_back(bullet);
+				}*/
+			}
+		}
 	}
+
+	
+	DisposablePhysicUpdate(t);
+
+	if (mainCharacter->isClimbing() == false)
+		mainCharacter->set_vy(mainCharacter->vy() + GRAVITY);
+	else
+		if (mainCharacter->vy() == 0)
+		{
+			MyCamera::GetInstance()->set_vy(0);
+		}
+
 
 	CollisionDetect();
 	mainCharacter->setState(mainCharacter->main_state() + mainCharacter->sub_state() + mainCharacter->hand_state());
-	if (mainCharacter->vx() != 0)
-	{
-		if (mainCharacter->vx() > 0)
-		{
-			mainCharacter->set_curFace(GameObject::Face::RIGHT);
-		}
-		else
-		{
-			mainCharacter->set_curFace(GameObject::Face::LEFT);
-		}
-		if (mainCharacter->CheckFlip())
-			mainCharacter->Flip();
-	}
+	
 
 	mainCharacter->PhysicUpdate(t);
 
@@ -355,15 +505,8 @@ void Scene1::PhysicsUpdate(float t)
 
 void Scene1::GraphicUpdate(float t)
 {
-	//Real Graphics Update
-	for (auto i = _gameObjectList->begin(); i != _gameObjectList->end(); i++)
-	{
-		GameObject* temp_object = *i;
-		temp_object->GraphicUpdate(t);
-	}
-	mainCharacter->GraphicUpdate(t);
-	  
-	MyCamera::GetInstance()->Update(t);
+
+	
 
 
 	//Render Everything
@@ -373,28 +516,36 @@ void Scene1::GraphicUpdate(float t)
 	viewRect = MyCamera::GetInstance()->View();
 	d3ddev->BeginScene();
 	 //erase the entire background 
-	//d3ddev->StretchRect(back, NULL, backbuffer, NULL, D3DTEXF_NONE);
+	
 	//start sprite handler 	
 	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
 
 	sprite_handler->SetTransform(&old_matrix);
 	sprite_handler->Draw(mapETC, &viewRect,NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
 
-
+	mainCharacter->setTranslation(D3DXVECTOR2(mainCharacter->x() - MyCamera::GetInstance()->View().left, mainCharacter->y() - MyCamera::GetInstance()->View().top));
 	mainCharacter->Render(false, true, true);
 	mainCharacter->DrawBullet();
-	list<GameObject*>* visibleList = OnScreenDetect();
+	//for (auto i = _disposableList->begin(); i!= _disposableList->end(); i++)
+	//{
+	//	GameObject* bullet = *i;
+	//	bullet->setAnchor(AnchorPoint::BOTTOM_MID);
+	//	bullet->setTranslation(D3DXVECTOR2(bullet->x() - viewRect.left, bullet->y() - viewRect.top));
+	//	bullet->Render(false, true, true);
+	//	bullet->GraphicUpdate(t);
+	//	bullet->RenderBounding(D3DCOLOR_ARGB(200, 255, 0, 0));
+	//}
 
-	for (auto i = visibleList->begin(); i != visibleList->end(); i++)
+	for (auto i = _onScreenList->begin(); i != _onScreenList->end(); i++)
 	{
 		GameObject* temp_object = *i;
 		temp_object->setAnchor(AnchorPoint::BOTTOM_MID);
 		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
-		temp_object->Render();
-		//temp_object->RenderBounding(D3DCOLOR_ARGB(200, 255, 0, 0));
+		temp_object->Render(false, true, true);
+		temp_object->GraphicUpdate(t);
+		temp_object->RenderBounding(D3DCOLOR_ARGB(200, 255, 0, 0));
 	}
-	delete visibleList;
-	 
+	
 
 #pragma region Draw map_front
 	viewRect.top += mapinfo->Height / 2;
@@ -404,12 +555,14 @@ void Scene1::GraphicUpdate(float t)
 	
 #pragma endregion
 
-	//mainCharacter->RenderBounding(D3DCOLOR_ARGB(150, 0, 250, 0));
+	mainCharacter->RenderBounding(D3DCOLOR_ARGB(150, 0, 250, 0));
 	sprite_handler->End();
 	//stop rendering 
 	d3ddev->EndScene();
 
+	mainCharacter->GraphicUpdate(t);
 
+	MyCamera::GetInstance()->Update(t);
 
 }
 
@@ -436,12 +589,7 @@ void Scene1::LoadListObjectXml(char* xmlpath)
 
 		//add mapState elements
 		string pathState = node.child("statexml").attribute("source").value();
-		/*if (pathState != "")
-		{
-		char* cPathState = new char[pathState.length() + 1];
-		memcpy(cPathState, pathState.c_str(), pathState.length() + 1);
-		mapStatePath[name] = cPathState;
-		} */
+		
 	}
 
 
@@ -521,15 +669,18 @@ void Scene1::LoadListObjectXml(char* xmlpath)
 				break;
 			case 12:
 				anObject = new GameObjectMove();
-				EnemyMusPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				EnemyMusPrefab::Instantiate((GameObjectMove*)anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				_healthHavingList->push_back((GameObjectMove*)anObject);
 				break;
 			case 13:
 				anObject = new GameObjectMove();
-				EnemyFatPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				EnemyFatPrefab::Instantiate((GameObjectMove*)anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				_healthHavingList->push_back((GameObjectMove*)anObject);
 				break;
 			case 14:
 				anObject = new GameObjectMove();
-				EnemyJugPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				EnemyJugPrefab::Instantiate((GameObjectMove*)anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				_healthHavingList->push_back((GameObjectMove*)anObject);
 				break;
 			case 15:
 				anObject = new GameObjectMove();
@@ -562,16 +713,19 @@ void Scene1::Game_Run(HWND hwnd, int dt)
 	float t = now - start;
 	if (t >= 1000 / FPS)
 	{
+		
 		//reset timing
 		start = now;
 		if (t < FIXED_TIME)
-			Sleep(100 - FIXED_TIME);
+			Sleep(FIXED_TIME - t);
+		_onScreenList = OnScreenDetect();
 		PhysicsUpdate(FIXED_TIME);
 		GraphicUpdate(FIXED_TIME);
+		_onScreenList->clear();
 	}
 	//display the back buffer on the screen
 	d3ddev->Present(NULL, NULL, NULL, NULL);
-	//check for escape key (to exit program)
+	//check for escape key (to exit program)	
 	if (KEY_PRESSED(VK_ESCAPE))
 		PostMessage(hwnd, WM_DESTROY, 0, 0);
 

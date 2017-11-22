@@ -16,12 +16,15 @@ private:
 	CSound* _soundCollectApple;
 	CSound* _soundCamel;
 	CSound* _soundSpringBoard;
+	CSound* _soundAppleCollision;
 	LPDIRECT3DSURFACE9 background;
 	LPDIRECT3DTEXTURE9 mapETC;
 	RECT viewRect; 
 	//GameObject * testObject = new GameObject();//object duoi dang co xml
 	//GameObject * namObject = new GameObject();//object duoi dang chi co mot hinh anh
 	map<string, int> mapIdName;
+	
+	virtual void DisposablePhysicUpdate(float) override;
 	virtual void CollisionDetect() override;
 	virtual void Key_Pressed(int KeyCode) override;
 	virtual void InputUpdate() override;

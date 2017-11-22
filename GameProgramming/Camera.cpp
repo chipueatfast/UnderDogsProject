@@ -4,8 +4,12 @@
 #include "Camera.h"
 #include "trace.h"
 #include "Scene1.h"
-#define MAX_LOOKUP -70
-#define MAX_LOOKDOWN 70
+#define MAX_LOOKUP -_height/2
+#define MAX_LOOKDOWN _height/2
+
+#define MAX_LOOKLEFT - SCREEN_WIDTH/(6*SCALE_RATE)
+#define MAX_LOOKRIGHT SCREEN_WIDTH/(6*SCALE_RATE)
+#define MAX_LOOKMID _width/2
 
 
 MyCamera* MyCamera::_instance = NULL;
@@ -21,6 +25,7 @@ MyCamera::MyCamera()
 	CalAnchorPoint();
 	_vx = 0;
 	_vy = 0; 
+	_boundingBox = ExtraView();
 }
 
 void MyCamera::Update(float t)
@@ -28,14 +33,17 @@ void MyCamera::Update(float t)
 	//_vx -= _vx*FRICTION;
 	//_vy -= _vy*FRICTION;
 	
-	
+	_distanceLeftRight += _vxTranslate*t;
 
-	if (_isStop == false)
+	if (_isStopX == false)
 	{
 		_position.x += (_vx)*t;
 
 	}
-	_position.y += _vy*t;
+	if (_isStopY == false)
+		_position.y += _vy*t;
+
+
 
 
 
@@ -79,7 +87,7 @@ void MyCamera::Update(float t)
 		}
 	}
 
-	_boundingBox = _viewRect;
+	_boundingBox = ExtraView();
 }
 
 
@@ -100,11 +108,22 @@ RECT MyCamera::View()
 {
 	return _viewRect;
 }
+RECT MyCamera::ExtraView()
+{
+	RECT extraView;
+	extraView.top = _viewRect.top - BODER_SIZE;
+	extraView.right = _viewRect.right + BODER_SIZE;
+	extraView.left = _viewRect.left - BODER_SIZE;
+	extraView.bottom = _viewRect.bottom + BODER_SIZE;
+
+
+	return extraView;
+}
 
 void MyCamera::LookUp(float t, bool toNormal)
 {
 
-	_vy = -0.15;
+	_vy = -15;
 
 	if (((_distanceUpDown+_vy*t <= MAX_LOOKUP || _distanceUpDown+_vy*t >= MAX_LOOKDOWN) && toNormal == false) 
 		|| _distanceUpDown + _vy*t <= (  _height / 2 - _position.y)
@@ -122,7 +141,7 @@ void MyCamera::LookUp(float t, bool toNormal)
 void MyCamera::LookDown(float t, bool toNormal)
 {
 	  
-		_vy = 0.15;
+		_vy = 15;
 		//trace(L"_distanceUpDown=%f cuMapHeight/2= %f  - _positionY = %f", _distanceUpDown, _curMapHeight / 2, _position.y);
 		
 		if (((_distanceUpDown+_vy*t <= MAX_LOOKUP || _distanceUpDown+_vy*t >= MAX_LOOKDOWN) && toNormal == false)
@@ -136,4 +155,68 @@ void MyCamera::LookDown(float t, bool toNormal)
 		//trace(L"%f", _distanceUpDown);
 	
 }
+
+#pragma region LEFTRIGHT 
+
+void MyCamera::set_curFace(GameObject::Face face, int mainCharacter_x, int mainCharacter_y)
+{
+	if (face != this->_curFace)
+	{
+		_curFace = face;
+		switch (face)
+		{
+		case Face::LEFT:
+
+			break;
+		case Face::RIGHT:
+
+			break;
+		}
+	}
+}
+
+
+void MyCamera::LookLeft(float t, bool toNormal)
+{
+	_vxTranslate = -CHARACTER_VX;
+
+	if (((_distanceLeftRight + _vxTranslate*t <= MAX_LOOKLEFT
+		|| _distanceLeftRight + _vxTranslate*t >= MAX_LOOKRIGHT)
+		&& toNormal == false)
+		|| (toNormal == true && int(_distanceLeftRight) == 0))
+	{
+		_vxTranslate = 0;
+	}
+
+
+}
+
+void MyCamera::LookRight(float t, bool toNormal)
+{
+	_vxTranslate = CHARACTER_VX;
+
+	if (((_distanceLeftRight + _vxTranslate*t <= MAX_LOOKLEFT || _distanceLeftRight + _vxTranslate*t >= MAX_LOOKRIGHT) && toNormal == false) //khi vuot qua vi tri toi da
+																																			 //|| _distanceLeftRight + _vxTranslate*t >= _curMapWidth / 2 - _width / 2 - _position.x
+		|| (toNormal == true && int(_distanceLeftRight) == 0)) // khi dang muon tro ve vi tri can bang va da dat duoc vi tri can bang
+	{
+		_vxTranslate = 0;
+	}
+	//_distanceLeftRight += _vxTranslate*t;
+	//trace(L"%f", _distanceLeftRight); 
+}
+
+
+void MyCamera::LeftRightToNormal(float t)
+{
+	_vxTranslate = 0;
+	if (_distanceLeftRight > 0)
+	{
+		LookLeft(t, true);
+	}
+	if (_distanceLeftRight < 0)
+	{
+		LookRight(t, true);
+	}
+}
+#pragma endregion
 

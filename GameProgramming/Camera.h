@@ -4,6 +4,7 @@
 //06-11 zPhong
 
 #define FRICTION 0.1f
+#define BODER_SIZE 50*SCALE_RATE
 
 #include "d3d9.h"
 #include "d3dx9.h"
@@ -13,13 +14,27 @@ class MyCamera : public GameObject
 private:
 	static MyCamera* _instance;
 	RECT _viewRect;
-	bool _isStop = true;
+	bool _isStopX = true;
+	bool _isStopY = true;
+
 	float _distanceUpDown;
 	
 	long _curMapWidth, _curMapHeight;
- 	 
+	int _vxTranslate;
 public:
+	int vxTranslate() const
+	{
+		return _vxTranslate;
+	}
 
+private:
+	int _vyTranslate;
+	float _distanceLeftRight;
+public:
+	float distanceLeftRight() const
+	{
+		return _distanceLeftRight;
+	}
 
 	long curMapWidth() const
 	{
@@ -47,10 +62,26 @@ public:
 	static MyCamera* GetInstance();
 
 	RECT View();
-	void Stop() { _vx = 0; }
-	void Move() { _isStop = false; }
+	RECT ExtraView();
+	void StopX()
+	{
+		_vx = 0;
+		_isStopX = true;
+	}
+	void StopY()
+	{
+		_vy = 0;
+		_isStopY = true;
+	}
+	void MoveX() { _isStopX = false; }
+	void MoveY() { _isStopY = false; }
+
 	void LookUp(float t,bool toNormal);
 	void LookDown(float t, bool toNormal);
+	void set_curFace(GameObject::Face face, int mainCharacter_x, int mainCharacter_y);
+	void LookLeft(float t, bool toNormal);
+	void LookRight(float t, bool toNormal);
+	void LeftRightToNormal(float t);
 public:
 	float vx() const
 	{

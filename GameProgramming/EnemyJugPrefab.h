@@ -4,8 +4,7 @@
 class EnemyJugPrefab
 {
 public:
-	static void Instantiate(GameObject*, float, float, int, int);
-
+	static void Instantiate(GameObjectMove*, float, float, int, int);
 	EnemyJugPrefab();
 	~EnemyJugPrefab();
 };

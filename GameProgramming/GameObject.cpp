@@ -115,12 +115,12 @@ void GameObject::Transform(bool isRotation, bool isScale, bool isTranslation)
 
 	sprite_handler->SetTransform(&mMatrix);
 }
-void GameObject::UpdateAnimate(bool isRepeating)
+void GameObject::UpdateAnimate()
 {
 	_animaCount ++;
 	if (_animaCount >= _animaDelay)
 	{
-		if (isRepeating == false)
+		if (_isRepeating == false)
 			Next2();
 		else
 			Next();
@@ -150,38 +150,41 @@ void GameObject::RenderBounding(D3DCOLOR color, bool isRotation, bool isScale, b
 	sprite_handler->SetTransform(&old_matrix);
 }
 
+
+
 void GameObject::Render(bool isRotation, bool isScale, bool isTranslation)
 {
 	//D3DXMATRIX oldmatrix;
 	//sprite_handler->GetTransform(&oldmatrix);
 	//
-
-	Transform(isRotation, isScale, isTranslation);
-
-	if (_stateManager->curState().getName() == "") {
-		sprite_handler->Draw(_sprite->image(), NULL, &_anchorPoint, NULL, D3DCOLOR_XRGB(255, 255, 255));
-	}
-	else
+	if (_isVisible == true)
 	{
-		_width = _stateManager->curState().getListRect().at(_index).right - _stateManager->curState().getListRect().at(_index).left;
-		_height = _stateManager->curState().getListRect().at(_index).bottom - _stateManager->curState().getListRect().at(_index).top;
-		_boundingBox = CalculateBoundingBox(x(), y(), _width, _height, _anchor);
-		CalAnchorPoint();
+		Transform(isRotation, isScale, isTranslation);
+
+		if (_stateManager->curState().getName() == "") {
+			sprite_handler->Draw(_sprite->image(), NULL, &_anchorPoint, NULL, D3DCOLOR_XRGB(255, 255, 255));
+		}
+		else
+		{
+			_width = _stateManager->curState().getListRect().at(_index).right - _stateManager->curState().getListRect().at(_index).left;
+			_height = _stateManager->curState().getListRect().at(_index).bottom - _stateManager->curState().getListRect().at(_index).top;
+			_boundingBox = CalculateBoundingBox(x(), y(), _width, _height, _anchor);
+			CalAnchorPoint();
 
 
-		sprite_handler->Draw(
-			_sprite->image(),
-			//_stateManager == NULL ? NULL : &_stateManager->curState().getListRect().at(_index),
-			_stateManager->curState().getName() == "" ? NULL : &_stateManager->curState().getListRect().at(_index),
-			//NULL,
-			&_anchorPoint,
-			NULL,
-			D3DCOLOR_XRGB(255, 255, 255)
-		);
+			sprite_handler->Draw(
+				_sprite->image(),
+				//_stateManager == NULL ? NULL : &_stateManager->curState().getListRect().at(_index),
+				_stateManager->curState().getName() == "" ? NULL : &_stateManager->curState().getListRect().at(_index),
+				//NULL,
+				&_anchorPoint,
+				NULL,
+				D3DCOLOR_XRGB(255, 255, 255)
+			);
 
-		sprite_handler->SetTransform(&old_matrix);
+			sprite_handler->SetTransform(&old_matrix);
+		}
 	}
-
 }
 
 
@@ -193,17 +196,7 @@ void GameObject::GraphicUpdate(float t)
 {
 	if (_stateManager != NULL)
 	{
-		_animaCount += t;
-		if (_animaCount >= _animaDelay)
-		{
-
-			Next();
-			_animaCount = 0;
-			// update lai anchorpoint do frame co bounding khac nhau
-			//CalAnchorPoint();
-		}
-
-		
+		UpdateAnimate();
 	}
 }
 

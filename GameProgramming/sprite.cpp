@@ -1,7 +1,7 @@
 #include "sprite.h"
 #include "game.h"
 
-Sprite::Sprite(LPCSTR FilePath, int Width, int Height)
+Sprite::Sprite(LPCSTR FilePath, int Width, int Height,D3DCOLOR color)
 {
 	D3DXIMAGE_INFO info;
 	HRESULT result;
@@ -26,7 +26,7 @@ Sprite::Sprite(LPCSTR FilePath, int Width, int Height)
 		D3DPOOL_DEFAULT,
 		D3DX_DEFAULT,
 		D3DX_DEFAULT,
-		D3DCOLOR_XRGB(255, 0, 234),
+		color,
 		&info,
 		NULL,
 		&_image

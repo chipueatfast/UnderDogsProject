@@ -39,7 +39,7 @@ public:
 		_height = height;
 	}
 #pragma endregion 
-	Sprite(LPCSTR FilePath, int Width, int Height);
+	Sprite(LPCSTR FilePath, int Width, int Height, D3DCOLOR color = D3DCOLOR_XRGB(255, 0, 255));
 	Sprite();
 	~Sprite();
 };

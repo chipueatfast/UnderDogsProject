@@ -1,17 +1,16 @@
 #include "AABB.h"
 #include <limits>
 #include "game.h"
-#include "trace.h"
 //new 02-11 chipu
 
 RECT getSweptBroadphaseRect(const GameObject* MovingObj)
 {
 	RECT rect;
 
-	rect.left = (MovingObj->vx()*FIXED_TIME) > 0 ? MovingObj->bounding_box().left : MovingObj->bounding_box().left + (MovingObj->vx()*FIXED_TIME);
-	rect.top = (MovingObj->vy()*FIXED_TIME) > 0 ? MovingObj->bounding_box().top : MovingObj->bounding_box().top + (MovingObj->vy()*FIXED_TIME);
-	rect.right = (MovingObj->vx()*FIXED_TIME)>0 ? (MovingObj->vx()*FIXED_TIME) + MovingObj->width() + MovingObj->bounding_box().left : MovingObj->bounding_box().left + MovingObj->width();
-	rect.bottom = (MovingObj->vy()*FIXED_TIME) > 0 ? MovingObj->bounding_box().top + MovingObj->height() + (MovingObj->vy()*FIXED_TIME) : MovingObj->bounding_box().top + MovingObj->height();
+	rect.left = (MovingObj->vx()) > 0 ? MovingObj->bounding_box().left : MovingObj->bounding_box().left + (MovingObj->vx()*FIXED_TIME);
+	rect.top = (MovingObj->vy()) > 0 ? MovingObj->bounding_box().top : MovingObj->bounding_box().top + (MovingObj->vy()*FIXED_TIME);
+	rect.right = (MovingObj->vx())>0 ? (MovingObj->vx()*FIXED_TIME) + MovingObj->width() + MovingObj->bounding_box().left : MovingObj->bounding_box().left + MovingObj->width();
+	rect.bottom = (MovingObj->vy()) > 0 ? MovingObj->bounding_box().top + MovingObj->height() + (MovingObj->vy()*FIXED_TIME) : MovingObj->bounding_box().top + MovingObj->height();
 	return rect;
 }
 
@@ -115,7 +114,7 @@ RECT CalculateBoundingBox(float x, float y, int width, int height, AnchorPoint a
 //	return temp_rect;
 //}
 
-CollisionResult CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
+CollisionResult CheckCollision(GameObject* MovingObj, GameObject* SubMoving)
 {
 	CollisionResult result;
 	result._collisionIndex = 1.0f;
@@ -128,19 +127,20 @@ CollisionResult CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 		float movingX2 = movingX1 + MovingObj->width();
 		float movingY1 = MovingObj->bounding_box().top;
 		float movingY2 = movingY1 + MovingObj->height();
-		float staticX1 = StaticObj->bounding_box().left;
-		float staticX2 = staticX1 + StaticObj->width();
-		float staticY1 = StaticObj->bounding_box().top;
-		float staticY2 = staticY1 + StaticObj->height();
+		float staticX1 = SubMoving->bounding_box().left + SubMoving->vx();
+		float staticX2 = staticX1 + SubMoving->width();
+		float staticY1 = SubMoving->bounding_box().top + SubMoving->vy();
+		float staticY2 = staticY1 + SubMoving->height();
 
-		float fixedVx = MovingObj->vx()*FIXED_TIME;
-		float fixedVy = MovingObj->vy()*FIXED_TIME;
+		int fixedVx = MovingObj->vx()*FIXED_TIME;
+		int fixedVy = MovingObj->vy()*FIXED_TIME;
 		RECT dst_rect;
-		IntersectRect(&dst_rect, &getSweptBroadphaseRect(MovingObj), &StaticObj->bounding_box());
+		IntersectRect(&dst_rect, &getSweptBroadphaseRect(MovingObj), &SubMoving->bounding_box());
 		if (dst_rect.bottom == 0 && dst_rect.top == 0 && dst_rect.right == 0 && dst_rect.left == 0)
 		{
 			return result;
 		}
+	
 		if (fixedVy == 0.0f)
 		{
 			tyEntry = -std::numeric_limits<float>::infinity();
@@ -226,53 +226,33 @@ CollisionResult CheckCollision(GameObject* MovingObj, GameObject* StaticObj)
 		else tExit = (txExit == std::numeric_limits<float>::infinity()) ? tyExit : txExit;
 		if (fabs(tEntry) < 1.0f && fabs(tEntry) < fabs(tExit))
 		{
-			//if (tEntry != 0)
-			//{
-				result._collisionIndex = tEntry;
-				/*if (tEntry == fabs(txEntry))
+			result._collisionIndex = tEntry;
+			if (MovingObj->vx() != 0)
+			{
+				if (MovingObj->vx()>0)
 				{
-					if (MovingObj->vx() > 0)
+					if (movingX2 + fixedVx*tEntry >= staticX1)
 						result._collisionSide = LEFT;
-					if (MovingObj->vx() < 0)
+				}
+				else
+					if (movingX1 + fixedVx*tEntry <= staticX2)
 						result._collisionSide = RIGHT;
-				}
-				if (tEntry == fabs(tyEntry))
-				{
-					if (MovingObj->vy() > 0)
-						result._collisionSide = UP;
-					if (MovingObj->vy() < 0)
-						result._collisionSide = DOWN;
-				}
-			*/
-				if (MovingObj->vx() != 0)
-				{
-					if (MovingObj->vx()>0)
-					{
-						if (movingX2 + fixedVx*tEntry >= staticX1)
-							result._collisionSide = LEFT;
-					}
-					else
-						if (movingX1 + fixedVx*tEntry <= staticX2)
-							result._collisionSide = RIGHT;
-				}
-			if ( MovingObj->vy()!= 0)
+			}
+			if (MovingObj->vy() != 0)
 			{
 				if (MovingObj->vy() > 0)
 				{
 					if (movingY2 + fixedVy*tEntry == staticY1)
-						result._collisionSide = UP;
+						result._collisionSide = DOWN;
 					return result;
 				}
 				else
 				{
 					if (movingY1 + fixedVy*tEntry == staticY2)
-						result._collisionSide = DOWN;
+						result._collisionSide = UP;
 					return result;
 				}
 			}
-		
-			//trace(L"col: %f static: %d ", fixedVx)
-
 			return result;
 		}
 

@@ -7,6 +7,7 @@
 #include <ios>
 #include "GameManager.h"
 #include "trace.h"
+#include "Camera.h"
 
 
 Quadtree::Quadtree()
@@ -69,11 +70,7 @@ void Quadtree::Clear()
 
 bool Quadtree::IsContaining(GameObject* gameObject)
 {
-	RECT* bound = &gameObject->bounding_box();
-	return !(bound->right < m_region->left ||
-		bound->bottom < m_region->top ||
-		bound->left > m_region->right ||
-		bound->top > m_region->bottom);
+	return SimpleIntersect(m_region, &gameObject->bounding_box());
 }
 
 
@@ -149,7 +146,7 @@ void Quadtree::Retrieve(std::list<GameObject*>* return_objects_list, GameObject*
 		for (int i = 0; i<4; i++)
 		{
 			if (m_nodes[i] != nullptr)
-				if (m_nodes[i]->IsContaining(gameObject))
+				/*if (m_nodes[i]->IsContaining(gameObject))*/
 					m_nodes[i]->Retrieve(return_objects_list, gameObject);
 		}
 		return;
@@ -159,17 +156,18 @@ void Quadtree::Retrieve(std::list<GameObject*>* return_objects_list, GameObject*
 	{
 		for (auto i = m_object_list->begin(); i != m_object_list->end(); i++)
 		{
-			if (gameObject != *i)
-				return_objects_list->push_back(*i);
+			GameObject* gameObject = *i;
+			if (SimpleIntersect(&gameObject->bounding_box(), &MyCamera::GetInstance()->bounding_box()))
+					return_objects_list->push_back(*i);
 		}
 
 	}
 
 }
 
-Quadtree* Quadtree::CreateQuadtree(int x1, int y1, int width, int height)
+Quadtree* Quadtree::CreateQuadtree(int x1, int y1, int x2, int y2)
 {
-	Quadtree* quadtree = new Quadtree(0, initialize(x1, width, y1, height));
+	Quadtree* quadtree = new Quadtree(0, initialize(x1, x2, y1, y2));
 	std::list<GameObject*>* gameobject_list = GameManager::GetInstance()->GetCurrentScene()->game_object_list();
 	for (auto i = gameobject_list->begin(); i != gameobject_list->end(); i++)
 	{

@@ -4,7 +4,7 @@
 class EnemyFatPrefab
 {
 public:
-	static void Instantiate(GameObject*,float ,float, int, int);
+	static void Instantiate(GameObjectMove*,float ,float, int, int);
 	EnemyFatPrefab();
 	~EnemyFatPrefab();
 };

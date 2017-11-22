@@ -6,8 +6,8 @@
 #include <list>
 #include "GameObject.h"
 
-#define QT_MAX_LEVEL 5
-#define MAX_OBJECTS_IN_REGION 4
+#define QT_MAX_LEVEL 6
+#define MAX_OBJECTS_IN_REGION 3
 
 class Quadtree
 {
