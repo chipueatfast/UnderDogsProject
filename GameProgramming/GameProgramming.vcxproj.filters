@@ -111,7 +111,7 @@
     <ClCompile Include="BulletPrefab.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponObject.cpp">
+    <ClCompile Include="UIScene1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -209,7 +209,7 @@
     <ClInclude Include="BulletPrefab.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponObject.h">
+    <ClInclude Include="UIScene1.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,13 +12,13 @@
 #include <list>
 #include "Quadtree.h"
 #include "GameObjectMove.h"
-#include "WeaponObject.h"
+
 
 //application title
 #define APPTITLE "FrameworkStage"
 //screen setup
 #define FULLSCREEN 0
-#define SCREEN_WIDTH 640
+#define SCREEN_WIDTH 660
 #define SCREEN_HEIGHT 480
 //macros to read the keyboard asynchronously
 #define KEY_PRESSED(vk_code) ((GetAsyncKeyState(vk_code) & 0x8000) ? 1 : 0) 

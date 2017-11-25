@@ -60,6 +60,8 @@ void StateManager::setState(string stateCode)
 
 State StateManager::getStateByCode(string stateCode)
 {
+	if (_dictState[stateCode] == "")
+		return _curState;
 	return _mapState[(_dictState[stateCode])];
 }
 

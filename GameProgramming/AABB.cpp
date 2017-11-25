@@ -140,6 +140,21 @@ CollisionResult CheckCollision(GameObject* MovingObj, GameObject* SubMoving)
 		{
 			return result;
 		}
+		//to edit later
+		if (SubMoving->get_name() == "HorizontalBar" || SubMoving->get_name() == "Rope")
+		{
+			IntersectRect(&dst_rect, &MovingObj->bounding_box(), &SubMoving->bounding_box());
+			if (dst_rect.bottom == 0 && dst_rect.top == 0 && dst_rect.right == 0 && dst_rect.left == 0)
+			{
+				return result;
+			}
+			else
+			{
+				result._collisionIndex = 0;
+				return result;
+			}
+		}
+
 	
 		if (fixedVy == 0.0f)
 		{

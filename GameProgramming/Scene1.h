@@ -5,6 +5,7 @@
 #include "game.h"
 #include <list>
 #include <d3dx9.h>
+#include "UIScene1.h"
 
 class Scene1: public Game
 {
@@ -23,7 +24,7 @@ private:
 	//GameObject * testObject = new GameObject();//object duoi dang co xml
 	//GameObject * namObject = new GameObject();//object duoi dang chi co mot hinh anh
 	map<string, int> mapIdName;
-	
+	UIScene1* _UI;
 	virtual void DisposablePhysicUpdate(float) override;
 	virtual void CollisionDetect() override;
 	virtual void Key_Pressed(int KeyCode) override;

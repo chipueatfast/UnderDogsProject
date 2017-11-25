@@ -3,38 +3,34 @@
 #define _CAMERA_H
 //06-11 zPhong
 
-#define FRICTION 0.1f
-#define BODER_SIZE 50*SCALE_RATE
+#define CHARACTER_VX 20
 
 #include "d3d9.h"
 #include "d3dx9.h"
+#include <list>
 
 class MyCamera : public GameObject
 {
+
+
 private:
 	static MyCamera* _instance;
 	RECT _viewRect;
-	bool _isStopX = true;
 	bool _isStopY = true;
-
-	float _distanceUpDown;
-	
 	long _curMapWidth, _curMapHeight;
-	int _vxTranslate;
-public:
-	int vxTranslate() const
-	{
-		return _vxTranslate;
-	}
+	int _distanceUpDown;
+	int _distanceLeftRight;
+	int _distanceJumpFall;
 
-private:
+	std::list <int> * _mainCharacterVy = new list<int>;
+
+	int _vxTranslate;
 	int _vyTranslate;
-	float _distanceLeftRight;
+	int _vyJumpFall;
+	int _maxLookLeft;
+	int _maxLookRight;
 public:
-	float distanceLeftRight() const
-	{
-		return _distanceLeftRight;
-	}
+
 
 	long curMapWidth() const
 	{
@@ -45,7 +41,7 @@ public:
 	{
 		return _curMapHeight;
 	}
-	 
+
 	void setCurMapWidth(long curMapWidth)
 	{
 		_curMapWidth = curMapWidth;
@@ -63,39 +59,36 @@ public:
 
 	RECT View();
 	RECT ExtraView();
-	void StopX()
-	{
-		_vx = 0;
-		_isStopX = true;
-	}
+	void RenderBounding(D3DCOLOR color = D3DCOLOR_ARGB(0, 255, 255, 255), bool isRotation = false, bool isScale = false, bool isTranslation = true);
+
 	void StopY()
 	{
 		_vy = 0;
 		_isStopY = true;
 	}
-	void MoveX() { _isStopX = false; }
-	void MoveY() { _isStopY = false; }
 
-	void LookUp(float t,bool toNormal);
+	void MoveY() { _isStopY = false; }
+	void LookUp(float t, bool toNormal);
 	void LookDown(float t, bool toNormal);
-	void set_curFace(GameObject::Face face, int mainCharacter_x, int mainCharacter_y);
 	void LookLeft(float t, bool toNormal);
 	void LookRight(float t, bool toNormal);
+	void UpDownToNormal(float t);
 	void LeftRightToNormal(float t);
 public:
-	float vx() const
+	int vx() const
 	{
-		return _vx;//*(1 + FRICTION);
+		return _vx;
 	}
 
 	void setVx(float vx)
 	{
-		_vx = vx;// *(1 + FRICTION);
+		_vx = vx;
+
 	}
 
-	float vy() const
+	int vy() const
 	{
-		return _vy; 
+		return _vy;
 	}
 
 	void setVy(float vy)
@@ -103,10 +96,40 @@ public:
 		_vy = vy;
 	}
 
-	float getDistanceUpDown()
+	int getUpperHeight();
+
+	int getLowerHeight();
+
+
+	int getDistanceUpDown()
 	{
 		return _distanceUpDown;
 	}
+	int getDistanceLeftRight()
+	{
+		return _distanceLeftRight;
+	}
+
+	int getMaxLookRight()
+	{
+		return _maxLookRight;
+	}
+
+	long getCurMapWidth()
+	{
+		return _curMapWidth;
+	}
+
+	void setVxTranslate(int vxTranslate)
+	{
+		_vxTranslate = vxTranslate;
+	}
+	void setDistanceLeftRight(int distanceLeftRight)
+	{
+		_distanceLeftRight = distanceLeftRight;
+	}
+
+	void set_curFace(Face face);
 
 };
 #endif

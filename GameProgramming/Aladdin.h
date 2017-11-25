@@ -70,7 +70,21 @@ public:
 private:
 	int _health;
 	int _invicibleTime;
+//to edit later
+	bool _isSwinging = false;
 
+public:
+	bool isSwinging() const
+	{
+		return _isSwinging;
+	}
+
+	void setIsSwinging(bool is_swinging)
+	{
+		_isSwinging = is_swinging;
+	}
+
+private:
 	CSound* _soundAladdinBeBeaten;
 public:
 	Aladdin();

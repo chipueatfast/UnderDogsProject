@@ -262,6 +262,7 @@
   <object id="126" x="1546" y="143.5" width="3.5" height="239"/>
   <object id="127" x="4713" y="355" width="5" height="220.5"/>
   <object id="144" x="2698" y="83" width="3" height="268.5"/>
+
  </objectgroup>
  <objectgroup name="HorizontalBar" id="4">
   <object id="173" x="4355.33" y="307.333" width="410.667" height="8"/>

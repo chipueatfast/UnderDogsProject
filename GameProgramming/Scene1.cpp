@@ -87,7 +87,7 @@ int Scene1::Game_Init(HWND hwnd)
 	//Init components 
 
 	 
-
+	_UI = new UIScene1();
 	mapinfo = new D3DXIMAGE_INFO();
 	background = LoadSurface("Res/background.png", D3DCOLOR_XRGB(63, 72, 204));
 	mapETC = LoadTexture("Res/map.png", D3DCOLOR_XRGB(63, 72, 204), mapinfo);
@@ -108,6 +108,12 @@ void Scene1::Key_Pressed(int KeyCode)
 {
 	switch (KeyCode)
 	{
+	case DIK_U:
+		mainCharacter->set_health(mainCharacter->health() + 1);
+		break;
+	case DIK_I:
+		mainCharacter->set_health(mainCharacter->health() - 1);
+		break;
 	case DIK_SPACE:
 		PlaySound(_soundJump);
 		break;
@@ -121,24 +127,18 @@ void Scene1::Key_Pressed(int KeyCode)
 		
 		break;
 	case DIK_Z:
-		if (mainCharacter->sub_state() != "1" && mainCharacter->sub_state() != "2")
+		if (mainCharacter->sub_state() != "1" && mainCharacter->sub_state() != "2" && mainCharacter->sub_state() != "5")
 		{
 			mainCharacter->set_sub_state("2");
 			mainCharacter->setIsClimbing(false);
-
 			mainCharacter->set_vy(JUMP_FORCE);
-			/*	if (mainCharacter->main_state() == "4")
-			{
-			if (mainCharacter->vy() == 0)
-			{
-			MyCamera::GetInstance()->set_vy(0);
-			}
-			}*/
+		}
+		else
+		{
+			if (mainCharacter->sub_state() == "5")
+				mainCharacter->setIsSwinging(false);
 		}
 		break;
-
-		break;
-
 	}
 }
 
@@ -157,7 +157,6 @@ void Scene1::InputUpdate()
 
 		mainCharacter->set_main_state("2");
 		mainCharacter->StopX();
-		MyCamera::GetInstance()->StopX();
 		return;
 
 	};
@@ -170,7 +169,6 @@ void Scene1::InputUpdate()
 			return;
 		}
 		mainCharacter->StopX();
-		MyCamera::GetInstance()->StopX();
 		mainCharacter->set_main_state("3");
 		return;
 	}
@@ -204,18 +202,19 @@ void Scene1::InputUpdate()
 	{
 		return;
 	}
-	if (mainCharacter->main_state() != "4" || (mainCharacter->main_state() == "4" && mainCharacter->isClimbing() == false))
+//to edit later
+	if (mainCharacter->main_state() != "4"
+		|| (mainCharacter->main_state() == "4" && mainCharacter->isClimbing() == false))
 	{
 		mainCharacter->set_main_state("0");
 
 	}
 	if (mainCharacter->main_state() == "4" && mainCharacter->isClimbing() == true)
 		mainCharacter->StopY();
+	if (mainCharacter->main_state() == "0" && mainCharacter->sub_state() == "5"  && mainCharacter->isSwinging() == true)
+		mainCharacter->StopY();
 
 	mainCharacter->StopX();
-	MyCamera::GetInstance()->StopX();
-
-	return;
 
 	return;
 
@@ -305,24 +304,66 @@ void Scene1::CollisionDetect()
 						if (mainCharacter->bounding_box().top >= temp_obj->bounding_box().top)
 						{
 							mainCharacter->setPosition(temp_obj->x(), mainCharacter->y());
-
+							//mainCharacter->set_sub_state("1");
 						}
 						else
 						{
 							if (mainCharacter->vy() < 0)
 								mainCharacter->set_vy(0);
+							mainCharacter->set_sub_state("1");
 						}
 						mainCharacter->set_vx(0);
 						mainCharacter->set_main_state("4");
-						MyCamera::GetInstance()->setPosition(temp_obj->x(), MyCamera::GetInstance()->y());
+						//MyCamera::GetInstance()->setPosition(temp_obj->x(), MyCamera::GetInstance()->y());
 					}
 
 
-					mainCharacter->set_sub_state("0");
+
 
 					break;
 				case 4://HorizontalBar
-					break;
+				{
+					if (mainCharacter->sub_state() == "1"
+						|| mainCharacter->sub_state() == "2"
+						|| mainCharacter->isSwinging() == true)
+					{
+						mainCharacter->StopY();
+						string str;
+						str = mainCharacter->main_state() + "5" + mainCharacter->hand_state();
+
+
+						mainCharacter->setIsSwinging(true);
+						int height;
+
+						OutputDebugString("\n");
+						OutputDebugString(str.c_str());
+						height = mainCharacter->state_manager()->getStateByCode(str).getListRect().at(0).bottom - mainCharacter->state_manager()->getStateByCode(str).getListRect().at(0).top;
+						OutputDebugString(("  : " + to_string(height)).c_str());
+						if (mainCharacter->bounding_box().left >= temp_obj->bounding_box().left
+							&& mainCharacter->bounding_box().right <= temp_obj->bounding_box().right)
+						{
+							mainCharacter->setPosition(mainCharacter->x(), temp_obj->CalPositon(TOP_LEFT).y + height);
+						}
+						if (mainCharacter->bounding_box().left < temp_obj->bounding_box().left && mainCharacter->vx() < 0)
+						{
+							mainCharacter->StopX();
+							mainCharacter->setPosition(temp_obj->CalPositon(TOP_LEFT).x + mainCharacter->width()/2, temp_obj->CalPositon(TOP_LEFT).y + height);
+						}
+						if (mainCharacter->bounding_box().right > temp_obj->bounding_box().right && mainCharacter->vx() > 0)
+						{
+
+							mainCharacter->StopX();
+							mainCharacter->setPosition(temp_obj->CalPositon(TOP_RIGHT).x - mainCharacter->width() / 2, temp_obj->CalPositon(TOP_LEFT).y + height);
+						}
+						mainCharacter->set_sub_state("5");
+						//mainCharacter->set_sub_state("1");
+					}
+					MyCamera::GetInstance()->setPosition(temp_obj->x(), MyCamera::GetInstance()->y());
+
+					//mainCharacter->set_main_state("0");
+				}
+				break;
+
 				case 5://FloatGround
 					break;
 				case 6://SpringBoard
@@ -335,8 +376,8 @@ void Scene1::CollisionDetect()
 					if (mainCharacter->sub_state() == "1" && collisionResult._collisionSide == DOWN)
 					{
 						mainCharacter->set_sub_state("2");
-						mainCharacter->setPosition(mainCharacter->x() + collisionResult._collisionIndex*mainCharacter->vx()*FIXED_TIME, mainCharacter->y() + collisionResult._collisionIndex*mainCharacter->vy()*FIXED_TIME);
-						mainCharacter->set_vy(JUMP_FORCE*0.8);
+						//mainCharacter->setPosition(mainCharacter->x() + collisionResult._collisionIndex*mainCharacter->vx()*FIXED_TIME, mainCharacter->y() + collisionResult._collisionIndex*mainCharacter->vy()*FIXED_TIME);
+						mainCharacter->set_vy(JUMP_FORCE*0.5);
 						//event 
 						CamelPrefab::BeBeaten(temp_obj);
 						//sound
@@ -422,18 +463,6 @@ void Scene1::CollisionDetect()
 }
 void Scene1::PhysicsUpdate(float t)
 {
-	/*if (mainCharacter->x() > 2300)
-		trace(L"laggy point!");*/
-	//trace(L"top: %d left: %d bottom: %d right:%d", MyCamera::GetInstance()->bounding_box().top, MyCamera::GetInstance()->bounding_box().left, MyCamera::GetInstance()->bounding_box().bottom, MyCamera::GetInstance()->bounding_box().right);
-	/*trace(L"----------");
-	for (auto i = _onScreenList->begin(); i != _onScreenList->end(); i++)
-	{
-		GameObject* game_obj = *i;
-		if (SimpleIntersect(&game_obj->bounding_box(), &MyCamera::GetInstance()->bounding_box()))
-			trace(L"true");
-		else trace(L"false");
-	}*/
-	/*trace(L"%d", _onScreenList->size());*/
 
 	//handle physic of all enemies
 	for (auto i=_healthHavingList->begin(); i!= _healthHavingList->end(); i++)
@@ -457,8 +486,7 @@ void Scene1::PhysicsUpdate(float t)
 				if (abs(mainCharacter->x() - game_obj->x())>80 && game_obj->is_throwing() == false)
 				{
 					game_obj->set_state("002");
-					WeaponObject* bullet = new WeaponObject();
-					bullet->set_owner_obj(game_obj);
+					GameObject* bullet = new GameObject();
 					D3DXVECTOR3 temp_pos = (game_obj->curface() == GameObject::RIGHT) ? game_obj->CalPositon(TOP_RIGHT) : game_obj->CalPositon(TOP_LEFT);
 
 					BulletPrefab::Instantiate(bullet, "Knife", temp_pos.x, temp_pos.y, game_obj->curface());
@@ -486,19 +514,30 @@ void Scene1::PhysicsUpdate(float t)
 	
 	DisposablePhysicUpdate(t);
 
-	if (mainCharacter->isClimbing() == false)
+	if (mainCharacter->vy() == 0)
+	{
+		if (mainCharacter->isSwinging() == false)
+			mainCharacter->set_sub_state("0");
+	}
+	if (mainCharacter->vy() > 0)
+	{
+		mainCharacter->set_sub_state("1");
+	}
+
+	if (mainCharacter->isClimbing() == false && mainCharacter->isSwinging() == false)
 		mainCharacter->set_vy(mainCharacter->vy() + GRAVITY);
+	//else
+	//	if( mainCharacter->isSwinging() == false)
+	//		mainCharacter->set_vy(mainCharacter->vy() + GRAVITY);
 	else
 		if (mainCharacter->vy() == 0)
 		{
 			MyCamera::GetInstance()->set_vy(0);
 		}
 
-
 	CollisionDetect();
 	mainCharacter->setState(mainCharacter->main_state() + mainCharacter->sub_state() + mainCharacter->hand_state());
 	
-
 	mainCharacter->PhysicUpdate(t);
 
 }
@@ -543,7 +582,7 @@ void Scene1::GraphicUpdate(float t)
 		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
 		temp_object->Render(false, true, true);
 		temp_object->GraphicUpdate(t);
-		temp_object->RenderBounding(D3DCOLOR_ARGB(200, 255, 0, 0));
+		//temp_object->RenderBounding(D3DCOLOR_ARGB(200, 255, 0, 0));
 	}
 	
 
@@ -555,11 +594,12 @@ void Scene1::GraphicUpdate(float t)
 	
 #pragma endregion
 
-	mainCharacter->RenderBounding(D3DCOLOR_ARGB(150, 0, 250, 0));
+	//mainCharacter->RenderBounding(D3DCOLOR_ARGB(150, 0, 250, 0));
+	_UI->Render(mainCharacter->health());
 	sprite_handler->End();
 	//stop rendering 
 	d3ddev->EndScene();
-
+	_UI->RenderText(5, mainCharacter->appleCount());
 	mainCharacter->GraphicUpdate(t);
 
 	MyCamera::GetInstance()->Update(t);

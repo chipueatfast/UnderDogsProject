@@ -49,9 +49,17 @@ Aladdin::Aladdin()
 	_stateManager->AddToDictState("130", "Push");
 	_stateManager->AddToDictState("400", "Climb");
 	_stateManager->AddToDictState("420", "ClimbJump");
+	_stateManager->AddToDictState("050", "SwingIdle");
+	_stateManager->AddToDictState("250", "SwingIdle");
+	_stateManager->AddToDictState("450", "SwingIdle");
+	_stateManager->AddToDictState("550", "SwingIdle");
+	_stateManager->AddToDictState("150", "Swing");
+	_stateManager->AddToDictState("052", "SwingSlash");
+	_stateManager->AddToDictState("051", "SwingThrow");
 	_stateManager->AddToDictState("402", "SwingSlash");
 	_stateManager->AddToDictState("401", "SwingThrow");
 	_stateManager->AddToDictState("060", "Spin");
+	_stateManager->AddToDictState("500", "Beaten");
 
 	_bulletList = new list<AppleBullet*>();
 
@@ -105,38 +113,44 @@ void Aladdin::Init()
 
 void Aladdin::PhysicUpdate(float t)
 {
-	if (this->vy() == 0)
-	{
-		this->set_sub_state("0");
-	}
-	if (this->vy() > 0)
-	{
-		this->set_sub_state("1");
-	}
 	if (this->vx() != 0)
 	{
 		if (this->vx() > 0)
 		{
 			this->set_curFace(GameObject::Face::RIGHT);
+			MyCamera::GetInstance()->set_curFace(GameObject::Face::RIGHT);
 		}
 		else
 		{
 			this->set_curFace(GameObject::Face::LEFT);
+			MyCamera::GetInstance()->set_curFace(GameObject::Face::LEFT);
+
 		}
 		if (this->CheckFlip())
 			this->Flip();
 	}
+
+
 	GameObjectMove::PhysicUpdate(t);
 	setPosition(x() + _vx*t, y() + _vy*t);
 
 	if (_position.x < 0)
 	{
-		_position.x = 0;
+		_position.x = _width;
 	}
-	if (_position.x > 4773)
+	if (_position.x > MyCamera::GetInstance()->curMapWidth())
 	{
-		_position.x = 4773;
+		_position.x = MyCamera::GetInstance()->curMapWidth() - _width;
 	}
+	if (_position.y < 0)
+	{
+		_position.y = _height;
+	}
+	if (_position.y > MyCamera::GetInstance()->curMapHeight() / 2)
+	{
+		_position.y = MyCamera::GetInstance()->curMapHeight() / 2 - _height;
+	}
+
 
 	for (list<AppleBullet*>::iterator i = _bulletList->begin(); i != _bulletList->end(); i++)
 	{
@@ -162,75 +176,38 @@ void Aladdin::GraphicUpdate(float t)
 			Next2();
 			if (_index == _stateManager->curState().getListRect().size() - 1)
 			{
-
 				if (_stateManager->curState().getName() == "IdleUp")
 				{
 					MyCamera::GetInstance()->LookUp(t, false);
 				}
 				else
 				{
- 
 					if (_stateManager->curState().getName() == "IdleDown")
 					{
 						MyCamera::GetInstance()->LookDown(t, false);
 					}
-
 					else
 					{
-						if (MyCamera::GetInstance()->getDistanceUpDown() > 0)
-
-						{
-							MyCamera::GetInstance()->LookUp(t, true);
-						}
-						if (MyCamera::GetInstance()->getDistanceUpDown() < 0)
-						{
-							MyCamera::GetInstance()->LookDown(t, true);
-						}
-
+						MyCamera::GetInstance()->UpDownToNormal(t);
 					}
 				}
 			}
 		}
 		else
 		{
-			if (_stateManager->curState().getName() == "Climb")
-			{
-				if (_vy != 0)
-					Next();
-			}
-			else
-			{
-				if (MyCamera::GetInstance()->getDistanceUpDown() > 0)
-				{
-					MyCamera::GetInstance()->LookUp(t, true);
-				}
-				if (MyCamera::GetInstance()->getDistanceUpDown() < 0)
-				{
-					MyCamera::GetInstance()->LookDown(t, true);
-				}
-
-				Next();
-			}
-
-
+			MyCamera::GetInstance()->UpDownToNormal(t);
+			Next();
 		}
-
-		if (_vx == 0)
+		if ((_position.y < MyCamera::GetInstance()->getUpperHeight() || _position.y> MyCamera::GetInstance()->getLowerHeight())
+			&& _boundingBox.top >= 0
+			)
 		{
-			MyCamera::GetInstance()->LeftRightToNormal(t);
+			MyCamera::GetInstance()->setVy(this->vy());
 		}
-		if (_vx > 0)
-		{
-			MyCamera::GetInstance()->LookLeft(t, false);
-			MyCamera::GetInstance()->MoveX();
+		else
+			MyCamera::GetInstance()->setVy(0);
+ 
 
-			//OutputDebugString(std::to_string(MyCamera::GetInstance()->vxTranslate()).c_str());
-		}
-		if (_vx < 0)
-		{
-			MyCamera::GetInstance()->LookRight(t, false);
-			MyCamera::GetInstance()->MoveX();
-		}
 		_width = _stateManager->curState().getListRect().at(_index).right - _stateManager->curState().getListRect().at(_index).left;
 		_height = _stateManager->curState().getListRect().at(_index).bottom - _stateManager->curState().getListRect().at(_index).top;
 
@@ -242,40 +219,48 @@ void Aladdin::GraphicUpdate(float t)
 		{
 			this->set_hand_state("0");
 		}
-
-
 	}
+	
 
-
-	//if (_position.x < SCREEN_WIDTH / (2 * SCALE_RATE))
+	MyCamera::GetInstance()->setVy(_vy);
+	//Set Camera LeftRight
+	OutputDebugString(to_string(this->x()).c_str());
+	MyCamera::GetInstance()->setVx(_vx);
+	//if (this->x() > MyCamera::GetInstance()->getMaxLookRight() * 2
+	//	&& this->x()  < MyCamera::GetInstance()->getCurMapWidth() - MyCamera::GetInstance()->getMaxLookRight() * 2
+	//	)
 	//{
-	//	MyCamera::GetInstance()->StopX();
+	//	if (_vx > 0)
+	//	{
+	//		MyCamera::GetInstance()->LookLeft(t, false);
+	//	}
+
+	//	if (_vx == 0)
+	//	{
+	//		MyCamera::GetInstance()->LeftRightToNormal(t);
+	//	}
+
+	//	if (_vx < 0)
+	//	{
+	//		MyCamera::GetInstance()->LookRight(t, false);
+	//	}
+
+	//	MyCamera::GetInstance()->setVx(this->vx());
+
+	//	if (((this->x() < MyCamera::GetInstance()->getMaxLookRight() * 3))
+	//		|| ((this->x() > MyCamera::GetInstance()->getCurMapWidth() - MyCamera::GetInstance()->getMaxLookRight() * 3))
+	//		)
+	//	{
+	//		MyCamera::GetInstance()->setVx(0);
+	//		MyCamera::GetInstance()->setVxTranslate(0);
+	//	} 
 	//}
 	//else
 	//{
-	//	if (_position.x > 4773 - SCREEN_WIDTH / (2 * SCALE_RATE))
-	//	{
-	//		MyCamera::GetInstance()->StopX();
-	//	}
-	//	else
-	//	{
-	//		MyCamera::GetInstance()->MoveX();
-	//	}
+	//	MyCamera::GetInstance()->setDistanceLeftRight(0);
+	//	MyCamera::GetInstance()->setVx(0);
+	//	MyCamera::GetInstance()->setVxTranslate(0);
 	//}
-
-	if (_position.y < SCREEN_HEIGHT / (2 * SCALE_RATE))
-	{
-		MyCamera::GetInstance()->StopY();
-	}
-	else
-	{
-		if (_position.y > MyCamera::GetInstance()->curMapHeight() / 2 - SCREEN_HEIGHT / (2 * SCALE_RATE))
-		{
-			//MyCamera::GetInstance()->StopY();
-		}
-		if (_position.y < MyCamera::GetInstance()->curMapHeight() / 2 - SCREEN_HEIGHT / (2 * SCALE_RATE))
-			MyCamera::GetInstance()->MoveY();
-	}
 
 
 }
@@ -295,10 +280,13 @@ void Aladdin::DrawBullet()
 
 void Aladdin::setState(string newState)
 {
+	if (_stateManager->dict_state()[newState] == "")
+		return;
 	if (_stateManager->curState().getName() != _stateManager->dict_state()[newState])
 	{
 		Reset();
 		_stateManager->setState(newState);
+
 	}
 
 
@@ -320,10 +308,12 @@ void Aladdin::BeBeaten()
 
 	if (_invicibleTime == 0)
 	{
-		_health--;
+		set_health(_health - 1);
+
 		_soundAladdinBeBeaten->Play();
 		_invicibleTime = 10;
 	}
+
 
 }
 

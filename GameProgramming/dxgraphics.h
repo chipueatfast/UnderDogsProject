@@ -1,7 +1,7 @@
 #ifndef _DXGRAPHICS_H
 #define _DXGRAPHICS_H
 
-#define FPS 30
+#define FPS 20
 #define SCALE_RATE 2
 #include <d3d9.h>
 #include <d3dx9.h>

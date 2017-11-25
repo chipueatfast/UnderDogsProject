@@ -153,8 +153,8 @@
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="trace.cpp" />
+    <ClCompile Include="UIScene1.cpp" />
     <ClCompile Include="WallPrefab.cpp" />
-    <ClCompile Include="WeaponObject.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -188,8 +188,8 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="trace.h" />
+    <ClInclude Include="UIScene1.h" />
     <ClInclude Include="WallPrefab.h" />
-    <ClInclude Include="WeaponObject.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
