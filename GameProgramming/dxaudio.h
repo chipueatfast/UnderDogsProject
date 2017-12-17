@@ -43,7 +43,7 @@ class CWaveFile;
 #define DSUtil_PlaySoundLooping(s)  { if(s) s->Play( 0, DSBPLAY_LOOPING ); }
 
 #pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "dxerr.lib")
+#pragma comment(lib, "DxErr.lib")
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "legacy_stdio_definitions.lib")
 

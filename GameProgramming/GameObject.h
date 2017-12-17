@@ -26,6 +26,7 @@ protected:
 	Sprite* _boundingRect;
 	bool _isRepeating = true;
 public:
+
 	void setIsRepeating(bool isRepeating)
 	{
 		_isRepeating = isRepeating;
@@ -64,6 +65,13 @@ public:
 protected:
 	Face _curFace, _lastFace;
 	Sprite* _sprite;
+public:
+	Sprite* sprite() const
+	{
+		return _sprite;
+	}
+
+protected:
 	int _width, _height;
 	int _vx, _vy;
 
@@ -144,9 +152,31 @@ public:
 protected:
 	D3DXVECTOR3 _anchorPoint;
 	int _index;
+public:
+	int index() const
+	{
+		return _index;
+	}
+
+	void set_index(int index)
+	{
+		_index = index;
+	}
+
+protected:
 	float _animaDelay, _animaCount;
 
 public:
+
+	int Index() const
+	{
+		return _index;
+	}
+	int animaDelay() const
+	{
+		return _animaDelay;
+	}
+
 	void setAnimaDelay(float animaDelay)
 	{
 		_animaDelay = animaDelay;
@@ -201,12 +231,24 @@ public:
 	void set_state(string newState);
 	void Transform(bool isRotation, bool isScale, bool isTranslation); // apply matrix transform vao spriteHandler
 	void UpdateAnimate();
-	void RenderBounding(D3DCOLOR color = D3DCOLOR_ARGB(0,255,255,255) , bool isRotation = false, bool isScale = false, bool isTranslation = true);
+	virtual void RenderBounding(D3DCOLOR color = D3DCOLOR_ARGB(0,255,255,255) , bool isRotation = false, bool isScale = false, bool isTranslation = true);
 protected:
 	void CalAnchorPoint(); // tinh lai gia tri anchor cua class
 	D3DXVECTOR3 CalAnchorPoint(AnchorPoint type); // tra ve anchorpoint theo type truyen vao
 	RECT getBoundingBox(string stateCode);
+private:
+	bool _isHitted;
 
+public:
+	bool is_hitted() const
+	{
+		return _isHitted;
+	}
+
+	void set_is_hitted(bool is_hitted)
+	{
+		_isHitted = is_hitted;
+	}
 };
 
 #endif // ! _GAME_OBJECT_H_

@@ -6,10 +6,7 @@ void GroundPrefab::Instantiate(GameObject* gameObject, float x, float y, int wid
 {
 	gameObject->set_name("Ground");
 	gameObject->setPosition(x, y);
-	gameObject->setSprite(new Sprite("Res\\Ground.png", width, height));
-	/*gameObject->set_state_manager(new StateManager("Res\\Ground.xml"));
-	gameObject->state_manager()->AddToDictState("000", "Ground");
-	gameObject->state_manager()->setState("000");*/
+	gameObject->setSprite(new Sprite("Res\\blank.png", width, height));
 }
 
 GroundPrefab::GroundPrefab()

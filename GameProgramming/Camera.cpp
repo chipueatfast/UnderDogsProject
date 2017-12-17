@@ -4,43 +4,12 @@
 #include "Camera.h"
 #include "trace.h"
 #include "Scene1.h"
-#define MAX_LOOKUP -_height/6
-#define MAX_LOOKDOWN _height/6
-#define BORDER_SIZE 75*SCALE_RATE;
+
+#define MAX_LOOKUP -CHARACTER_VX*5
+#define MAX_LOOKDOWN CHARACTER_VX*5 
+#define BORDER_SIZE 25*SCALE_RATE;
+
 MyCamera* MyCamera::_instance = NULL;
-
-
-
-MyCamera::MyCamera()
-{
-	_distanceUpDown = 0;
-	_distanceLeftRight = 0;
-	_distanceJumpFall = 0;
-	_width = SCREEN_WIDTH / SCALE_RATE;		//width cua viewRect
-	_height = SCREEN_HEIGHT / SCALE_RATE;	//height cua viewRect
-	_viewRect = RECT();
-	_position = D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
-	_anchor = MIDDLE;
-	CalAnchorPoint();
-	_vx = 0;
-	_vy = 0;
-	_curFace = Face::RIGHT;
-	_vxTranslate = 0;
-	_vyTranslate = 0;
-
-	while (_maxLookRight <= float(_width) / 6)
-	{
-		_maxLookRight += CHARACTER_VX * FIXED_TIME;
-	}
-	_maxLookLeft = -_maxLookRight;
-
-}
-
-
-MyCamera::~MyCamera()
-{
-}
-
 MyCamera * MyCamera::GetInstance()
 {
 	if (!_instance)
@@ -49,18 +18,136 @@ MyCamera * MyCamera::GetInstance()
 	return _instance;
 }
 
-
-RECT MyCamera::View()
+MyCamera::~MyCamera()
 {
-	return _viewRect;
 }
+
+MyCamera::MyCamera()
+{
+	_width = SCREEN_WIDTH / SCALE_RATE;		//width of viewRect
+	_height = SCREEN_HEIGHT / SCALE_RATE;	//height of viewRect
+	_viewRect = RECT();
+	_position = D3DXVECTOR3(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 0);
+	_anchor = MIDDLE;
+	CalAnchorPoint();
+
+	_curFace = Face::RIGHT;
+	_maxLookRight = _vxTranslate = _vyTranslate = _distanceLeftRight = _distanceUpDown = _specialState = 0;
+	_isUpdateLeftRight = true;
+
+	while (_maxLookRight < float(_width) / 6 + CHARACTER_VX * FIXED_TIME)
+	{
+		_maxLookRight += CHARACTER_VX * FIXED_TIME;
+	}
+	_maxLookLeft = -_maxLookRight;
+}
+
+void MyCamera::Update(float t)
+{
+#pragma region Update Camera Left-Right Position
+	//Decide UpDateLeftRightOrNOt
+	if (_specialState == 0) // if it is special state : fix camera 's position as  character's
+	{
+		//if Camera position make bounding reach end side of the map 
+		if (_positionCharacter.x <= width() / 2
+			|| _positionCharacter.x >= curMapWidth() - width() / 2
+			)
+		{
+			if (_positionCharacter.x == width() / 2
+				|| _positionCharacter.x == curMapWidth() - width() / 2
+				)
+			{
+				UpdateLeftRight(t);
+				_distanceLeftRight += _vxTranslate*t;
+				_position.x += _vxTranslate;
+			}
+			else
+			{
+				_vx = 0;
+				_distanceLeftRight = 0;
+				_vxTranslate = 0;
+			}
+		}
+		else
+		{
+			UpdateLeftRight(t);
+			_distanceLeftRight += _vxTranslate*t;
+			_position.x += _vxTranslate;
+		}
+
+		//set position x by position of character
+		if (_distanceLeftRight == 0)
+		{
+			_position.x = _positionCharacter.x - _vx*t;
+		}
+
+		_position.x += _vx*t;
+	}
+	else
+	{
+		_distanceLeftRight = 0;
+		_position.x = _positionCharacter.x;
+	}
+
+	//A Raw Way Lock camera X bounding inside map
+	if (_position.x < _width / 2)
+		_position.x = _width / 2;
+	if (_position.x > _curMapWidth - _width / 2)
+	{
+		_position.x = _curMapWidth - _width / 2;
+	}
+#pragma endregion 
+
+
+#pragma region Update Camera Up-Down Position
+	//If character exceedes upper side of camera
+	if (_boundingCharacter.top <= getUpperSide())
+	{
+		_vy > 0 ? _vy = 0 : _vy = _vy;
+	}
+	else
+	{
+		//If character exceedes lower side of camera
+		if (_boundingCharacter.bottom >= getLowerSide())
+		{
+			_vy < 0 ? _vy = 0 : _vy = _vy;
+		}
+		else
+			_vy = 0;
+	}
+	_distanceUpDown += _vyTranslate*t;
+	_position.y += _vy*t + _vyTranslate*t;
+
+	//A raw way to lock camera Y bounding inside map
+	if (_position.y < _height / 2)
+		_position.y = _height / 2;
+	if (_position.y > _curMapHeight / 2 - _height / 2)
+		_position.y = _curMapHeight / 2 - _height / 2;
+
+#pragma endregion  
+
+
+#pragma region Update Camera ViewRect and BoundingBox
+	//Caculate view rect accordding to position and width height
+	_viewRect.left = _position.x - _width / 2;
+	_viewRect.right = _position.x + _width / 2;
+	_viewRect.top = -_height / 2 + _position.y;
+	_viewRect.bottom = _viewRect.top + _height;
+
+	//Caculate Extraview (which is also a larger bounding box of camera - use for scan quadtree)
+	_boundingBox = ExtraView();
+#pragma endregion 
+}
+
+
+#pragma region ExtraView And BoundingBox
 
 RECT MyCamera::ExtraView()
 {
 	RECT extraView;
 
 	extraView.left = _viewRect.left - BORDER_SIZE;
-	extraView.top = _viewRect.top  - BORDER_SIZE;
+	extraView.top = _viewRect.top - BORDER_SIZE;
 	extraView.bottom = _viewRect.bottom + BORDER_SIZE;
 	extraView.right = _viewRect.right + BORDER_SIZE;
 	return extraView;
@@ -87,45 +174,35 @@ void MyCamera::RenderBounding(D3DCOLOR color, bool isRotation, bool isScale, boo
 	sprite_handler->SetTransform(&old_matrix);
 }
 
+#pragma endregion
+
+
 #pragma region UPDOWN
-void MyCamera::LookUp(float t, bool toNormal)
+
+void MyCamera::LookUp(const float &t, const bool & toNormal)
 {
+	_vyTranslate = -CHARACTER_VX;
 
-	_vyTranslate = -15;
-
-	if (((_distanceUpDown + _vyTranslate*t <= MAX_LOOKUP || _distanceUpDown + _vyTranslate*t >= MAX_LOOKDOWN) && toNormal == false) // dat toi bien tren hoac bien duoi cua tam nhin
-		|| _distanceUpDown + _vyTranslate*t <= (_height / 2 - _position.y) //dat toi cot moc bien tren cua map buffer
-		|| (toNormal == true && int(_distanceUpDown) == 0)) // da dat toi tam nhin man hinh binh thuong mong muon
+	if (((_distanceUpDown + _vyTranslate*t <= MAX_LOOKUP || _distanceUpDown + _vyTranslate*t >= MAX_LOOKDOWN) && toNormal == false)
+		|| _distanceUpDown + _vyTranslate*t <= (_height / 2 - _position.y)
+		|| (toNormal == true && int(_distanceUpDown) == 0))
 	{
 		_vyTranslate = 0;
 	}
-
-	_distanceUpDown += _vyTranslate*t;
 }
 
-//Update(0);
-
-
-void MyCamera::LookDown(float t, bool toNormal)
+void MyCamera::LookDown(const float &t, const bool & toNormal)
 {
-
-	_vyTranslate = 15;
-	//trace(L"_distanceUpDown=%f cuMapHeight/2= %f  - _positionY = %f", _distanceUpDown, _curMapHeight / 2, _position.y);
-
-	if (((_distanceUpDown + _vyTranslate*t <= MAX_LOOKUP || _distanceUpDown + _vyTranslate*t >= MAX_LOOKDOWN) && toNormal == false) //dat toi bien bien tren hoac bien duoi cua tam nhin
-		|| _distanceUpDown + _vyTranslate*t >= _curMapHeight / 2 - _height / 2 - _position.y //dat toi bien duoi cua mapbuffer
-		|| (toNormal == true && int(_distanceUpDown) == 0)) //da dat toi tam nhin binh thuong mong muon
+	_vyTranslate = CHARACTER_VX;
+	if (((_distanceUpDown + _vyTranslate*t <= MAX_LOOKUP || _distanceUpDown + _vyTranslate*t >= MAX_LOOKDOWN) && toNormal == false)
+		|| _distanceUpDown + _vyTranslate*t >= _curMapHeight / 2 - _height / 2 - _position.y
+		|| (toNormal == true && int(_distanceUpDown) == 0))
 	{
 		_vyTranslate = 0;
 	}
-
-	_distanceUpDown += _vyTranslate*t;
-	//trace(L"%f", _distanceUpDown);
-
 }
 
-
-void MyCamera::UpDownToNormal(float t)
+void MyCamera::UpDownToNormal(const float &t)
 {
 	_vyTranslate = 0;
 	if (_distanceUpDown > 0)
@@ -138,70 +215,40 @@ void MyCamera::UpDownToNormal(float t)
 	}
 }
 
-#pragma endregion 
+#pragma endregion  
 
 
-void MyCamera::Update(float t)
-{
-	_distanceLeftRight += _vxTranslate*t;
-	_position.x += (_vxTranslate)*t + (_vx)*t;;
+#pragma region LEFTRIGHT  
 
-	_position.y += _vy*t + _vyTranslate*t;
-
-
-	//Lock camera Y
-
-
-	//Raw fix camera left right bounding
-	if (_position.x < _width / 2)
-		_position.x = _width / 2;
-	if (_position.x > _curMapWidth - _width / 2)
-	{
-		_position.x = _curMapWidth - _width / 2;
-	}
-
-	if (_position.y < _height / 2)
-		_position.y = _height / 2;
-	if (_position.y > _curMapHeight / 2 - _height / 2)
-	{
-		_position.y = _curMapHeight / 2 - _height / 2;
-	}
-
-	_viewRect.left = _position.x - _width / 2;
-	_viewRect.right = _position.x + _width / 2;
-	_viewRect.top = -_height / 2 + _position.y;
-	_viewRect.bottom = _viewRect.top + _height;
-	_boundingBox = ExtraView();
-}
-
-#pragma region LEFTRIGHT 
-
-void MyCamera::LookLeft(float t, bool toNormal)
+void MyCamera::LookLeft(const float &t, const bool & toNormal)
 {
 	_vxTranslate = -CHARACTER_VX;
-	if (((_distanceLeftRight + int(_vxTranslate*t) < _maxLookLeft) && _curFace == Face::RIGHT)
-		//	|| _distanceLeftRight + _vxTranslate*t <= (_width/2 - _position.x) 
+
+	if (((_distanceLeftRight + _vxTranslate*t <= _maxLookLeft || _distanceLeftRight + _vxTranslate*t >= _maxLookRight) && toNormal == false)
+		|| (toNormal == true && int(_distanceLeftRight) == 0))
+	{
+		_vxTranslate = 0;
+	}
+
+}
+
+void MyCamera::LookRight(const float &t, const bool & toNormal)
+{
+	_vxTranslate = CHARACTER_VX;
+
+	if (((_distanceLeftRight + _vxTranslate*t <= _maxLookLeft || _distanceLeftRight + _vxTranslate*t >= _maxLookRight) && toNormal == false)
 		|| (toNormal == true && int(_distanceLeftRight) == 0))
 	{
 		_vxTranslate = 0;
 	}
 }
 
-void MyCamera::LookRight(float t, bool toNormal)
+void MyCamera::LeftRightToNormal(const float &t)
 {
-	_vxTranslate = CHARACTER_VX;
-
-	if (((_distanceLeftRight + int(_vxTranslate*t) > _maxLookRight) && _curFace == Face::LEFT) //khi vuot qua vi tri toi da
-																							   //	 || _distanceLeftRight + _vxTranslate*t >= (_curMapWidth + _width / 2 - _position.x )
-		|| (toNormal == true && int(_distanceLeftRight) == 0)) // khi dang muon tro ve vi tri can bang va da dat duoc vi tri can bang
+	if (_distanceLeftRight == 0)
 	{
 		_vxTranslate = 0;
 	}
-}
-
-void MyCamera::LeftRightToNormal(float t)
-{
-	_vxTranslate = 0;
 	if (_distanceLeftRight > 0)
 	{
 		LookLeft(t, true);
@@ -212,30 +259,18 @@ void MyCamera::LeftRightToNormal(float t)
 	}
 }
 
-int MyCamera::getUpperHeight()
+void MyCamera::UpdateLeftRight(const float &t)
 {
-	return this->y() - _height / 4;
-}
-
-int MyCamera::getLowerHeight()
-{
-	return this->y() + _height / 6;
-}
-
-void MyCamera::set_curFace(Face face)
-{
-	if (face != _curFace)
+	if (_vx == 0)
 	{
-		_curFace = face;
-		switch (face)
-		{
-		case Face::LEFT:
-			_distanceLeftRight = _distanceLeftRight + (_maxLookRight) * 2;
-			break;
-		case Face::RIGHT:
-			_distanceLeftRight = _distanceLeftRight + (_maxLookLeft) * 2;
-			break;
-		}
+		if (this->curface() == Face::LEFT)
+			LookLeft(t, false);
+		else
+			LookRight(t, false);
+	}
+	else
+	{
+		LeftRightToNormal(t);
 	}
 }
-#pragma endregion
+#pragma endregion 

@@ -1,6 +1,6 @@
 #include "BulletPrefab.h"
 
-#define BULLET_PREFAB_VX 2
+#define BULLET_PREFAB_VX 10
 void BulletPrefab::Instantiate(GameObject* gameObject, char* category, int x, int y, GameObject::Face direction)
 {
 	gameObject->set_state_manager(new StateManager("Res\\BulletXML.xml"));

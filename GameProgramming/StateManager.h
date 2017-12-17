@@ -9,6 +9,7 @@ class StateManager
 {
 private:
 	State _curState;
+	State _lastState;
 	int _lifeSpan;
 public:
 	int life_span() const
@@ -27,10 +28,18 @@ public:
 		return _curState;
 	}
 
+	State lastState() const
+	{
+		return _lastState;
+	}
+
+
 private:
 	//Sta	te_Name _state;
 
 	map<string, string> _dictState;
+	map<string, State> _mapState;
+
 public:
 	map<string, string> dict_state() const
 	{
@@ -41,11 +50,7 @@ public:
 	{
 		_dictState = pairs;
 	}
-
-private:
-	map<string, State> _mapState;
-
-
+  
 public:
 	StateManager();
 	~StateManager();
@@ -54,6 +59,8 @@ public:
 	StateManager(char* xmlpath);
 	void setState(string stateCode);
 	State getStateByCode(string stateCode);
+
+	void setLastState(string lastStateCode);
 };
 
 #endif // !_STATE_MANAGER_H_

@@ -32,9 +32,53 @@ protected:
 	CSound* _soundTheme;
 	D3DXIMAGE_INFO* mapinfo;
 
+public:
+	D3DXIMAGE_INFO* MapInfo() const
+	{
+		return mapinfo;
+	}
+
+	void set_mapinfo(D3DXIMAGE_INFO* mapinfo)
+	{
+		this->mapinfo = mapinfo;
+	}
+
+protected:
 	list<GameObjectMove*>* _healthHavingList;
 	list<GameObject*>* _gameObjectList;
 	list<GameObject*>* _onScreenList;
+public:
+	list<GameObjectMove*>* health_having_list() const
+	{
+		return _healthHavingList;
+	}
+
+	void set_health_having_list(list<GameObjectMove*>* game_object_moves)
+	{
+		_healthHavingList = game_object_moves;
+	}
+
+	list<GameObject*>* on_screen_list() const
+	{
+		return _onScreenList;
+	}
+
+	void set_on_screen_list(list<GameObject*>* game_objects)
+	{
+		_onScreenList = game_objects;
+	}
+
+	list<GameObject*>* disposable_list() const
+	{
+		return _disposableList;
+	}
+
+	void set_disposable_list(list<GameObject*>* game_objects)
+	{
+		_disposableList = game_objects;
+	}
+
+protected:
 	list<GameObject*>* _disposableList;
 public:
 	list<GameObject*>* game_object_list() const

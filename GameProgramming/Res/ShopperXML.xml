@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Animations>
-  <Animation name="ShopperIdle1" imagePath="Shopper.png" width="564" height="1049">
-    <sprite x="6" y="1" w="28" h="55" oX="6" oY="1" oW="-102" oH="166" />
-    <sprite x="41" y="0" w="28" h="55" oX="41" oY="0" oW="-102" oH="166" />
-    <sprite x="75" y="0" w="28" h="55" oX="75" oY="0" oW="-102" oH="166" />
-    <sprite x="111" y="1" w="27" h="53" oX="111" oY="1" oW="-102" oH="166" />
-    <sprite x="143" y="2" w="26" h="51" oX="143" oY="2" oW="-102" oH="166" />
-  </Animation>
-  <Animation name="ShopperOpen" imagePath="Shopper.png" width="564" height="1049">
+  
+  <Animation name="ShopperOpen" imagePath="Shopper.png" width="564" height="1049" delay="1">
     <sprite x="4" y="66" w="85" h="64" oX="4" oY="66" oW="909" oH="368" />
     <sprite x="94" y="59" w="59" h="83" oX="94" oY="59" oW="909" oH="368" />
     <sprite x="161" y="59" w="81" h="84" oX="161" oY="59" oW="909" oH="368" />
@@ -32,18 +26,75 @@
     <sprite x="5" y="836" w="113" h="59" oX="5" oY="836" oW="909" oH="368" />
     <sprite x="133" y="836" w="142" h="59" oX="133" oY="836" oW="909" oH="368" />
   </Animation>
-  <Animation name="ShopperIdle2" imagePath="Shopper.png" width="564" height="1049">
-    <sprite x="394" y="13" w="118" h="67" oX="394" oY="13" oW="72" oH="125" />
-    <sprite x="393" y="96" w="119" h="67" oX="393" oY="96" oW="72" oH="125" />
-    <sprite x="392" y="188" w="119" h="67" oX="392" oY="188" oW="72" oH="125" />
-    <sprite x="395" y="288" w="113" h="67" oX="395" oY="288" oW="72" oH="125" />
-    <sprite x="395" y="377" w="112" h="67" oX="395" oY="377" oW="72" oH="125" />
+   <Animation name="Idle1" imagePath="Shopper.png" width="762" height="1049" delay="2">
+    <sprite x="589" y="13" w="146" h="67" oX="394" oY="13" oW="72" oH="125" />
+    <sprite x="589" y="96" w="146" h="67" oX="393" oY="96" oW="72" oH="125" />
+    <sprite x="589" y="188" w="146" h="67" oX="392" oY="188" oW="72" oH="125" /> 
+	
+	<sprite x="589" y="13" w="146" h="67" oX="394" oY="13" oW="72" oH="125" />
+    <sprite x="589" y="96" w="146" h="67" oX="393" oY="96" oW="72" oH="125" />
+    <sprite x="589" y="188" w="146" h="67" oX="392" oY="188" oW="72" oH="125" />
+	
+	<sprite x="589" y="13" w="146" h="67" oX="394" oY="13" oW="72" oH="125" />
+    <sprite x="589" y="96" w="146" h="67" oX="393" oY="96" oW="72" oH="125" />
+    <sprite x="589" y="188" w="146" h="67" oX="392" oY="188" oW="72" oH="125" />
+	
+    <sprite x="589" y="288" w="146" h="67" oX="395" oY="288" oW="72" oH="125" />
+    <sprite x="589" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="589" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="589" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="589" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="589" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="589" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
   </Animation>
-  <Animation name="ShopperIddle3" imagePath="Shopper.png" width="564" height="1049">
-    <sprite x="395" y="480" w="129" h="67" oX="395" oY="480" oW="578" oH="199" />
-    <sprite x="391" y="586" w="173" h="76" oX="391" oY="586" oW="578" oH="199" />
-    <sprite x="398" y="697" w="146" h="67" oX="398" oY="697" oW="578" oH="199" />
-    <sprite x="396" y="791" w="141" h="67" oX="396" oY="791" oW="578" oH="199" />
-    <sprite x="397" y="886" w="167" h="88" oX="397" oY="886" oW="578" oH="199" />
+  <Animation name="Idle2" imagePath="Shopper.png" width="762" height="1049" delay="2">
+    <sprite x="392" y="13" w="146" h="67" oX="394" oY="13" oW="72" oH="125" />
+    <sprite x="392" y="96" w="146" h="67" oX="393" oY="96" oW="72" oH="125" />
+    <sprite x="392" y="188" w="146" h="67" oX="392" oY="188" oW="72" oH="125" />
+	
+	<sprite x="392" y="13" w="146" h="67" oX="394" oY="13" oW="72" oH="125" />
+    <sprite x="392" y="96" w="146" h="67" oX="393" oY="96" oW="72" oH="125" />
+    <sprite x="392" y="188" w="146" h="67" oX="392" oY="188" oW="72" oH="125" />
+	
+	<sprite x="392" y="13" w="146" h="67" oX="394" oY="13" oW="72" oH="125" />
+    <sprite x="392" y="96" w="146" h="67" oX="393" oY="96" oW="72" oH="125" />
+    <sprite x="392" y="188" w="146" h="67" oX="392" oY="188" oW="72" oH="125" />
+	
+    <sprite x="392" y="288" w="146" h="67" oX="395" oY="288" oW="72" oH="125" /> 
+    <sprite x="392" y="288" w="146" h="67" oX="395" oY="288" oW="72" oH="125" />
+	
+    <sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+  </Animation>
+  <Animation name="Idle3" imagePath="Shopper.png" width="762" height="1049" delay="2">
+    <sprite x="392" y="480" w="146" h="67" oX="395" oY="480" oW="606" oH="156" />
+    <sprite x="392" y="595" w="146" h="67" oX="391" oY="595" oW="606" oH="156" />
+    <sprite x="392" y="697" w="146" h="67" oX="398" oY="697" oW="606" oH="156" />
+    <sprite x="392" y="791" w="146" h="67" oX="396" oY="791" oW="606" oH="156" />
+	
+    <sprite x="392" y="907" w="146" h="67" oX="397" oY="907" oW="606" oH="156" />
+	<sprite x="392" y="907" w="146" h="67" oX="397" oY="907" oW="606" oH="156" />
+	<sprite x="392" y="907" w="146" h="67" oX="397" oY="907" oW="606" oH="156" />
+	<sprite x="392" y="907" w="146" h="67" oX="397" oY="907" oW="606" oH="156" />
+	<sprite x="392" y="907" w="146" h="67" oX="397" oY="907" oW="606" oH="156" />
+	<sprite x="392" y="791" w="146" h="67" oX="396" oY="791" oW="606" oH="156" />
+	<sprite x="392" y="697" w="146" h="67" oX="398" oY="697" oW="606" oH="156" />
+	<sprite x="392" y="595" w="146" h="67" oX="391" oY="595" oW="606" oH="156" />
+	
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" />
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" /> 
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" /> 
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" /> 
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" /> 
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" /> 
+	<sprite x="392" y="377" w="146" h="67" oX="395" oY="377" oW="72" oH="125" /> 
+	
+	<sprite x="392" y="288" w="146" h="67" oX="395" oY="288" oW="72" oH="125" /> 
+    <sprite x="392" y="288" w="146" h="67" oX="395" oY="288" oW="72" oH="125" />
+	
   </Animation>
 </Animations>

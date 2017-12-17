@@ -16,7 +16,7 @@ GameObject::GameObject()
 	_sprite = new Sprite();
 	_anchor = AnchorPoint::TOP_LEFT;
 	_index = 0;
-	_animaDelay = 1.0f;
+	_animaDelay = 0;
 	_animaCount = 0;
 
 	_boundingRect = new Sprite("Res/blank.png", 50, 50);
@@ -60,7 +60,7 @@ void GameObject::setPosition(D3DXVECTOR3 vec3)
 void GameObject::setPosition(float x, float y)
 {
 	_position = D3DXVECTOR3(x, y, 0);
-		_translation = D3DXVECTOR2(_position.x, _position.y); // test
+	_translation = D3DXVECTOR2(_position.x, _position.y); // test
 	_boundingBox = CalculateBoundingBox(x, y, _width, _height, _anchor);
 }
 
@@ -117,7 +117,10 @@ void GameObject::Transform(bool isRotation, bool isScale, bool isTranslation)
 }
 void GameObject::UpdateAnimate()
 {
-	_animaCount ++;
+	if (_stateManager->curState().getName() != "")
+		_animaDelay = _stateManager->curState().AnimaDelay();
+	_animaCount++;
+
 	if (_animaCount >= _animaDelay)
 	{
 		if (_isRepeating == false)
@@ -128,6 +131,7 @@ void GameObject::UpdateAnimate()
 		// update lai anchorpoint do frame co bounding khac nhau
 		CalAnchorPoint();
 	}
+
 }
 
 void GameObject::RenderBounding(D3DCOLOR color, bool isRotation, bool isScale, bool isTranslation)
@@ -174,9 +178,7 @@ void GameObject::Render(bool isRotation, bool isScale, bool isTranslation)
 
 			sprite_handler->Draw(
 				_sprite->image(),
-				//_stateManager == NULL ? NULL : &_stateManager->curState().getListRect().at(_index),
 				_stateManager->curState().getName() == "" ? NULL : &_stateManager->curState().getListRect().at(_index),
-				//NULL,
 				&_anchorPoint,
 				NULL,
 				D3DCOLOR_XRGB(255, 255, 255)
@@ -214,6 +216,7 @@ void GameObject::Next2()
 	int size = _stateManager->curState().getListRect().size() - 1;
 	if (_index < size)
 		_index++;
+	_stateManager->set_life_span(_stateManager->life_span() - 1);
 }
 
 void GameObject::set_state(string newState)

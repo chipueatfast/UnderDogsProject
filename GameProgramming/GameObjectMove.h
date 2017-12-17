@@ -2,10 +2,80 @@
 #include "GameObject.h";
 class GameObjectMove :public GameObject
 {
+protected:
+	//mark as standstill
+	bool _isStandStill;
 private:
 	GameObject* _weaponObj;
-
+	bool _reachLimit;
 public:
+	bool reach_limit() const
+	{
+		return _reachLimit;
+	}
+
+	void set_reach_limit(bool reach_limit)
+	{
+		_reachLimit = reach_limit;
+	}
+
+private:
+	//attack turn remain
+	int _attackTurnRemain;
+public:
+	bool is_stand_still() const
+	{
+		return _isStandStill;
+	}
+
+	void set_is_stand_still(bool is_stand_still)
+	{
+		_isStandStill = is_stand_still;
+	}
+
+	int attack_turn_remain() const
+	{
+		return _attackTurnRemain;
+	}
+
+	void set_attack_turn_remain(int attack_turn_remain)
+	{
+		_attackTurnRemain = attack_turn_remain;
+	}
+
+protected:
+	int _distanceFromMain;
+	int _minX, _maxX;
+public:
+	int min_x() const
+	{
+		return _minX;
+	}
+
+	void set_min_x(int min_x)
+	{
+		_minX = min_x;
+	}
+
+	int max_x() const
+	{
+		return _maxX;
+	}
+
+	void set_max_x(int max_x)
+	{
+		_maxX = max_x;
+	}
+	int distance_from_main() const
+	{
+		return _distanceFromMain;
+	}
+
+	void set_distance_from_main(int distance_from_main)
+	{
+		_distanceFromMain = distance_from_main;
+	}
+
 	GameObject* weapon_obj() const
 	{
 		return _weaponObj;

@@ -1,5 +1,9 @@
 #include "GameObjectMove.h"
 #include "trace.h"
+#include "Camera.h"
+#include "GameManager.h"
+#define STOP_TRACKING_DISTANCE 10
+
 
 
 GameObjectMove::GameObjectMove()
@@ -8,65 +12,90 @@ GameObjectMove::GameObjectMove()
 	_isThrowing = false;
 	_isImmune = 0.0f;
 	_health = 0;
+	_vx = 0;
 }
 
 void GameObjectMove::GraphicUpdate(float t)
 {
 	GameObject::GraphicUpdate(t);
-
-
-
 }
 
 void GameObjectMove::PhysicUpdate(float t)
 {
+	int temp_x = x() + _vx*t;
+	if (temp_x > min_x() && temp_x < max_x())
+		_reachLimit = false;
+	else _reachLimit = true;
+	if (distance_from_main()>= STOP_TRACKING_DISTANCE && _reachLimit==false)
+	{
+
+		setPosition(temp_x, y() + _vy*t);
+		_isStandStill = false;
+	}
+		
+
+	if (hand_state() != "1")
+	{
+		_isStandStill = false;
+	}	
+	else
+	{
+		_isStandStill = true;
+	}
+		
+	
 	if (_isImmune != 0.0f)
 		_isImmune--;
 	if (_handState == "2" && _stateManager->life_span() == 3)
 	{
 		CalSword();
-		//trace(L"%d", _stateManager->life_span());
 	}
-	if (_handState == "2" && _stateManager->life_span() == 1)
+	if (_handState == "2" && _stateManager->life_span() == 0)
 	{
 		_handState = "0";
-		DelSword();		
+		DelSword();
 	}
+	
 }
 
 void GameObjectMove::CalSword()
 {
-
-	if (main_state() == "2")
+	if (_sword!= nullptr)
 	{
-		_sword = &getBoundingBox(main_state() + sub_state() + "2");
-		return;
+		if (main_state() == "2")
+		{
+			_sword = &getBoundingBox(main_state() + sub_state() + "2");
+			return;
+		}
+		_sword->top = _boundingBox.top;
+		_sword->bottom = _boundingBox.bottom;
+		if (curface() == Face::RIGHT)
+		{
+			_sword->left = _boundingBox.right;
+			_sword->right = _sword->left + 50;
+			return;
+		}
+		else
+		{
+			_sword->right = _boundingBox.left;
+			_sword->left = _sword->right + 50;
+			return;
+		}
 	}
-	RECT temp_rect1 = getBoundingBox(main_state() + sub_state() + "2");
-	RECT temp_rect2 = getBoundingBox(main_state() + sub_state() + "0");
-	_sword->top = _boundingBox.top;
-	_sword->bottom = _boundingBox.bottom;
-	if (curface() == Face::RIGHT)
-	{
-		_sword->left = temp_rect2.right;
-		_sword->right = temp_rect1.right;
-		return;
-	}
-	else
-	{
-		_sword->left = temp_rect1.left;
-		_sword->right = temp_rect2.left;
-		return;
-	}
+	
 
 }
 
 void GameObjectMove::DelSword()
 {
-	_sword->bottom = 0;
-	_sword->top = 0;
-	_sword->right = 0;
-	_sword->left = 0;
+	if (_sword!=nullptr)
+	{
+		_sword->bottom = 0;
+		_sword->top = 0;
+		_sword->right = 0;
+		_sword->left = 0;
+	}
+
 }
 
 GameObjectMove::~GameObjectMove()

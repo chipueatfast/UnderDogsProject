@@ -1,33 +1,6 @@
- <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
  <Animations>
- <Animation name="EnemyMusRun1" imagePath="Enemy1.png" width="500" height="1096">
-    <sprite x="4" y="313" w="40" h="53" oX="4" oY="313" oW="358" oH="457" />
-    <sprite x="179" y="315" w="40" h="52" oX="179" oY="315" oW="358" oH="457" />
-    <sprite x="94" y="311" w="40" h="58" oX="94" oY="311" oW="358" oH="457" />
-    <sprite x="138" y="311" w="37" h="57" oX="138" oY="311" oW="358" oH="457" />
-    <sprite x="250" y="310" w="43" h="58" oX="250" oY="310" oW="358" oH="457" />
-    <sprite x="4" y="313" w="40" h="53" oX="4" oY="313" oW="358" oH="457" />
-    <sprite x="423" y="313" w="45" h="50" oX="423" oY="313" oW="358" oH="457" />
-    <sprite x="365" y="311" w="43" h="57" oX="365" oY="311" oW="358" oH="457" />
-    <sprite x="310" y="311" w="42" h="57" oX="310" oY="311" oW="358" oH="457" />
-    <sprite x="49" y="311" w="42" h="59" oX="49" oY="311" oW="358" oH="457" />
-  </Animation>
-  <Animation name="EnemyMusSlash1" imagePath="Enemy1.png" width="500" height="1096">
-    <sprite x="134" y="387" w="70" h="41" oX="134" oY="387" oW="363" oH="388" />
-    <sprite x="62" y="385" w="67" h="43" oX="62" oY="385" oW="363" oH="388" />
-    <sprite x="3" y="383" w="54" h="51" oX="3" oY="383" oW="363" oH="388" />
-    <sprite x="207" y="382" w="74" h="42" oX="207" oY="382" oW="363" oH="388" />
-    <sprite x="290" y="378" w="88" h="44" oX="290" oY="378" oW="363" oH="388" />
-    <sprite x="0" y="443" w="95" h="45" oX="0" oY="443" oW="363" oH="388" />
-  </Animation>
-  <Animation name="EnemyMusSlash2" imagePath="Enemy1.png" width="500" height="1096">
-    <sprite x="14" y="507" w="43" h="59" oX="14" oY="507" oW="554" oH="291" />
-    <sprite x="64" y="498" w="43" h="72" oX="64" oY="498" oW="554" oH="291" />
-    <sprite x="114" y="503" w="51" h="65" oX="114" oY="503" oW="554" oH="291" />
-    <sprite x="168" y="515" w="114" h="55" oX="168" oY="515" oW="554" oH="291" />
-    <sprite x="286" y="496" w="91" h="72" oX="286" oY="496" oW="554" oH="291" />
-  </Animation>
-  <Animation name="EnemyMusTaunt" imagePath="Enemy1.png" width="500" height="1096">
+   <Animation name="EnemyMusTaunt" imagePath="Enemy1.png" width="500" height="1096" delay="2">
     <sprite x="5" y="582" w="44" h="52" oX="5" oY="582" oW="625" oH="313" />
     <sprite x="54" y="580" w="36" h="53" oX="54" oY="580" oW="625" oH="313" />
     <sprite x="93" y="580" w="53" h="52" oX="93" oY="580" oW="625" oH="313" />
@@ -35,7 +8,17 @@
     <sprite x="217" y="578" w="48" h="52" oX="217" oY="578" oW="625" oH="313" />
     <sprite x="273" y="579" w="43" h="52" oX="273" oY="579" oW="625" oH="313" />
   </Animation>
-  <Animation name="EnemyMusBeaten" imagePath="Enemy1.png" width="500" height="1096">
+  <Animation name="EnemusRun" imagePath="Enemy1.png" width="500" height="1096" delay="2">
+    <sprite x="426" y="393" w="47" h="51" oX="426" oY="393" oW="557" oH="77" />
+    <sprite x="420" y="475" w="51" h="53" oX="420" oY="475" oW="557" oH="77" />
+    <sprite x="418" y="550" w="56" h="54" oX="418" oY="550" oW="557" oH="77" />
+    <sprite x="426" y="661" w="51" h="53" oX="426" oY="661" oW="557" oH="77" />
+    <sprite x="422" y="724" w="49" h="51" oX="422" oY="724" oW="557" oH="77" />
+    <sprite x="428" y="811" w="41" h="52" oX="428" oY="811" oW="557" oH="77" />
+    <sprite x="429" y="874" w="43" h="55" oX="429" oY="874" oW="557" oH="77" />
+    <sprite x="434" y="935" w="46" h="53" oX="434" oY="935" oW="557" oH="77" />
+  </Animation>
+  <Animation name="EnemyMusBeaten" imagePath="Enemy1.png" width="500" height="1096" delay="2">
     <sprite x="6" y="663" w="53" h="47" oX="6" oY="663" oW="761" oH="331" />
     <sprite x="69" y="640" w="62" h="69" oX="69" oY="640" oW="761" oH="331" />
     <sprite x="137" y="642" w="58" h="56" oX="137" oY="642" oW="761" oH="331" />
@@ -46,5 +29,32 @@
   <Animation name="EnemyMusIdle" imagePath="Enemy1.png" width="500" height="1096">
     <sprite x="3" y="383" w="54" h="51" oX="3" oY="383" oW="433" oH="54" />
   </Animation>
+<Animation name="EnemusSlash" imagePath="Enemy1.png" width="500" height="1096" delay="2">
+    <sprite x="3" y="383" w="54" h="51" oX="3" oY="383" oW="496" oH="388" />
+    <sprite x="62" y="385" w="67" h="43" oX="62" oY="385" oW="496" oH="388" />
+    <sprite x="134" y="387" w="70" h="41" oX="134" oY="387" oW="496" oH="388" />
+    <sprite x="207" y="382" w="74" h="42" oX="207" oY="382" oW="496" oH="388" />
+    <sprite x="290" y="378" w="88" h="44" oX="290" oY="378" oW="496" oH="388" />
+    <sprite x="0" y="443" w="95" h="45" oX="0" oY="443" oW="496" oH="388" />
+  </Animation>
+  <Animation name="EnemusHeavyAttack" imagePath="Enemy1.png" width="500" height="1096" delay="2">
+    <sprite x="14" y="507" w="43" h="59" oX="14" oY="507" oW="554" oH="291" />
+    <sprite x="64" y="498" w="43" h="72" oX="64" oY="498" oW="554" oH="291" />
+    <sprite x="114" y="503" w="51" h="65" oX="114" oY="503" oW="554" oH="291" />
+    <sprite x="168" y="515" w="114" h="55" oX="168" oY="515" oW="554" oH="291" />
+    <sprite x="286" y="496" w="91" h="72" oX="286" oY="496" oW="554" oH="291" />
+  </Animation>
+  <Animation name="EnemusHot" imagePath="Enemy1.png" width="500" height="1096">
+    <sprite x="4" y="313" w="40" h="53" oX="4" oY="313" oW="358" oH="457" />
+    <sprite x="49" y="311" w="42" h="59" oX="49" oY="311" oW="358" oH="457" />
+    <sprite x="94" y="311" w="40" h="58" oX="94" oY="311" oW="358" oH="457" />
+    <sprite x="138" y="311" w="37" h="57" oX="138" oY="311" oW="358" oH="457" />
+    <sprite x="179" y="315" w="40" h="52" oX="179" oY="315" oW="358" oH="457" />
+    <sprite x="250" y="310" w="43" h="58" oX="250" oY="310" oW="358" oH="457" />
+    <sprite x="310" y="311" w="42" h="57" oX="310" oY="311" oW="358" oH="457" />
+    <sprite x="365" y="311" w="43" h="57" oX="365" oY="311" oW="358" oH="457" />
+    <sprite x="423" y="313" w="45" h="50" oX="423" oY="313" oW="358" oH="457" />
+  </Animation>
+
 
   <Animations>

@@ -3,34 +3,68 @@
 #define _CAMERA_H
 //06-11 zPhong
 
-#define CHARACTER_VX 20
-
 #include "d3d9.h"
 #include "d3dx9.h"
 #include <list>
 
 class MyCamera : public GameObject
 {
-
-
 private:
-	static MyCamera* _instance;
 	RECT _viewRect;
-	bool _isStopY = true;
+	static MyCamera* _instance;
 	long _curMapWidth, _curMapHeight;
+
+	D3DXVECTOR2 _positionCharacter;
+	RECT	    _boundingCharacter;
+
+	//attributes for update up-down camera
+	int _vyTranslate;
 	int _distanceUpDown;
 	int _distanceLeftRight;
-	int _distanceJumpFall;
 
-	std::list <int> * _mainCharacterVy = new list<int>;
-
+	//attributes for update left-right camera
 	int _vxTranslate;
-	int _vyTranslate;
-	int _vyJumpFall;
 	int _maxLookLeft;
 	int _maxLookRight;
+	int _specialState;
+	bool _isUpdateLeftRight;
+
+
+public:
+	MyCamera();
+	~MyCamera();
+	static MyCamera* GetInstance();
+
+	RECT ExtraView();
+	void RenderBounding(D3DCOLOR color = D3DCOLOR_ARGB(0, 255, 255, 255), bool isRotation = false, bool isScale = false, bool isTranslation = true) override;
+	void Update(float t);
+
+	//method to update left-right position
+	void LookLeft(const float &t, const bool &toNormal);
+	void LookRight(const float &t, const bool &toNormal);
+	void LeftRightToNormal(const float &t);
+	void UpdateLeftRight(const float &t);
+
+	//method to update up-down position
+	void LookUp(const float &t, const bool &toNormal);
+	void LookDown(const float &t, const bool &toNormal);
+	void UpDownToNormal(const float &t);
+	int  getUpperSide() const
+	{
+		return this->y() - (float(_height) / 4)-40;
+	}
+	int  getLowerSide() const
+	{
+		return this->y() + (float(_height) / 3);
+	}
+
 public:
 
+#pragma region Get-Set Properties
+	RECT  View()const
+	{
+		return _viewRect;
+	}
 
 	long curMapWidth() const
 	{
@@ -42,94 +76,32 @@ public:
 		return _curMapHeight;
 	}
 
-	void setCurMapWidth(long curMapWidth)
+	void setCurMapWidth(const long &curMapWidth)
 	{
 		_curMapWidth = curMapWidth;
 	}
 
-	void setCurMapHeight(long curMapHeight)
+	void setCurMapHeight(const long &curMapHeight)
 	{
 		_curMapHeight = curMapHeight;
 	}
 
-	MyCamera();
-	void Update(float t);
-	~MyCamera();
-	static MyCamera* GetInstance();
-
-	RECT View();
-	RECT ExtraView();
-	void RenderBounding(D3DCOLOR color = D3DCOLOR_ARGB(0, 255, 255, 255), bool isRotation = false, bool isScale = false, bool isTranslation = true);
-
-	void StopY()
+	void setPositionCharacter(const float& x, const float& y)
 	{
-		_vy = 0;
-		_isStopY = true;
+		_positionCharacter.x = x;
+		_positionCharacter.y = y;
 	}
 
-	void MoveY() { _isStopY = false; }
-	void LookUp(float t, bool toNormal);
-	void LookDown(float t, bool toNormal);
-	void LookLeft(float t, bool toNormal);
-	void LookRight(float t, bool toNormal);
-	void UpDownToNormal(float t);
-	void LeftRightToNormal(float t);
-public:
-	int vx() const
+	void setSpecialState(const int &newState)
 	{
-		return _vx;
+		_specialState = newState;
 	}
 
-	void setVx(float vx)
+	void setBoundingCharacter(const RECT &newRect)
 	{
-		_vx = vx;
-
+		_boundingCharacter = newRect;
 	}
-
-	int vy() const
-	{
-		return _vy;
-	}
-
-	void setVy(float vy)
-	{
-		_vy = vy;
-	}
-
-	int getUpperHeight();
-
-	int getLowerHeight();
-
-
-	int getDistanceUpDown()
-	{
-		return _distanceUpDown;
-	}
-	int getDistanceLeftRight()
-	{
-		return _distanceLeftRight;
-	}
-
-	int getMaxLookRight()
-	{
-		return _maxLookRight;
-	}
-
-	long getCurMapWidth()
-	{
-		return _curMapWidth;
-	}
-
-	void setVxTranslate(int vxTranslate)
-	{
-		_vxTranslate = vxTranslate;
-	}
-	void setDistanceLeftRight(int distanceLeftRight)
-	{
-		_distanceLeftRight = distanceLeftRight;
-	}
-
-	void set_curFace(Face face);
+#pragma endregion 
 
 };
 #endif

@@ -14,7 +14,6 @@ Sprite::Sprite(LPCSTR FilePath, int Width, int Height,D3DCOLOR color)
 	{
 		return;
 	}
-
 	result = D3DXCreateTextureFromFileEx(
 		d3ddev,
 		FilePath,

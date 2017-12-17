@@ -1,6 +1,7 @@
 #include "AABB.h"
 #include <limits>
 #include "game.h"
+#include "trace.h"
 //new 02-11 chipu
 
 RECT getSweptBroadphaseRect(const GameObject* MovingObj)
@@ -24,95 +25,81 @@ bool SimpleIntersect(RECT* rect1, RECT* rect2)
 
 RECT CalculateBoundingBox(float x, float y, int width, int height, AnchorPoint anchor)
 {
-	RECT temp_rect;
+	RECT* temp_rect = new RECT();
 	switch (anchor)
 	{
 	case TOP_LEFT:
 	{
-		temp_rect.left = x;
-		temp_rect.right = x + width;
-		temp_rect.top = y;
-		temp_rect.bottom = y + height;
+		temp_rect->left = x;
+		temp_rect->right = x + width;
+		temp_rect->top = y;
+		temp_rect->bottom = y + height;
 	}; break;
 	case TOP_MID:
 	{
-		temp_rect.left = x - width / 2;
-		temp_rect.right = x + width / 2;
-		temp_rect.top = y;
-		temp_rect.bottom = y + height;
+		temp_rect->left = x - width / 2;
+		temp_rect->right = x + width / 2;
+		temp_rect->top = y;
+		temp_rect->bottom = y + height;
 
 	}; break;
 	case TOP_RIGHT:
 	{
-		temp_rect.left = x - width;
-		temp_rect.right = x;
-		temp_rect.top = y;
-		temp_rect.bottom = y + height;
+		temp_rect->left = x - width;
+		temp_rect->right = x;
+		temp_rect->top = y;
+		temp_rect->bottom = y + height;
 	}; break;
 	case MID_LEFT:
 	{
-		temp_rect.left = x;
-		temp_rect.right = x + width;
-		temp_rect.top = y - height / 2;
-		temp_rect.bottom = y + height / 2;
+		temp_rect->left = x;
+		temp_rect->right = x + width;
+		temp_rect->top = y - height / 2;
+		temp_rect->bottom = y + height / 2;
 	}; break;
 	case MIDDLE:
 	{
-		temp_rect.left = x - width / 2;
-		temp_rect.right = x + width / 2;
-		temp_rect.top = y - height / 2;
-		temp_rect.bottom = y + height / 2;
+		temp_rect->left = x - width / 2;
+		temp_rect->right = x + width / 2;
+		temp_rect->top = y - height / 2;
+		temp_rect->bottom = y + height / 2;
 
 	}; break;
 	case MID_RIGHT:
 	{
-		temp_rect.left = x - width;
-		temp_rect.right = x;
-		temp_rect.top = y;
-		temp_rect.bottom = y + height;
+		temp_rect->left = x - width;
+		temp_rect->right = x;
+		temp_rect->top = y;
+		temp_rect->bottom = y + height;
 
 	}; break;
 	case BOTTOM_LEFT:
 	{
-		temp_rect.left = x;
-		temp_rect.right = x + width;
-		temp_rect.top = y - height / 2;
-		temp_rect.bottom = y + height / 2;
+		temp_rect->left = x;
+		temp_rect->right = x + width;
+		temp_rect->top = y - height / 2;
+		temp_rect->bottom = y + height / 2;
 	}; break;
 
 	case BOTTOM_MID:
 	{
-		temp_rect.left = x - width / 2;
-		temp_rect.right = x + width / 2;
-		temp_rect.top = y - height;
-		temp_rect.bottom = y;
+		temp_rect->left = x - width / 2;
+		temp_rect->right = x + width / 2;
+		temp_rect->top = y - height;
+		temp_rect->bottom = y;
 
 	}; break;
 	case BOTTOM_RIGHT:
 	{
-		temp_rect.left = x - width;
-		temp_rect.right = x;
-		temp_rect.top = y - height;
-		temp_rect.bottom = y;
+		temp_rect->left = x - width;
+		temp_rect->right = x;
+		temp_rect->top = y - height;
+		temp_rect->bottom = y;
 
 	}; break;
 	}
-	return temp_rect;
+	return *temp_rect;
 }
-
-
-
-
-//RECT CalculateBoundingBox(int x, int y, int width, int height)
-//{
-//	
-//	RECT temp_rect;
-//	temp_rect.left = x;
-//	temp_rect.right = x + width;
-//	temp_rect.top = y;
-//	temp_rect.bottom = y + height;
-//	return temp_rect;
-//}
 
 CollisionResult CheckCollision(GameObject* MovingObj, GameObject* SubMoving)
 {
@@ -221,11 +208,11 @@ CollisionResult CheckCollision(GameObject* MovingObj, GameObject* SubMoving)
 		if (fixedVy < 0)
 		{
 			//distance of near side with fixedVx > 0
-			dyEntry = MovingObj->y() - staticY2;
+			dyEntry = movingY1 - staticY2;
 			//distance of far side with fixedVx > 0
 			dyExit = movingY2 - staticY1;
 			//time moving enter static
-			tyEntry = dyEntry / (fixedVy);
+			tyEntry = dyEntry / fixedVy;
 			tyExit = dyExit / fixedVy;
 			if (tyEntry > 0)
 			{
@@ -258,13 +245,7 @@ CollisionResult CheckCollision(GameObject* MovingObj, GameObject* SubMoving)
 				if (MovingObj->vy() > 0)
 				{
 					if (movingY2 + fixedVy*tEntry == staticY1)
-						result._collisionSide = DOWN;
-					return result;
-				}
-				else
-				{
-					if (movingY1 + fixedVy*tEntry == staticY2)
-						result._collisionSide = UP;
+						result._collisionSide = UPTOP;
 					return result;
 				}
 			}
@@ -291,4 +272,23 @@ CollisionPair::~CollisionPair()
 bool CollisionPair::IsIndentical(CollisionPair* cp1, CollisionPair* cp2)
 {
 	return ((cp1->obj1() == cp2->obj1() && cp1->obj2() == cp2->obj2()) || (cp1->obj1() == cp2->obj2() && cp1->obj1() == cp2->obj2()));
+}
+
+float CalculateY(float x, float a, float b , float c)
+{
+
+	return a*pow(x, 2) + b*x + c;
+}
+
+int CalculateParabolVy(int vx, D3DXVECTOR3 startposition, int max_x, int max_y , float curPosX)
+{
+	float vy;
+	float a, b, c;
+	a = (startposition.x - (startposition.y + max_y)) / pow((startposition.x - (startposition.x - max_x / 2)), 2);
+	b = -2 * a*(startposition.x - max_x / 2);
+	c = startposition.x + max_y + pow(b, 2) / (4 * a);
+	vy = (CalculateY(curPosX + vx*FIXED_TIME, a, b, c) - CalculateY(curPosX, a, b, c)) / FIXED_TIME;
+
+	//`trace(L"\n%.4f", vy);
+	return (int)-vy;
 }

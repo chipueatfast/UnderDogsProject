@@ -7,8 +7,8 @@ enum Side
 {
 	LEFT,
 	RIGHT,
-	UP,
-	DOWN,
+	UPTOP,
+	DOWNBOTTOM,
 	NONE
 };
 struct CollisionResult
@@ -68,6 +68,8 @@ public:
 
 
 };
+float CalculateY(float, float, float, float);
+int CalculateParabolVy(int vx, D3DXVECTOR3 startposition, int max_x, int max_y, float curPosX);
 
 
 #endif

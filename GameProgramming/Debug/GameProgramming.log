@@ -1,19 +1,28 @@
-﻿  Aladdin.cpp
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\camera.h(85): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\camera.h(96): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+﻿  Scene1.cpp
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\gameobject.h(172): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\camera.h(56): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\camera.h(60): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
 c:\users\gnar\source\repos\underdogsproject\gameprogramming\gameobjectmove.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.h(132): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.h(138): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.h(155): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.h(160): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   c:\program files (x86)\microsoft directx sdk (june 2010)\include\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(89): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(139): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(143): warning C4244: '=': conversion from 'long' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(147): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(151): warning C4244: '=': conversion from 'long' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(158): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(205): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(225): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(228): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.cpp(339): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemythinprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemymusprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemyfatprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemyjugprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemyjarprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\camelprefab.h(3): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\enemyhandprefab.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(131): warning C4244: 'argument': conversion from 'UINT' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(131): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(324): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(335): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(733): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(734): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(808): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(946): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(948): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(1065): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene1.cpp(1072): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.exe
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Debug\GameProgramming.pdb (Partial PDB)

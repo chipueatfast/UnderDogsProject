@@ -8,11 +8,20 @@
 #include "dxinput.h"
 #define BULLET_VX 30
 #define BULLET_VY 3
+//for situational purpose
+AppleBullet* temp_bullet_object;
+
 
 
 
 Aladdin::Aladdin()
 {
+	//temp instance to increase performance
+	temp_bullet_object = new AppleBullet();
+	_minX = 0;
+	_maxX = GameManager::GetInstance()->GetCurrentScene()->MapInfo()->Width;
+	_isThrowing = false;
+	_distanceFromMain = 9999;
 	_index = 0;
 	_animaDelay = 1.0f;
 	_animaCount = 0;
@@ -26,18 +35,28 @@ Aladdin::Aladdin()
 	_sword = new RECT();
 	_stateManager = new StateManager("Res\\AladdinXML.xml");
 	this->setSprite(new Sprite("Res\\Aladdin.png", 40, 50));
-	_stateManager->AddToDictState("010", "IdleFall");
-	_stateManager->AddToDictState("110", "RunFall");
-	_stateManager->AddToDictState("020", "IdleJump");
-	_stateManager->AddToDictState("120", "RunJump");
-	_stateManager->AddToDictState("101", "RunThrow");
 	_stateManager->AddToDictState("000", "Idle1");
+	//these state is temporary and illogic
+	_stateManager->AddToDictState("0001", "RunSkid");
+	_stateManager->AddToDictState("0002", "FallHeavy");
+	_stateManager->AddToDictState("0003", "FallLight");
+	_stateManager->AddToDictState("005", "StartIdle2");
+	_stateManager->AddToDictState("006", "Idle2");
+	_stateManager->AddToDictState("007", "Idle3");
+	_stateManager->AddToDictState("410", "Climb");
+	_stateManager->AddToDictState("010", "IdleFall");
+	_stateManager->AddToDictState("020", "IdleJump");
 	_stateManager->AddToDictState("001", "IdleThrow");
 	_stateManager->AddToDictState("002", "IdleSlash");
+	_stateManager->AddToDictState("052", "SwingSlash");
+	_stateManager->AddToDictState("051", "SwingThrow");
+	_stateManager->AddToDictState("050", "SwingIdle");
 	_stateManager->AddToDictState("100", "Run");
+	_stateManager->AddToDictState("110", "RunFall");
+	_stateManager->AddToDictState("120", "RunJump");
+	_stateManager->AddToDictState("101", "RunThrow");
 	_stateManager->AddToDictState("300", "IdleDown");
 	_stateManager->AddToDictState("200", "IdleUp");
-	_stateManager->AddToDictState("002", "IdleSlash");
 	_stateManager->AddToDictState("102", "RunSlash");
 	_stateManager->AddToDictState("202", "IdleUpSlash");
 	_stateManager->AddToDictState("302", "IdleDownSlash");
@@ -49,17 +68,16 @@ Aladdin::Aladdin()
 	_stateManager->AddToDictState("130", "Push");
 	_stateManager->AddToDictState("400", "Climb");
 	_stateManager->AddToDictState("420", "ClimbJump");
-	_stateManager->AddToDictState("050", "SwingIdle");
 	_stateManager->AddToDictState("250", "SwingIdle");
 	_stateManager->AddToDictState("450", "SwingIdle");
 	_stateManager->AddToDictState("550", "SwingIdle");
 	_stateManager->AddToDictState("150", "Swing");
-	_stateManager->AddToDictState("052", "SwingSlash");
-	_stateManager->AddToDictState("051", "SwingThrow");
 	_stateManager->AddToDictState("402", "SwingSlash");
 	_stateManager->AddToDictState("401", "SwingThrow");
 	_stateManager->AddToDictState("060", "Spin");
+	_stateManager->AddToDictState("160", "Spin");
 	_stateManager->AddToDictState("500", "Beaten");
+
 
 	_bulletList = new list<AppleBullet*>();
 
@@ -82,11 +100,8 @@ RECT Aladdin::NextBounding()
 void Aladdin::FireApple()
 {
 
-	OutputDebugString("\n");
-	OutputDebugString(std::to_string(_appleCount).c_str());
 	if (_appleCount > 0)
 	{
-		AppleBullet* temp = new AppleBullet(x(), y(), curface());
 		D3DXVECTOR3 newPos;
 		if (curface() == Face::RIGHT)
 			newPos = this->CalPositon(TOP_RIGHT);
@@ -95,10 +110,19 @@ void Aladdin::FireApple()
 			newPos = this->CalPositon(TOP_LEFT);
 
 		}
-		temp->setPosition(newPos.x, newPos.y);
-		_bulletList->push_back(temp);
+		temp_bullet_object->set_is_popping(false);
+		temp_bullet_object->setVisible(true);
+		temp_bullet_object->state_manager()->setState("000");
+		temp_bullet_object->Reset();//reset animation
+		temp_bullet_object->setPosition(newPos.x, newPos.y);
+		if (_curFace == Face::RIGHT)
+			temp_bullet_object->set_vx(BULLET_VX);
+		else
+			temp_bullet_object->set_vx(-BULLET_VX);
+		_bulletList->push_back(temp_bullet_object);
 		_soundThrowApple->Play();
 		_appleCount--;
+		_isThrowing = true;
 	}
 	else
 	{
@@ -113,6 +137,9 @@ void Aladdin::Init()
 
 void Aladdin::PhysicUpdate(float t)
 {
+	GameObjectMove::PhysicUpdate(t);
+	if (isClimbing() == false && main_state() == "4")
+		_mainState = "0";
 	if (this->vx() != 0)
 	{
 		if (this->vx() > 0)
@@ -124,15 +151,13 @@ void Aladdin::PhysicUpdate(float t)
 		{
 			this->set_curFace(GameObject::Face::LEFT);
 			MyCamera::GetInstance()->set_curFace(GameObject::Face::LEFT);
-
 		}
 		if (this->CheckFlip())
+		{
+			_vx = -_vx;
 			this->Flip();
+		}
 	}
-
-
-	GameObjectMove::PhysicUpdate(t);
-	setPosition(x() + _vx*t, y() + _vy*t);
 
 	if (_position.x < 0)
 	{
@@ -152,14 +177,23 @@ void Aladdin::PhysicUpdate(float t)
 	}
 
 
-	for (list<AppleBullet*>::iterator i = _bulletList->begin(); i != _bulletList->end(); i++)
-	{
-		AppleBullet* temp_obj = *i;
-		temp_obj->set_vy(temp_obj->vy()*1.1f);
-		temp_obj->setPosition(temp_obj->x() + temp_obj->vx()*t, temp_obj->y() + temp_obj->vy()*t);
-	}
 
-	
+	for (auto it = _bulletList->begin(); it != _bulletList->end(); )
+	{
+		if ((temp_bullet_object->is_popping() == true && temp_bullet_object->state_manager()->life_span() == 0) || (SimpleIntersect(&MyCamera::GetInstance()->ExtraView(), &temp_bullet_object->bounding_box()) == false))
+		{
+			it = _bulletList->erase(it);
+			temp_bullet_object->setVisible(false);
+			_isThrowing = false;
+		}
+		else
+		{
+			temp_bullet_object = *it;
+			temp_bullet_object->set_vy(temp_bullet_object->vy()*1.1f);
+			temp_bullet_object->setPosition(temp_bullet_object->x() + temp_bullet_object->vx()*t, temp_bullet_object->y() + temp_bullet_object->vy()*t);
+			it++;
+		}
+	}
 
 }
 
@@ -169,26 +203,91 @@ void Aladdin::GraphicUpdate(float t)
 {
 	_animaCount++;
 
+	_animaDelay = _stateManager->curState().AnimaDelay();
+
+
 	if (_animaCount >= _animaDelay)
 	{
-		if (_stateManager->curState().getName() == "IdleUp" || _stateManager->curState().getName() == "IdleDown" || _stateManager->curState().getName() == "IdleJump" || _stateManager->curState().getName() == "IdleFall")
+		string name = _stateManager->curState().getName();
+		if (main_state() == "0"
+			|| name == "ClimbJump"
+			|| name == "IdleUp"
+			|| name == "IdleDown"
+			|| sub_state()=="1"
+			|| sub_state()=="2"
+			|| hand_state()!="0"
+			|| degree_state()!="0"
+			)
 		{
 			Next2();
-			if (_index == _stateManager->curState().getListRect().size() - 1)
+			if (name == "IdleUp" && _index == _stateManager->curState().getListRect().size() - 1)
+				MyCamera::GetInstance()->LookUp(t, false);
+			if (name == "IdleDown" && _index == _stateManager->curState().getListRect().size() - 1)
+				MyCamera::GetInstance()->LookDown(t, false);
+			if (((name == "IdleUp" || name == "IdleDown") && _index != _stateManager->curState().getListRect().size() - 1)
+				|| (name != "IdleUp" && name != "IdleDown")
+				)
+
 			{
-				if (_stateManager->curState().getName() == "IdleUp")
+				MyCamera::GetInstance()->UpDownToNormal(t);
+
+				if (_index == _stateManager->curState().getListRect().size() - 1)
 				{
-					MyCamera::GetInstance()->LookUp(t, false);
-				}
-				else
-				{
-					if (_stateManager->curState().getName() == "IdleDown")
+					if (name == "Idle1")
 					{
-						MyCamera::GetInstance()->LookDown(t, false);
+						_randomIdleCount++;
+						if (_randomIdleCount == 3)
+						{
+							_stateManager->setLastState("000");
+							_stateManager->setState("005");
+							_randomIdleCount = 0;
+						}
+						Reset();
+						goto Another;
 					}
-					else
+
+					if (name == "StartIdle2")
 					{
-						MyCamera::GetInstance()->UpDownToNormal(t);
+						_stateManager->setLastState("005");
+						_randomIdle = 6 + (rand() % static_cast<int>(2));
+						_stateManager->setState("00" + to_string(_randomIdle));
+						Reset();
+						goto Another;
+					}
+
+					if (_stateManager->lastState().getName() == "StartIdle2")
+					{
+						_randomIdle = 6 + (rand() % static_cast<int>(2));
+						_stateManager->setState("00" + to_string(_randomIdle));
+						Reset();
+						goto Another;
+					}
+
+					if (name == "Idle2")
+					{
+						_randomIdleCount++;
+						if (_randomIdleCount == 3)
+						{
+							_stateManager->setLastState("005");
+							_randomIdleCount = 0;
+							Reset();
+
+						}
+						goto Another;
+
+					}
+
+					if (name == "Idle3")
+					{
+						_randomIdleCount++;
+						if (_randomIdleCount == 1)
+						{
+							_stateManager->setLastState("005");
+							_randomIdleCount = 0;
+							Reset();
+						}
+						goto Another;
+
 					}
 				}
 			}
@@ -196,72 +295,32 @@ void Aladdin::GraphicUpdate(float t)
 		else
 		{
 			MyCamera::GetInstance()->UpDownToNormal(t);
-			Next();
+			if ((name == "Climb" && _vy != 0) || name != "Climb")
+			{
+				Next();
+			}
 		}
-		if ((_position.y < MyCamera::GetInstance()->getUpperHeight() || _position.y> MyCamera::GetInstance()->getLowerHeight())
-			&& _boundingBox.top >= 0
-			)
-		{
-			MyCamera::GetInstance()->setVy(this->vy());
-		}
-		else
-			MyCamera::GetInstance()->setVy(0);
- 
+	Another:
+		/*_width = _stateManager->curState().getListRect().at(_index).right - _stateManager->curState().getListRect().at(_index).left;
+		_height = _stateManager->curState().getListRect().at(_index).bottom - _stateManager->curState().getListRect().at(_index).top;*/
 
-		_width = _stateManager->curState().getListRect().at(_index).right - _stateManager->curState().getListRect().at(_index).left;
-		_height = _stateManager->curState().getListRect().at(_index).bottom - _stateManager->curState().getListRect().at(_index).top;
 
 		_animaCount = 0;
 		// update lai anchorpoint do frame co bounding khac nhau
-		CalAnchorPoint();
-		this->state_manager()->set_life_span(this->state_manager()->life_span() - 1);
-		if (this->state_manager()->life_span() == 0)
+		//CalAnchorPoint();
+		//this->state_manager()->set_life_span(this->state_manager()->life_span() - 1);
+		if (this->state_manager()->life_span() == 0 && this->hand_state()=="1")
 		{
 			this->set_hand_state("0");
 		}
 	}
-	
+	CalAnchorPoint();
 
-	MyCamera::GetInstance()->setVy(_vy);
-	//Set Camera LeftRight
-	OutputDebugString(to_string(this->x()).c_str());
-	MyCamera::GetInstance()->setVx(_vx);
-	//if (this->x() > MyCamera::GetInstance()->getMaxLookRight() * 2
-	//	&& this->x()  < MyCamera::GetInstance()->getCurMapWidth() - MyCamera::GetInstance()->getMaxLookRight() * 2
-	//	)
-	//{
-	//	if (_vx > 0)
-	//	{
-	//		MyCamera::GetInstance()->LookLeft(t, false);
-	//	}
-
-	//	if (_vx == 0)
-	//	{
-	//		MyCamera::GetInstance()->LeftRightToNormal(t);
-	//	}
-
-	//	if (_vx < 0)
-	//	{
-	//		MyCamera::GetInstance()->LookRight(t, false);
-	//	}
-
-	//	MyCamera::GetInstance()->setVx(this->vx());
-
-	//	if (((this->x() < MyCamera::GetInstance()->getMaxLookRight() * 3))
-	//		|| ((this->x() > MyCamera::GetInstance()->getCurMapWidth() - MyCamera::GetInstance()->getMaxLookRight() * 3))
-	//		)
-	//	{
-	//		MyCamera::GetInstance()->setVx(0);
-	//		MyCamera::GetInstance()->setVxTranslate(0);
-	//	} 
-	//}
-	//else
-	//{
-	//	MyCamera::GetInstance()->setDistanceLeftRight(0);
-	//	MyCamera::GetInstance()->setVx(0);
-	//	MyCamera::GetInstance()->setVxTranslate(0);
-	//}
-
+	(this->isSwinging() == true || this->isClimbing() == true) ? MyCamera::GetInstance()->setSpecialState(1) : MyCamera::GetInstance()->setSpecialState(0);
+	MyCamera::GetInstance()->setPositionCharacter(this->x(), this->y());
+	MyCamera::GetInstance()->setBoundingCharacter(CalculateBoundingBox(this->x(), this->y(), _width, _height, _anchor));
+	MyCamera::GetInstance()->set_vx(_vx);
+	MyCamera::GetInstance()->set_vy(_vy);
 
 }
 
@@ -271,10 +330,14 @@ void Aladdin::DrawBullet()
 {
 	for (list<AppleBullet*>::iterator i = _bulletList->begin(); i != _bulletList->end(); i++)
 	{
-		AppleBullet* temp_obj = *i;
-		temp_obj->setTranslation(D3DXVECTOR2(temp_obj->x() - MyCamera::GetInstance()->View().left, temp_obj->y() - MyCamera::MyCamera::GetInstance()->View().top));
-		temp_obj->UpdateAnimate();
-		temp_obj->Render();
+		temp_bullet_object = *i;
+		if (temp_bullet_object->Visbile() == true)
+		{
+			temp_bullet_object->setTranslation(D3DXVECTOR2(temp_bullet_object->x() - MyCamera::GetInstance()->View().left, temp_bullet_object->y() - MyCamera::MyCamera::GetInstance()->View().top));
+			temp_bullet_object->UpdateAnimate();
+			temp_bullet_object->Render();
+		}
+
 	}
 }
 
@@ -282,13 +345,20 @@ void Aladdin::setState(string newState)
 {
 	if (_stateManager->dict_state()[newState] == "")
 		return;
-	if (_stateManager->curState().getName() != _stateManager->dict_state()[newState])
+	if (_isWalkingStairs == true && _vx != 0)
+	{
+		_mainState = "1";
+		_subState = "0";
+		_isWalkingStairs = false;
+	}
+	if (_stateManager->curState().getName() != _stateManager->dict_state()[newState]
+		&& isAllowChangeState(newState) == true)
 	{
 		Reset();
+		_stateManager->setLastState(_stateManager->curState().getName());
 		_stateManager->setState(newState);
 
 	}
-
 
 }
 
@@ -323,7 +393,16 @@ string Aladdin::CurrentState()
 }
 
 
-
+AppleBullet::AppleBullet()
+{
+	_isRepeating = false;
+	this->setAnchor(TOP_LEFT);
+	this->setSprite(new Sprite("Res\\Aladdin.png", 7, 6));
+	this->set_state_manager(new StateManager("Res\\AppleBullet.xml"));
+	this->state_manager()->AddToDictState("000", "flying");
+	this->state_manager()->AddToDictState("001", "popping");
+	this->state_manager()->setState("000");
+}
 
 AppleBullet::AppleBullet(int x, int y, Face face)
 {
@@ -343,5 +422,29 @@ AppleBullet::AppleBullet(int x, int y, Face face)
 	this->state_manager()->AddToDictState("001", "popping");
 	this->state_manager()->setState("000");
 
+}
+void Aladdin::Render(bool isRotation, bool isScale, bool isTranslation)
+{
+	Transform(isRotation, isScale, isTranslation);
+	_width = _stateManager->curState().getListRect().at(_index).right - _stateManager->curState().getListRect().at(_index).left;
+	_height = _stateManager->curState().getListRect().at(_index).bottom - _stateManager->curState().getListRect().at(_index).top;
+	CalAnchorPoint();
+
+	sprite_handler->Draw(
+		_sprite->image(),
+		//_stateManager == NULL ? NULL : &_stateManager->curState().getListRect().at(_index),
+		_stateManager->curState().getName() == "" ? NULL : &_stateManager->curState().getListRect().at(_index),
+		//NULL,
+		&_anchorPoint,
+		NULL,
+		D3DCOLOR_XRGB(255, 255, 255)
+	);
+
+	sprite_handler->SetTransform(&old_matrix);
+
+	_width = _stateManager->curState().MinBounding().right - _stateManager->curState().MinBounding().left;
+	_height = _stateManager->curState().MinBounding().bottom - _stateManager->curState().MinBounding().top;
+	_boundingBox = CalculateBoundingBox(x(), y(), _width, _height, _anchor);
+	CalAnchorPoint();
 }
 

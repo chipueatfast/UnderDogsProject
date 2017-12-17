@@ -6,6 +6,7 @@
 StateManager::StateManager()
 {
 	_curState = State();
+	_lifeSpan = 0;
 }
 StateManager::~StateManager()
 {
@@ -28,7 +29,10 @@ StateManager::StateManager(char* xmlpath)
 	{
 
 		string name = nodeAnimation.attribute("name").value();
-		vector <RECT> srcRect;
+		int animaDelay = 1;
+		animaDelay = nodeAnimation.attribute("delay").as_int();
+
+		vector <RECT> srcRect; 
 		for (xml_node nodeRec = nodeAnimation.first_child(); nodeRec; nodeRec = nodeRec.next_sibling())
 		{
 			RECT rect;
@@ -38,11 +42,8 @@ StateManager::StateManager(char* xmlpath)
 			rect.right = atoi(nodeRec.attribute("w").value()) + rect.left;
 			srcRect.push_back(rect); 
 		}
-		_mapState[name] = State(name, srcRect);
-		_lifeSpan = 12;
-
+		_mapState[name] = State(name, srcRect,animaDelay);	
 	}
-	_curState = _mapState["Idle1"];
 }
 
 
@@ -64,4 +65,14 @@ State StateManager::getStateByCode(string stateCode)
 		return _curState;
 	return _mapState[(_dictState[stateCode])];
 }
+
+void StateManager::setLastState(string lastStateCode)
+{
+	if (_dictState[lastStateCode] != "")
+	{
+		string targetState = _dictState[lastStateCode];
+		_lastState = _mapState[targetState];
+	}
+}
+
 

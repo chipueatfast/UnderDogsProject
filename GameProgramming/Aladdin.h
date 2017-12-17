@@ -10,15 +10,15 @@
 #include "dxaudio.h"
 #include "GameObjectMove.h"
 
-#define CHARACTER_VX 20
+#define CHARACTER_VX 10
 
 using namespace std;
 class AppleBullet : public GameObject
 {
+private:
 	bool _isPopping;
 	
 public:
-	
 	bool is_popping() const
 	{
 		return _isPopping;
@@ -29,12 +29,37 @@ public:
 		_isPopping = is_popping;
 	}
 
+	AppleBullet();
 	AppleBullet(int x, int y, Face face);
 };
 
 
 class Aladdin : public GameObjectMove
 {
+	string _prev_main_state;
+public:
+	string prev_main_state() const
+	{
+		return _prev_main_state;
+	}
+
+	void set_prev_main_state(const string& cs)
+	{
+		_prev_main_state = cs;
+	}
+
+private:
+	bool _onStateEnd;
+public:
+	bool on_state_end() const
+	{
+		return _onStateEnd;
+	}
+
+	void set_on_state_end(bool on_state_end)
+	{
+		_onStateEnd = on_state_end;
+	}
 
 
 private:
@@ -44,6 +69,14 @@ private:
 	CSound* _soundAppleEmty;
 	CSound* _soundThrowApple;
 	bool _isClimbing = false;
+	int _chosenLayer = 0;
+
+	int _randomIdle = 6;
+	int _randomIdleCount = 0;
+	Face _facePush;
+	bool _isSetStatePush = false;
+	bool _isWalkingStairs = false;
+
 public:
 	int appleCount() const
 	{
@@ -74,6 +107,16 @@ private:
 	bool _isSwinging = false;
 
 public:
+	void set_ChosenLayer(const int & chosenlayer)
+	{
+		_chosenLayer = chosenlayer;
+	}
+
+	int ChosenLayer() const
+	{
+		return _chosenLayer;
+	}
+
 	bool isSwinging() const
 	{
 		return _isSwinging;
@@ -86,7 +129,18 @@ public:
 
 private:
 	CSound* _soundAladdinBeBeaten;
+	string _degreeState;
 public:
+	string degree_state() const
+	{
+		return _degreeState;
+	}
+
+	void set_degree_state(const string& cs)
+	{
+		_degreeState = cs;
+	}
+
 	Aladdin();
 	~Aladdin();
 
@@ -130,14 +184,43 @@ public:
 	void set_vx(float vx)
 	{
 		_vx = vx;
-		MyCamera::GetInstance()->setVx(vx);
 	}
 
 	void set_vy(float vy)
 	{
 		_vy = vy;
-		MyCamera::GetInstance()->setVy(vy);
 	}
+
+	//Nam 12/3
+
+
+	void Render(bool isRotation, bool isScale, bool isTranslation) override;
+
+	bool isAllowChangeState(string newState)
+	{
+		if (newState == "000")
+		{
+			string curState = _stateManager->curState().getName();
+			if (curState == "StartIdle2" || curState == "Idle2" || curState == "Idle3")
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	void set_FacePush(GameObject::Face facePush)
+	{
+		_facePush = facePush;
+	}
+	void isSetStatePush(bool isUsePush)
+	{
+		_isSetStatePush = isUsePush;
+	}
+	void set_IsWalkingStairs(bool isWalking)
+	{
+		_isWalkingStairs = isWalking;
+	}
+
 };
 
 

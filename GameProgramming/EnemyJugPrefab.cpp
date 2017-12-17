@@ -1,9 +1,12 @@
 #include "EnemyJugPrefab.h"
 
-void EnemyJugPrefab::Instantiate(GameObjectMove* gameObject, float x, float y, int width, int height)
+void EnemyJugPrefab::Instantiate(GameObjectMove* gameObject, float x, float y, int width, int height, int xMin, int xMax)
 {
+	gameObject->set_health(1);
 	gameObject->set_curFace(GameObject::LEFT);
 	gameObject->set_name("EnemyJug");
+	gameObject->set_min_x(xMin);
+	gameObject->set_max_x(xMax);
 	gameObject->setPosition(x, y);
 	gameObject->setSprite(new Sprite("Res\\Enemy2.png", width, height));
 	gameObject->set_state_manager(new StateManager("Res\\EnemyJugXML.xml"));

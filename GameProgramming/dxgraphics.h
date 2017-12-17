@@ -1,8 +1,8 @@
 #ifndef _DXGRAPHICS_H
 #define _DXGRAPHICS_H
 
-#define FPS 20
-#define SCALE_RATE 2
+#define FPS 25
+#define SCALE_RATE 2.5
 #include <d3d9.h>
 #include <d3dx9.h>
 //function prototypes
