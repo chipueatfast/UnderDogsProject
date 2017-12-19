@@ -18,6 +18,7 @@ Aladdin::Aladdin()
 {
 	//temp instance to increase performance
 	temp_bullet_object = new AppleBullet();
+	_isAbsorbed = false;
 	_minX = 0;
 	_maxX = GameManager::GetInstance()->GetCurrentScene()->MapInfo()->Width;
 	_isThrowing = false;
@@ -138,9 +139,11 @@ void Aladdin::Init()
 void Aladdin::PhysicUpdate(float t)
 {
 	GameObjectMove::PhysicUpdate(t);
+	if (this->hand_state() != "0" && this->state_manager()->life_span() < 0)
+		this->set_hand_state("0");
 	if (isClimbing() == false && main_state() == "4")
 		_mainState = "0";
-	if (this->vx() != 0)
+	if (this->vx() != 0 && _isAbsorbed == false)
 	{
 		if (this->vx() > 0)
 		{
@@ -213,10 +216,10 @@ void Aladdin::GraphicUpdate(float t)
 			|| name == "ClimbJump"
 			|| name == "IdleUp"
 			|| name == "IdleDown"
-			|| sub_state()=="1"
-			|| sub_state()=="2"
-			|| hand_state()!="0"
-			|| degree_state()!="0"
+			|| (sub_state() == "1" && name!="Climb")
+			|| sub_state() == "2"
+			|| hand_state() != "0"
+		/*	|| degree_state() != "0"*/
 			)
 		{
 			Next2();
@@ -292,12 +295,16 @@ void Aladdin::GraphicUpdate(float t)
 				}
 			}
 		}
-		else
+		else 
 		{
 			MyCamera::GetInstance()->UpDownToNormal(t);
-			if ((name == "Climb" && _vy != 0) || name != "Climb")
+			if ((name == "Climb" && _vy < 0) || name != "Climb")
 			{
 				Next();
+			}
+			if (name == "Climb" && _vy > 0)
+			{
+				Back();
 			}
 		}
 	Another:
@@ -309,14 +316,15 @@ void Aladdin::GraphicUpdate(float t)
 		// update lai anchorpoint do frame co bounding khac nhau
 		//CalAnchorPoint();
 		//this->state_manager()->set_life_span(this->state_manager()->life_span() - 1);
-		if (this->state_manager()->life_span() == 0 && this->hand_state()=="1")
+		if (this->state_manager()->life_span() == 0 && this->hand_state() == "1")
 		{
 			this->set_hand_state("0");
 		}
 	}
 	CalAnchorPoint();
 
-	(this->isSwinging() == true || this->isClimbing() == true) ? MyCamera::GetInstance()->setSpecialState(1) : MyCamera::GetInstance()->setSpecialState(0);
+	(this->isSwinging() == true || this->isClimbing() == true || _isAbsorbed == true) ?
+		MyCamera::GetInstance()->setSpecialState(1) : MyCamera::GetInstance()->setSpecialState(0);
 	MyCamera::GetInstance()->setPositionCharacter(this->x(), this->y());
 	MyCamera::GetInstance()->setBoundingCharacter(CalculateBoundingBox(this->x(), this->y(), _width, _height, _anchor));
 	MyCamera::GetInstance()->set_vx(_vx);
@@ -325,6 +333,16 @@ void Aladdin::GraphicUpdate(float t)
 }
 
 
+void Aladdin::Back()
+{
+
+	int size = _stateManager->curState().getListRect().size() - 1;
+	if (_index > 0)
+		_index = (_index - 1) % size;
+	else
+		_index = size;
+
+}
 
 void Aladdin::DrawBullet()
 {

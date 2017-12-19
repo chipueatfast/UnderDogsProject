@@ -1,9 +1,10 @@
 #include "PotPrefab.h"
 
 #define ACCE_Y 1.0f
-void PotPrefab::Instantiate(GameObject* gameObject, float x, float y)
+void PotPrefab::Instantiate(Pot* gameObject, float x, float y, int breakpoint)
 {
 	gameObject->set_name("Pot");
+	gameObject->set_break_point(breakpoint);
 	gameObject->setPosition(x, y);
 	gameObject->setSprite(new Sprite("Res\\Bullet.png", 0, 0));
 	gameObject->set_state_manager(new StateManager("Res\\PotBulletXML.xml"));

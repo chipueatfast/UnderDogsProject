@@ -140,12 +140,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="AbuFacePrefab.cpp" />
     <ClCompile Include="Aladdin.cpp" />
     <ClCompile Include="ApplePrefab.cpp" />
     <ClCompile Include="BulletPrefab.cpp" />
     <ClCompile Include="BurningEffectPrefab.cpp" />
     <ClCompile Include="CamelPrefab.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CheckpointJarPrefab.cpp" />
+    <ClCompile Include="DiamondPrefab.cpp" />
     <ClCompile Include="dxaudio.cpp" />
     <ClCompile Include="dxgraphics.cpp" />
     <ClCompile Include="dxinput.cpp" />
@@ -156,6 +159,7 @@
     <ClCompile Include="EnemyMusPrefab.cpp" />
     <ClCompile Include="EnemyThinPrefab.cpp" />
     <ClCompile Include="ExplosionPrefab.cpp" />
+    <ClCompile Include="FireBulletPrefab.cpp" />
     <ClCompile Include="FireGroundPrefab.cpp" />
     <ClCompile Include="FloatGroundPrefab.cpp" />
     <ClCompile Include="game.cpp" />
@@ -163,21 +167,29 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameObjectMove.cpp" />
     <ClCompile Include="GameTime.cpp" />
+    <ClCompile Include="GenieFacePrefab.cpp" />
+    <ClCompile Include="GenieLampPrefab.cpp" />
     <ClCompile Include="GroundPrefab.cpp" />
+    <ClCompile Include="HeartPrefab.cpp" />
     <ClCompile Include="HorizontalBarPrefab.cpp" />
+    <ClCompile Include="JafarPrefab.cpp" />
+    <ClCompile Include="Pot.cpp" />
     <ClCompile Include="PotPrefab.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="RopePrefab.cpp" />
     <ClCompile Include="Scene1.cpp" />
+    <ClCompile Include="Scene2.cpp" />
+    <ClCompile Include="SceneHome.cpp" />
     <ClCompile Include="ShopperPrefab.cpp" />
     <ClCompile Include="SpringBoardPrefab.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="StairsPrefab.cpp" />
+    <ClCompile Include="StarBulletPrefab.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateManager.cpp" />
     <ClCompile Include="trace.cpp" />
     <ClCompile Include="TriggerPrefab.cpp" />
-    <ClCompile Include="UIScene1.cpp" />
+    <ClCompile Include="UIScene.cpp" />
     <ClCompile Include="WallPrefab.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
@@ -189,6 +201,7 @@
     <ClInclude Include="BurningEffectPrefab.h" />
     <ClInclude Include="CamelPrefab.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CheckpointJarPrefab.h" />
     <ClInclude Include="dxaudio.h" />
     <ClInclude Include="dxgraphics.h" />
     <ClInclude Include="dxinput.h" />
@@ -199,6 +212,7 @@
     <ClInclude Include="EnemyMusPrefab.h" />
     <ClInclude Include="EnemyThinPrefab.h" />
     <ClInclude Include="ExplosionPrefab.h" />
+    <ClInclude Include="FireBulletPrefab.h" />
     <ClInclude Include="FireGroundPrefab.h" />
     <ClInclude Include="FloatGroundPrefab.h" />
     <ClInclude Include="game.h" />
@@ -206,21 +220,27 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameObjectMove.h" />
     <ClInclude Include="GameTime.h" />
+    <ClInclude Include="GenieLampPrefab.h" />
     <ClInclude Include="GroundPrefab.h" />
     <ClInclude Include="HorizontalBarPrefab.h" />
+    <ClInclude Include="JafarPrefab.h" />
+    <ClInclude Include="Pot.h" />
     <ClInclude Include="PotPrefab.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="RopePrefab.h" />
     <ClInclude Include="Scene1.h" />
+    <ClInclude Include="Scene2.h" />
+    <ClInclude Include="SceneHome.h" />
     <ClInclude Include="ShopperPrefab.h" />
     <ClInclude Include="SpringBoardPrefab.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="StairsPrefab.h" />
+    <ClInclude Include="StarBulletPrefab.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateManager.h" />
     <ClInclude Include="trace.h" />
     <ClInclude Include="TriggerPrefab.h" />
-    <ClInclude Include="UIScene1.h" />
+    <ClInclude Include="UIScene.h" />
     <ClInclude Include="WallPrefab.h" />
   </ItemGroup>
   <ItemGroup>

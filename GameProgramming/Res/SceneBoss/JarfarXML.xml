@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Animations>
+  <Animation name="HumanIdle" imagePath="Jafar.png" width="640" height="672">
+    <sprite x="8" y="9" w="64" h="70" oX="8" oY="9" oW="68" oH="64" />
+  </Animation>
+  <Animation name="HumanAttack" imagePath="Jafar.png" width="640" height="672" delay="8">
+    <sprite x="80" y="10" w="57" h="69" oX="80" oY="10" oW="-455" oH="507" />
+    <sprite x="144" y="11" w="55" h="68" oX="144" oY="11" oW="-455" oH="507" />
+    <sprite x="208" y="12" w="51" h="67" oX="208" oY="12" oW="-455" oH="507" />
+    <sprite x="272" y="11" w="64" h="68" oX="272" oY="11" oW="-455" oH="507" />
+    <sprite x="344" y="11" w="82" h="68" oX="344" oY="11" oW="-455" oH="507" />
+    <sprite x="440" y="11" w="85" h="68" oX="440" oY="11" oW="-455" oH="507" />
+    <sprite x="536" y="11" w="68" h="68" oX="536" oY="11" oW="-455" oH="507" />
+  </Animation>
+  <Animation name="AnacondaIdle" imagePath="Jafar.png" width="640" height="672">
+    <sprite x="320" y="92" w="68" h="83" oX="320" oY="92" oW="-152" oH="68" />
+  </Animation>
+  <Animation name="AnacondaAttack" imagePath="Jafar.png" width="640" height="672" delay="3">
+    <sprite x="240" y="104" w="71" h="71" oX="240" oY="104" oW="287" oH="612" />
+    <sprite x="320" y="92" w="68" h="83" oX="320" oY="92" oW="287" oH="612" />
+    <sprite x="400" y="93" w="68" h="82" oX="400" oY="93" oW="287" oH="612" />
+    <sprite x="480" y="94" w="69" h="81" oX="480" oY="94" oW="287" oH="612" />
+    <sprite x="560" y="94" w="69" h="81" oX="560" oY="94" oW="287" oH="612" />
+    <sprite x="8" y="188" w="63" h="83" oX="8" oY="188" oW="287" oH="612" />
+    <sprite x="152" y="211" w="71" h="60" oX="152" oY="211" oW="287" oH="612" />
+    <sprite x="88" y="112" w="64" h="63" oX="88" oY="112" oW="287" oH="612" />
+<sprite x="88" y="112" w="64" h="63" oX="88" oY="112" oW="287" oH="612" />
+<sprite x="88" y="112" w="64" h="63" oX="88" oY="112" oW="287" oH="612" />
+
+    <sprite x="160" y="104" w="67" h="71" oX="160" oY="104" oW="287" oH="612" />
+    <sprite x="240" y="104" w="71" h="71" oX="240" oY="104" oW="287" oH="612" />
+  </Animation>
+</Animations>

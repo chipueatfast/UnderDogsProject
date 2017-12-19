@@ -162,6 +162,6 @@ public:
 	GameObjectMove();
 	~GameObjectMove();
 	int health() ;
-	void set_health(int newHealth);
+	void virtual set_health(int newHealth);
 };
 

@@ -34,4 +34,11 @@ void GameManager::ReplaceScene(Game* scene)
 {
 	delete mCurrentScene;
 	mCurrentScene = scene;
+	//initialize the game
+	if (!mCurrentScene->Game_Init(hwnd))
+	{
+		MessageBox(hwnd, "Error initializing the game", "Error", MB_OK);
+
+	}
+
 }

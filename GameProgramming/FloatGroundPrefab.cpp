@@ -12,6 +12,7 @@ void FloatGroundPrefab::Instantiate(GameObject* gameObject, float x, float y, in
 	gameObject->state_manager()->AddToDictState("001", "Broken");
 	gameObject->state_manager()->setState("000");
 	gameObject->set_is_hitted(false);
+	gameObject->setIsRepeating(true);
 }
 
 FloatGroundPrefab::FloatGroundPrefab()

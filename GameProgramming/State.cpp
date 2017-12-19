@@ -12,6 +12,7 @@ State::State()
 
 State::~State()
 {
+	_srcRect.clear();
 }
 State::State(const std::string stateName, const std::vector<RECT> rect,const int& animaDelay)
 {

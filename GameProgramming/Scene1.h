@@ -5,7 +5,7 @@
 #include "game.h"
 #include <list>
 #include <d3dx9.h>
-#include "UIScene1.h"
+#include "UIScene.h"
 
 class Scene1: public Game
 {
@@ -24,11 +24,9 @@ private:
 	CSound* _soundAppleCollision;
 	LPDIRECT3DSURFACE9 background;
 	LPDIRECT3DTEXTURE9 mapETC;
-	RECT viewRect; 
 	//GameObject * testObject = new GameObject();//object duoi dang co xml
 	//GameObject * namObject = new GameObject();//object duoi dang chi co mot hinh anh
-	map<string, int> mapIdName;
-	UIScene1* _UI;
+
 	
 	virtual void DisposablePhysicUpdate(float) override;
 	void EnemyThinAI(GameObjectMove* obj_mov);

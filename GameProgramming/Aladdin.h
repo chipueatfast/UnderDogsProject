@@ -9,6 +9,7 @@
 #include <list>
 #include "dxaudio.h"
 #include "GameObjectMove.h"
+#include "game.h"
 
 #define CHARACTER_VX 10
 
@@ -105,8 +106,19 @@ private:
 	int _invicibleTime;
 //to edit later
 	bool _isSwinging = false;
+	bool _isAbsorbed;
 
 public:
+	bool is_absorbed() const
+	{
+		return _isAbsorbed;
+	}
+
+	void set_is_absorbed(bool is_absorbed)
+	{
+		_isAbsorbed = is_absorbed;
+	}
+
 	void set_ChosenLayer(const int & chosenlayer)
 	{
 		_chosenLayer = chosenlayer;
@@ -221,6 +233,79 @@ public:
 		_isWalkingStairs = isWalking;
 	}
 
+private:
+	int _score = 100;
+	int _diamondCount = 4;
+	int _life = 3;
+	//mainCharacter->setPosition(MyCamera::GetInstance()->width() / 2, 600);
+	D3DXVECTOR3 _positionCheckpoint = D3DXVECTOR3(SCREEN_WIDTH / 2, 600, 0);
+public:
+	void Back();
+
+
+	void setScore(int newScore)
+	{
+		_score = newScore;
+	}
+	int Score()
+	{
+		return _score;
+	}
+
+	void setPositionCheckpoint(D3DXVECTOR3 newCheckpoint)
+	{
+		if (newCheckpoint.x <= _positionCheckpoint.x)
+			return;
+		_positionCheckpoint.x = newCheckpoint.x;
+		_positionCheckpoint.y = newCheckpoint.y;
+	}
+
+
+	void setDiamondCount(int diamondCount)
+	{
+		_diamondCount = diamondCount;
+	}
+	int DiamondCount()
+	{
+		return _diamondCount;
+	}
+
+	int health()
+	{
+		return _health;
+	}
+
+	void set_health(int newHealth) override
+	{
+		if (newHealth < 0)
+			return;
+		_health = newHealth;
+		if (_health == 0)
+		{
+			if (_life - 1 > 0)
+			{
+				_life -= 1;
+				_health = 7;
+				this->setPosition(_positionCheckpoint);
+				MyCamera::GetInstance()->setPosition(_positionCheckpoint);
+			}
+
+		}
+	}
+	int Life()
+	{
+
+		return _life;
+	}
+	void setLife(int newLife)
+	{
+		if (newLife < 0)
+		{
+			return;
+		}
+		_life = newLife;
+
+	}
 };
 
 

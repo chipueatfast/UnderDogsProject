@@ -4,6 +4,7 @@
 #include <d3d9.h>
 #include <d3dx9.h>
 #include "dxgraphics.h"
+#include "game.h"
 
 //variable declarations
 LPDIRECT3D9 d3d = NULL;
@@ -11,6 +12,7 @@ LPDIRECT3DDEVICE9 d3ddev = NULL;
 LPDIRECT3DSURFACE9 backbuffer = NULL;
 LPD3DXSPRITE sprite_handler = nullptr;
 D3DXMATRIX old_matrix;
+HWND hwnd = NULL;
 
 int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 {
@@ -63,6 +65,7 @@ int Init_Direct3D(HWND hwnd, int width, int height, int fullscreen)
 	D3DXMatrixRotationX(&rota, 0);
 
 	old_matrix = rota*scale*trans;
+	//create a new window
 
 	if (result != D3D_OK)
 		return 0;
@@ -135,4 +138,22 @@ LPDIRECT3DTEXTURE9 LoadTexture(char *filename, D3DCOLOR transcolor, D3DXIMAGE_IN
 	if (result != D3D_OK)
 		return NULL;
 	return texture;
+}
+
+void CreateHWND(HINSTANCE hInstance, DWORD style)
+{
+	hwnd = CreateWindow(
+		APPTITLE, //window class
+		APPTITLE, //title bar
+		style, //window style
+		CW_USEDEFAULT, //x position of window
+		CW_USEDEFAULT, //y position of window
+		SCREEN_WIDTH, //width of the window
+		SCREEN_HEIGHT, //height of the window
+		NULL, //parent window
+		NULL, //menu
+		hInstance, //application instance
+		NULL); //window parameters
+			   //was there an error creating the window?
+			   //initialize  DirectInput
 }

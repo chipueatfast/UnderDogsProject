@@ -13,7 +13,7 @@ void EnemyJarPrefab::Instantiate(GameObjectMove* gameObject, float x, float y, i
 	gameObject->state_manager()->AddToDictState("000", "EnemyJarIdle");
 	gameObject->state_manager()->AddToDictState("001", "EnemyJarRun");
 	gameObject->state_manager()->AddToDictState("002", "EnemyJarSlash");
-	gameObject->state_manager()->AddToDictState("003", "EnemyJarBeaten");
+	gameObject->state_manager()->AddToDictState("003", "EnemyJarIdle");
 	gameObject->state_manager()->setState("000");
 	gameObject->Flip();
 }

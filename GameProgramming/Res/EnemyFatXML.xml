@@ -1,6 +1,6 @@
  <?xml version="1.0" encoding="utf-8"?>
  <Animations>
- <Animation name="EnemyFatIdle" imagePath="Enemy1.png" width="500" height="1096">
+ <Animation name="EnemyFatIdle" imagePath="Enemy1.png" width="500" height="1096" delay="2">
     <sprite x="2" y="921" w="37" h="43" oX="2" oY="921" oW="959" oH="333" />
     <sprite x="48" y="918" w="40" h="49" oX="48" oY="918" oW="959" oH="333" />
     <sprite x="96" y="920" w="34" h="45" oX="96" oY="920" oW="959" oH="333" />
@@ -9,7 +9,7 @@
     <sprite x="239" y="912" w="52" h="51" oX="239" oY="912" oW="959" oH="333" />
     <sprite x="300" y="914" w="40" h="48" oX="300" oY="914" oW="959" oH="333" />
   </Animation> 
-  <Animation name="EnemyFatBeaten" imagePath="Enemy1.png" width="500" height="1096" delay="3">
+  <Animation name="EnemyFatBeaten" imagePath="Enemy1.png" width="500" height="1096" delay="2">
     <sprite x="2" y="975" w="55" h="51" oX="2" oY="975" oW="1026" oH="345" />
     <sprite x="59" y="974" w="54" h="50" oX="59" oY="974" oW="1026" oH="345" />
     <sprite x="118" y="973" w="51" h="49" oX="118" oY="973" oW="1026" oH="345" />
@@ -19,7 +19,7 @@
     <sprite x="299" y="968" w="69" h="64" oX="299" oY="968" oW="1026" oH="345" />
     <sprite x="77" y="725" w="42" h="49" oX="77" oY="725" oW="1026" oH="345" />
   </Animation>
-  <Animation name="EnemyFatRun" imagePath="Enemy1.png" width="500" height="1096">
+  <Animation name="EnemyFatRun" imagePath="Enemy1.png" width="500" height="1096" delay="2">
     <sprite x="13" y="790" w="36" h="51" oX="13" oY="790" oW="823" oH="342" />
     <sprite x="57" y="787" w="34" h="49" oX="57" oY="787" oW="823" oH="342" />
     <sprite x="99" y="790" w="36" h="46" oX="99" oY="790" oW="823" oH="342" />
@@ -29,7 +29,7 @@
     <sprite x="272" y="789" w="36" h="47" oX="272" oY="789" oW="823" oH="342" />
     <sprite x="317" y="787" w="33" h="50" oX="317" oY="787" oW="823" oH="342" />
   </Animation>
-  <Animation name="EnemyFatSlash" imagePath="Enemy1.png" width="500" height="1096">
+  <Animation name="EnemyFatSlash" imagePath="Enemy1.png" width="500" height="1096" delay="2">
     <sprite x="5" y="854" w="55" h="57" oX="5" oY="854" oW="921" oH="293" />
     <sprite x="62" y="854" w="36" h="55" oX="62" oY="854" oW="921" oH="293" />
     <sprite x="118" y="859" w="60" h="49" oX="118" oY="859" oW="921" oH="293" />

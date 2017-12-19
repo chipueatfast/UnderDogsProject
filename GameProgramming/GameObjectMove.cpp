@@ -50,7 +50,7 @@ void GameObjectMove::PhysicUpdate(float t)
 	{
 		CalSword();
 	}
-	if (_handState == "2" && _stateManager->life_span() == 0)
+	if (_handState == "2" && _stateManager->life_span() <= 0)
 	{
 		_handState = "0";
 		DelSword();
@@ -78,7 +78,7 @@ void GameObjectMove::CalSword()
 		else
 		{
 			_sword->right = _boundingBox.left;
-			_sword->left = _sword->right + 50;
+			_sword->left = _sword->right - 50;
 			return;
 		}
 	}

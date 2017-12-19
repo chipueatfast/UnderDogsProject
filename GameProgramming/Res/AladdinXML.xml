@@ -202,7 +202,7 @@
     <sprite x="437" y="1300" w="45" h="51" oX="437" oY="1300" oW="1360" oH="547" />
     <sprite x="498" y="1294" w="51" h="51" oX="498" oY="1294" oW="1360" oH="547" />
   </Animation>
-  <Animation name="Climb" imagePath="AladdinSprite.png" width="1121" height="2718">
+  <Animation name="Climb" imagePath="AladdinSprite.png" width="1121" height="2718" delay="2">
     <sprite x="11" y="1362" w="29" h="85" oX="11" oY="1362" oW="1435" oH="425" />
     <sprite x="53" y="1361" w="28" h="88" oX="53" oY="1361" oW="1435" oH="425" />
     <sprite x="94" y="1374" w="28" h="73" oX="94" oY="1374" oW="1435" oH="425" />
@@ -214,7 +214,7 @@
     <sprite x="356" y="1377" w="42" h="61" oX="356" oY="1377" oW="1435" oH="425" />
     <sprite x="406" y="1362" w="27" h="80" oX="406" oY="1362" oW="1435" oH="425" />
   </Animation>
-  <Animation name="Swing" imagePath="AladdinSprite.png" width="1121" height="2718">
+  <Animation name="Swing" imagePath="AladdinSprite.png" width="1121" height="2718" delay="2">
     <sprite x="10" y="1467" w="39" h="77" oX="10" oY="1467" oW="1521" oH="617" />
     <sprite x="57" y="1469" w="53" h="71" oX="57" oY="1469" oW="1521" oH="617" />
     <sprite x="120" y="1470" w="51" h="76" oX="120" oY="1470" oW="1521" oH="617" />
@@ -256,7 +256,7 @@
     <sprite x="192" y="1664" w="31" h="88" oX="192" oY="1664" oW="1714" oH="250" />
     <sprite x="236" y="1664" w="56" h="88" oX="236" oY="1664" oW="1714" oH="250" />
   </Animation>
-  <Animation name="SwingSlash" imagePath="AladdinSprite.png" width="1121" height="2718">
+  <Animation name="SwingSlash" imagePath="AladdinSprite.png" width="1121" height="2718" delay="2">
     <sprite x="15" y="1769" w="48" h="86" oX="15" oY="1769" oW="1827" oH="532" />
     <sprite x="81" y="1769" w="52" h="88" oX="81" oY="1769" oW="1827" oH="532" />
     <sprite x="146" y="1769" w="61" h="92" oX="146" oY="1769" oW="1827" oH="532" />

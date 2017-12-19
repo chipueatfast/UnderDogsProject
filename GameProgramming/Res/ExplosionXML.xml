@@ -1,47 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Animations>
-  <Animation name="Explosing" imagePath="explosion.png" width="620" height="315">
-    <sprite x="12" y="13" w="46" h="28" oX="12" oY="13" oW="288" oH="690" />
-    <sprite x="72" y="10" w="74" h="31" oX="72" oY="10" oW="288" oH="690" />
-    <sprite x="169" y="19" w="42" h="23" oX="169" oY="19" oW="288" oH="690" />
-    <sprite x="224" y="26" w="73" h="21" oX="224" oY="26" oW="288" oH="690" />
-    <sprite x="299" y="17" w="28" h="29" oX="299" oY="17" oW="288" oH="690" />
-    <sprite x="333" y="12" w="37" h="34" oX="333" oY="12" oW="288" oH="690" />
-    <sprite x="376" y="14" w="30" h="28" oX="376" oY="14" oW="288" oH="690" />
-    <sprite x="416" y="0" w="43" h="42" oX="416" oY="0" oW="288" oH="690" />
-    <sprite x="467" y="1" w="46" h="44" oX="467" oY="1" oW="288" oH="690" />
-    <sprite x="515" y="0" w="52" h="46" oX="515" oY="0" oW="288" oH="690" />
-    <sprite x="571" y="0" w="49" h="48" oX="571" oY="0" oW="288" oH="690" />
-    <sprite x="0" y="53" w="49" h="52" oX="0" oY="53" oW="288" oH="690" />
-    <sprite x="54" y="53" w="46" h="50" oX="54" oY="53" oW="288" oH="690" />
-    <sprite x="108" y="56" w="50" h="46" oX="108" oY="56" oW="288" oH="690" />
-    <sprite x="164" y="61" w="50" h="42" oX="164" oY="61" oW="288" oH="690" />
-    <sprite x="221" y="57" w="48" h="49" oX="221" oY="57" oW="288" oH="690" />
-    <sprite x="276" y="55" w="51" h="49" oX="276" oY="55" oW="288" oH="690" />
-    <sprite x="331" y="60" w="51" h="46" oX="331" oY="60" oW="288" oH="690" />
-    <sprite x="394" y="71" w="47" h="30" oX="394" oY="71" oW="288" oH="690" />
-    <sprite x="457" y="70" w="43" h="32" oX="457" oY="70" oW="288" oH="690" />
-    <sprite x="502" y="76" w="29" h="27" oX="502" oY="76" oW="288" oH="690" />
-    <sprite x="541" y="75" w="30" h="24" oX="541" oY="75" oW="288" oH="690" />
-    <sprite x="580" y="70" w="21" h="33" oX="580" oY="70" oW="288" oH="690" />
-    <sprite x="0" y="171" w="26" h="23" oX="0" oY="171" oW="288" oH="690" />
-    <sprite x="40" y="146" w="60" h="48" oX="40" oY="146" oW="288" oH="690" />
-    <sprite x="112" y="109" w="81" h="85" oX="112" oY="109" oW="288" oH="690" />
-    <sprite x="200" y="114" w="83" h="80" oX="200" oY="114" oW="288" oH="690" />
-    <sprite x="296" y="115" w="82" h="79" oX="296" oY="115" oW="288" oH="690" />
-    <sprite x="392" y="119" w="83" h="75" oX="392" oY="119" oW="288" oH="690" />
-    <sprite x="488" y="122" w="83" h="72" oX="488" oY="122" oW="288" oH="690" />
-    <sprite x="0" y="205" w="80" h="69" oX="0" oY="205" oW="288" oH="690" />
-    <sprite x="88" y="208" w="82" h="66" oX="88" oY="208" oW="288" oH="690" />
-    <sprite x="184" y="213" w="83" h="61" oX="184" oY="213" oW="288" oH="690" />
-    <sprite x="278" y="214" w="85" h="60" oX="278" oY="214" oW="288" oH="690" />
-    <sprite x="366" y="218" w="84" h="67" oX="366" oY="218" oW="288" oH="690" />
-    <sprite x="456" y="229" w="56" h="51" oX="456" oY="229" oW="288" oH="690" />
-    <sprite x="516" y="231" w="36" h="46" oX="516" oY="231" oW="288" oH="690" />
-    <sprite x="570" y="235" w="50" h="47" oX="570" oY="235" oW="288" oH="690" />
+  <Animation name="Empty" imagePath="enemy_explosion.png" width="1780" height="115">
+    <sprite x="0" y="0" w="162" h="35" oX="0" oY="0" oW="99" oH="162" />
   </Animation>
-  <Animation name="Empty" imagePath="explosion.png" width="620" height="315">
-    <sprite x="274" y="295" w="56" h="19" oX="274" oY="295" oW="59" oH="56" />
+  <Animation name="Exploding" imagePath="enemy_explosion.png" width="1780" height="115">
+    <sprite x="77" y="75" w="30" h="25" oX="77" oY="75" oW="-1308" oH="1461" />
+    <sprite x="196" y="15" w="146" h="93" oX="196" oY="15" oW="-1308" oH="1461" />
+    <sprite x="372" y="13" w="155" h="97" oX="372" oY="13" oW="-1308" oH="1461" />
+    <sprite x="540" y="9" w="163" h="101" oX="540" oY="9" oW="-1308" oH="1461" />
+    <sprite x="716" y="7" w="171" h="103" oX="716" oY="7" oW="-1308" oH="1461" />
+    <sprite x="891" y="2" w="175" h="108" oX="891" oY="2" oW="-1308" oH="1461" />
+    <sprite x="1112" y="40" w="84" h="73" oX="1112" oY="40" oW="-1308" oH="1461" />
+    <sprite x="1294" y="42" w="79" h="71" oX="1294" oY="42" oW="-1308" oH="1461" />
+    <sprite x="1476" y="46" w="77" h="67" oX="1476" oY="46" oW="-1308" oH="1461" />
+    <sprite x="1476" y="46" w="77" h="67" oX="1476" oY="46" oW="-1308" oH="1461" />
   </Animation>
-
 </Animations>

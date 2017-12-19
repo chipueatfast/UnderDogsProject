@@ -18,11 +18,13 @@ GameObject::GameObject()
 	_index = 0;
 	_animaDelay = 0;
 	_animaCount = 0;
-
+	_disappearing = false;
 	_boundingRect = new Sprite("Res/blank.png", 50, 50);
 }
 GameObject::~GameObject()
 {
+	delete _stateManager;
+	delete _sprite;
 }
 
 void GameObject::setSprite(Sprite * t)
@@ -120,7 +122,9 @@ void GameObject::UpdateAnimate()
 	if (_stateManager->curState().getName() != "")
 		_animaDelay = _stateManager->curState().AnimaDelay();
 	_animaCount++;
-
+ 
+	if (_disappearing == true && _stateManager->curState().getListRect().size() - 1 == _index )
+		_isVisible = false;
 	if (_animaCount >= _animaDelay)
 	{
 		if (_isRepeating == false)

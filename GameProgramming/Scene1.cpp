@@ -33,19 +33,30 @@
 #include "EnemyHandPrefab.h"
 #include "BurningEffectPrefab.h"
 #include "PotPrefab.h"
+#include "GenieFacePrefab.h"
+#include "AbuFacePrefab.h"
+#include "HeartPrefab.h"
+#include "DiamondPrefab.h"
+#include "CheckpointJarPrefab.h"
+#include "GenieLampPrefab.h"
 
 
 #define GRAVITY 5
 #define JUMP_FORCE -31
 #define STOP_TRACKING_DISTANCE 40
 #define BOUNDARY_STAIRS 583
-#define JUMP_STAIRS -5
+#define JUMP_STAIRS -2
 
 float countForFat;
 
 HRESULT result;
 //For allocating purpose
+Pot* temp_pot_bullet;
+list<Pot*>* pot_list;
 vector<D3DXVECTOR3> initFloatGroundList;
+list<GameObject*>* listFireGround;
+list<GameObject*>* listSpringBoard;
+GameObject* tempFireGround;
 list<GameObject*>* floatGroundList;
 CollisionResult* _bulletCollide;
 GameObjectMove* temp_object_move;
@@ -66,7 +77,12 @@ int Scene1::Game_Init(HWND hwnd)
 {
 	//init object for operating
 	temp_bullet_enemy = new GameObject();
+	pot_list = new list<Pot*>();
+	temp_pot_bullet = new Pot();
 	_camel = new GameObjectMove();
+	listFireGround = new list<GameObject*>();
+	listSpringBoard = new list<GameObject*>();
+	tempFireGround = new GameObject();
 	floatGroundList = new list<GameObject*>();
 	temp_object_jug = new GameObjectMove();
 	_bulletCollide = new CollisionResult();
@@ -108,6 +124,12 @@ int Scene1::Game_Init(HWND hwnd)
 	mapIdName["CamelSaliva"] = 18;
 	mapIdName["FireGround"] = 19;
 	mapIdName["Shopper"] = 30;
+	mapIdName["Diamond"] = 41;
+	mapIdName["Heart"] = 42;
+	mapIdName["AbuFace"] = 43;
+	mapIdName["CheckpointJar"] = 44;
+	mapIdName["GenieFace"] = 45;
+	mapIdName["GenieLamp"] = 46;
 #pragma region Sound
 	_soundTheme = LoadSound("Res/Audio/LifeCollect.wave");
 	_soundJump = LoadSound("Cuica-1.wave");
@@ -122,16 +144,10 @@ int Scene1::Game_Init(HWND hwnd)
 		return 0;
 	//_soundTheme->Play(0, DSBPLAY_LOOPING);
 
-	//initialize keyboard 
-	if (!Init_Keyboard(hwnd))
-	{
-		MessageBox(hwnd, "Error initializing the keyboard", "Error", MB_OK);
-		return 0;
-	}
 	//Init components 
 
 
-	_UI = new UIScene1();
+	_UI = new UIScene();
 	mapinfo = new D3DXIMAGE_INFO();
 	background = LoadSurface("Res/background.png", D3DCOLOR_XRGB(63, 72, 204));
 	mapETC = LoadTexture("Res/map.png", D3DCOLOR_XRGB(63, 72, 204), mapinfo);
@@ -145,12 +161,11 @@ int Scene1::Game_Init(HWND hwnd)
 	//MyCamera::GetInstance()->setPosition(MyCamera::GetInstance()->width() / 2, mapinfo->Height / 2 - MyCamera::GetInstance()->height() / 2);
 	//return okay
 
-	mainCharacter->setPosition(100, 400);
+	mainCharacter->setPosition(2000, 664);
 
-	MyCamera::GetInstance()->setPosition(800,400);
+	MyCamera::GetInstance()->setPosition(2000,664);
 
 	return 1;
-
 }
 void Scene1::NormalizeAction()
 {
@@ -291,11 +306,14 @@ void Scene1::InputUpdate()
 	{
 		mainCharacter->set_main_state("0");
 	}
-	if (mainCharacter->on_state_end()==false && mainCharacter->prev_main_state()=="1" && mainCharacter->vy()==0 && mainCharacter->isClimbing()== false && mainCharacter->isSwinging()== false)
+	if (mainCharacter->on_state_end()==false && mainCharacter->prev_main_state()=="1" && mainCharacter->hand_state()=="0" && mainCharacter->sub_state()=="0" && mainCharacter->vy()==0 && mainCharacter->isClimbing()== false && mainCharacter->hand_state()=="0" && mainCharacter->isSwinging()== false)
 	{
 		mainCharacter->set_on_state_end(true);
-		mainCharacter->set_state("0001");
-		mainCharacter->set_degree_state("1");
+		if (mainCharacter->degree_state()=="0")
+		{
+			mainCharacter->set_state("0001");
+			mainCharacter->set_degree_state("1");
+		}
 		mainCharacter->set_prev_main_state("0");
 	}
 	if (mainCharacter->on_state_end()==true && mainCharacter->state_manager()->life_span() <=0 )
@@ -303,6 +321,7 @@ void Scene1::InputUpdate()
 		mainCharacter->set_on_state_end(false);
 		mainCharacter->set_degree_state("0");
 	}
+
 	if (mainCharacter->main_state() == "4" && mainCharacter->isClimbing() == true)
 		mainCharacter->StopY();
 	if (mainCharacter->main_state() == "0" && mainCharacter->sub_state() == "5"  && mainCharacter->isSwinging() == true)
@@ -314,9 +333,32 @@ void Scene1::InputUpdate()
 }
 void Scene1::DisposablePhysicUpdate(float t)
 {
+	//handle surrounding
+	for (auto i = listSpringBoard->begin(); i!= listSpringBoard->end(); i++)
+	{
+		temp_object = *i;
+		if (find(_onScreenList->begin(), _onScreenList->end(), temp_object)!= _onScreenList->end())
+		{
+			if (temp_object->is_hitted()== true)
+			{
+				temp_object->set_state("001");
+				temp_object->setIsRepeating(false);
+			}
+			if (temp_object->state_manager()->life_span() <= 0)
+			{
+				temp_object->set_state("000");
+				temp_object->set_is_hitted(false);
+				temp_object->setIsRepeating(true);
+			}
+				
+		}
+		
+
+	}
 	for (auto i = floatGroundList->begin(); i != floatGroundList->end(); i++)
 	{
 		temp_object = *i;
+		
 		if (temp_object->vy() != 0)
 			temp_object->setPosition(temp_object->x(), temp_object->y() + temp_object->vy()*t);
 		if (temp_object->y() >= 635)
@@ -324,14 +366,46 @@ void Scene1::DisposablePhysicUpdate(float t)
 			temp_object->set_vy(0);
 			temp_object->set_state("001");
 		}
-		if (temp_object->vy() == 0.0f && temp_object->is_hitted() == true)
+		if (temp_object->is_hitted() == true && temp_object->state_manager()->life_span() == 0)
+		{
+			temp_object->set_vy(temp_object->vy()+GRAVITY*2);
+		}
+		if (temp_object->vy() == 0.0f && temp_object->is_hitted() == true && temp_object->y()!= initFloatGroundList[distance(floatGroundList->begin(), i)].y)
 			if (find(_onScreenList->begin(), _onScreenList->end(), temp_object) != _onScreenList->end())
 			{
 				temp_object->setPosition(initFloatGroundList[distance(floatGroundList->begin(), i)]);
 				temp_object->set_is_hitted(false);
+				temp_object->setIsRepeating(true);
 				temp_object->set_state("000");
 			}
 
+	}
+	for (auto i = pot_list->begin(); i!= pot_list->end(); i++)
+	{
+
+			temp_pot_bullet = *i;
+			if (temp_pot_bullet->y() >= temp_pot_bullet->break_point())
+			{
+				temp_pot_bullet->set_vy(0);
+				temp_pot_bullet->set_is_hitted(true);
+				temp_pot_bullet->set_state("001");
+				temp_pot_bullet->setIsRepeating(false);
+				if (temp_pot_bullet->state_manager()->life_span() == 0)
+					_gameObjectList->remove(temp_pot_bullet);
+			}
+			else temp_pot_bullet->set_vy(temp_pot_bullet->vy() + 1);
+			temp_pot_bullet->setPosition(temp_pot_bullet->x() + temp_pot_bullet->vx()*t, temp_pot_bullet->y() + temp_pot_bullet->vy()*t);
+			
+			
+			if (_bulletCollide->_collisionIndex == 0.0f && mainCharacter->is_immune() == 0.0f)
+			{
+				mainCharacter->set_health(mainCharacter->health() - 1);
+			}
+			
+			if (find(_onScreenList->begin(), _onScreenList->end(), temp_pot_bullet) == _onScreenList->end())
+			{
+				_gameObjectList->remove(temp_pot_bullet);
+			}
 	}
 	for (auto i = _disposableList->begin(); i != _disposableList->end(); i++)
 	{
@@ -342,19 +416,6 @@ void Scene1::DisposablePhysicUpdate(float t)
 		case 16:
 			//parabol knife
 			temp_bullet_enemy->set_vy(CalculateParabolVy(1, temp_object_jug->Position(), 80, -100, temp_bullet_enemy->x()));
-			break;
-		case 21:
-			//pot
-			temp_bullet_enemy->set_vy(temp_bullet_enemy->vy() + 1);
-			if (temp_bullet_enemy->y() >= 635)
-			{
-				temp_bullet_enemy->set_vy(0);
-				temp_bullet_enemy->set_is_hitted(true);
-				temp_bullet_enemy->set_state("001");
-				temp_bullet_enemy->setIsRepeating(false);
-				if (temp_bullet_enemy->state_manager()->life_span() == 0)
-					_gameObjectList->remove(temp_bullet_enemy);
-			}
 			break;
 		}
 			//to remove disposable thing out of screen when they are out of sight
@@ -426,12 +487,28 @@ void Scene1::EnemyMusAI(GameObjectMove* obj_mov)
 		//if in range of sight, muscle will attack
 		if (abs(mainCharacter->x() - obj_mov->x())<50)
 		{
+			for (list<GameObject*>::iterator it = listFireGround->begin(); it != listFireGround->end(); it++)
+			{
+				tempFireGround = *it;
+				if (find(_onScreenList->begin(), _onScreenList->end(), tempFireGround)!=_onScreenList->end())
+				{
+					if (SimpleIntersect(&tempFireGround->bounding_box(), &obj_mov->bounding_box()))
+					{
+						obj_mov->set_state("004");
+						obj_mov->set_hand_state("4");
+						obj_mov->setIsRepeating(true);
+						return;
+					}
+				}
+				
+			}
 			if(obj_mov->reach_limit() == true)
 			{
 				obj_mov->setIsRepeating(true);
 				obj_mov->set_state("000");
 				obj_mov->set_hand_state("0");
 			}
+			
 			if (obj_mov->hand_state()=="0"|| obj_mov->hand_state()=="1")
 			{
 				obj_mov->set_state("002");
@@ -572,7 +649,7 @@ void Scene1::EnemyFatAI(GameObjectMove* obj_mov)
 			}
 			else
 				//if in range of pursuit, fat will pursue
-				if (abs(mainCharacter->x() - obj_mov->x()) > 100)
+				if (abs(mainCharacter->x() - obj_mov->x()) < 130)
 				{
 					if ((obj_mov->is_stand_still() == false || (obj_mov->vx() != 0)) && obj_mov->reach_limit() == false && obj_mov->is_throwing()==false)
 					{
@@ -683,10 +760,10 @@ void Scene1::EnemyHandAI(GameObjectMove* obj_mov)
 			obj_mov->setIsRepeating(false);
 			if (obj_mov->hand_state()=="1" && obj_mov->state_manager()->life_span()==3)
 			{
-				GameObject* temp_pot = new GameObject();
-				PotPrefab::Instantiate(temp_pot, obj_mov->x(), obj_mov->y());
+				Pot* temp_pot = new Pot();
+				PotPrefab::Instantiate(temp_pot, obj_mov->x(), obj_mov->y(), obj_mov->max_x());
 				obj_mov->set_weapon_obj(temp_pot);
-				_disposableList->push_back(temp_pot);
+				pot_list->push_back(temp_pot);
 				_gameObjectList->push_back(temp_pot);
 				_onScreenList->push_back(temp_pot);
 				obj_mov->set_is_throwing(true);		
@@ -814,10 +891,12 @@ void Scene1::CollisionDetect()
 				{
 					
 				case 0://Apple
-					if (collisionResult._collisionIndex != 0.0f)
+					if (temp_object->IsDisappearing() == false)
 					{
-						temp_object->setVisible(false);
 						mainCharacter->setAppleCount(mainCharacter->appleCount() + 1);
+
+						temp_object->set_state("1");
+						temp_object->setDisappearing(true);
 					}
 					//sound
 					//_soundCollectApple->Play();
@@ -1130,6 +1209,47 @@ void Scene1::CollisionDetect()
 					}
 				}
 				break;
+				case 41://Diamond
+					if (temp_object->IsDisappearing() == false)
+					{
+						mainCharacter->setScore(mainCharacter->Score() + 150);
+						mainCharacter->setDiamondCount(mainCharacter->DiamondCount() + 1);
+						temp_object->set_state("1");
+						temp_object->setDisappearing(true);
+					}
+					break;
+				case 42://Heart
+
+					if (temp_object->IsDisappearing() == false)
+					{
+						mainCharacter->setScore(mainCharacter->Score() + 150);
+						temp_object->set_state("1");
+						temp_object->setDisappearing(true);
+					}
+
+					break;
+				case 44://CheckpointJar
+					if (temp_object->IsRepeating() == true)
+					{
+						mainCharacter->setPositionCheckpoint(temp_object->Position());
+						temp_object->set_state("1");
+						temp_object->setIsRepeating(false);
+					}
+					break;
+				case 43://AbuFace
+				case 45://GenieFace
+
+					if (temp_object->IsDisappearing() == false)
+					{
+						mainCharacter->setScore(mainCharacter->Score() + 250);
+						temp_object->set_state("1");
+						temp_object->setDisappearing(true);
+					}
+					break;
+				case 46://GenieLamp
+					temp_object->setVisible(false);
+
+					break;
 
 
 
@@ -1143,8 +1263,9 @@ void Scene1::CollisionDetect()
 							{
 								mainCharacter->set_vy(0);
 								mainCharacter->set_main_state("0");
-								temp_object->set_vy(GRAVITY * 2);
+								//temp_object->set_vy(GRAVITY * 2);
 								temp_object->set_is_hitted(true);
+								temp_object->setIsRepeating(false);
 							}
 						/*	else
 								mainCharacter->set_vy((collisionResult._collisionIndex*mainCharacter->vy()));*/
@@ -1155,10 +1276,19 @@ void Scene1::CollisionDetect()
 					
 					break;
 				case 6://SpringBoard
-
-					mainCharacter->set_sub_state("6");
-					mainCharacter->set_vy(JUMP_FORCE*0.8f);
-
+					/*if (collisionResult._collisionSide==UPTOP)
+					{*/
+						if (collisionResult._collisionIndex == 0.0f)
+						{
+							mainCharacter->set_sub_state("6");
+							mainCharacter->set_vy(JUMP_FORCE*0.8f);
+							temp_object->set_is_hitted(true);
+						}
+						else
+						{
+							mainCharacter->set_vy(mainCharacter->vy()*collisionResult._collisionIndex);
+						}
+					
 					_soundSpringBoard->Play();
 					break;
 				case 7://Camel
@@ -1300,9 +1430,6 @@ void Scene1::PhysicsUpdate(float t)
 
 	if (mainCharacter->isClimbing() == false && mainCharacter->isSwinging() == false)
 		mainCharacter->set_vy(mainCharacter->vy() + GRAVITY);
-	//else
-	//	if( mainCharacter->isSwinging() == false)
-	//		mainCharacter->set_vy(mainCharacter->vy() + GRAVITY);
 	else
 		if (mainCharacter->vy() == 0)
 		{
@@ -1350,14 +1477,12 @@ void Scene1::GraphicUpdate(float t)
 
 	mainCharacter->setTranslation(D3DXVECTOR2(mainCharacter->x() - MyCamera::GetInstance()->View().left, mainCharacter->y() - MyCamera::GetInstance()->View().top));
 	mainCharacter->DrawBullet();
-	mainCharacter->RenderBounding(D3DCOLOR_ARGB(200, 255, 67, 78));
+	//mainCharacter->RenderBounding(D3DCOLOR_ARGB(200, 255, 67, 78));
 	mainCharacter->Render(false, true, true);
 
 
 	for (auto i = _onScreenList->begin(); i != _onScreenList->end(); i++)
 	{
-		if (temp_object->get_name() == "EnemyThin")
-			trace(L"me kiep");
 		temp_object = *i;
 		temp_object->setAnchor(AnchorPoint::BOTTOM_MID);
 		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
@@ -1371,6 +1496,7 @@ void Scene1::GraphicUpdate(float t)
 
 
 
+
 #pragma region Draw map_front
 	viewRect.top += mapinfo->Height / 2;
 	viewRect.bottom += mapinfo->Height / 2;
@@ -1380,11 +1506,10 @@ void Scene1::GraphicUpdate(float t)
 #pragma endregion
 
 	//mainCharacter->RenderBounding(D3DCOLOR_ARGB(150, 0, 250, 0));
-	_UI->Render(mainCharacter->health());
+	_UI->Render(mainCharacter->health(), mainCharacter->Life(), mainCharacter->appleCount(), mainCharacter->DiamondCount(), mainCharacter->Score());
 	sprite_handler->End();
 	//stop rendering 
 	d3ddev->EndScene();
-	_UI->RenderText(5, mainCharacter->appleCount());
 
 
 }
@@ -1443,7 +1568,9 @@ void Scene1::LoadListObjectXml(char* xmlpath)
 		for (xml_node object = node.first_child(); object; object = object.next_sibling())
 		{
 			if (name == "Ground" || name == "HorizontalBar" || name == "Rope" || name == "Wall"
-				|| name == "Stairs" || name == "FireGround" || name == "Trigger")
+				|| name == "Stairs" || name == "FireGround" || name == "Trigger"
+				|| name == "Diamond" || name == "Heart" || name == "AbuFace" || name == "CheckpointJar" || name == "GenieFace" || name == "GenieLamp"
+				)
 			{
 				anchorTransformY = atoi(object.attribute("height").value());
 			}
@@ -1483,6 +1610,7 @@ void Scene1::LoadListObjectXml(char* xmlpath)
 			case 6:
 				anObject = new GameObject();
 				SpringBoardPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				listSpringBoard->push_back(anObject);
 				break;
 			case 7:
 				anObject = new GameObjectMove();
@@ -1496,6 +1624,7 @@ void Scene1::LoadListObjectXml(char* xmlpath)
 			case 9:
 				anObject = new GameObject();
 				FireGroundPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				listFireGround->push_back(anObject);
 				break;
 			case 10:
 				anObject = new GameObjectMove();
@@ -1541,14 +1670,47 @@ void Scene1::LoadListObjectXml(char* xmlpath)
 				anObject = new GameObject();
 				TriggerPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
 				break;
+			case 41:
+				anObject = new GameObject();
+				DiamondPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				break;
+
+			case 42:
+				anObject = new GameObject();
+				HeartPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				break;
+
+			case 43:
+				anObject = new GameObject();
+				AbuFacePrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				break;
+
+			case 44:
+				anObject = new GameObject();
+				CheckpointJarPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				break;
+
+			case 45:
+				anObject = new GameObject();
+				GenieFacePrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				break;
+
+			case 46:
+				anObject = new GameObject();
+				GenieLampPrefab::Instantiate(anObject, atoi(object.attribute("x").value()) + anchorTransformX, atoi(object.attribute("y").value()) + anchorTransformY, atoi(object.attribute("width").value()), atoi(object.attribute("height").value()));
+				break;
 			default:
-				continue;
+				anObject = new GameObject(); 
+				break;
 			}
 			anObject->setAnchor(AnchorPoint::BOTTOM_MID);
 			if (idName == 30)
 				anObject->setAnchor(AnchorPoint::TOP_LEFT);
+			if (idName == 41 || idName == 42 || idName == 43 || idName == 44 || idName == 45 || idName == 46)
+				anObject->setAnchor(AnchorPoint::MIDDLE);
 			anObject->set_bounding_box(CalculateBoundingBox(anObject->x(), anObject->y(), anObject->width(), anObject->height(), anObject->anchor()));
 			(CalculateBoundingBox(anObject->x(), anObject->y(), anObject->width(), anObject->height(), anObject->anchor()));
+
 
 			_gameObjectList->push_back(anObject);
 		}

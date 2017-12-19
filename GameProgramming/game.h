@@ -12,6 +12,7 @@
 #include <list>
 #include "Quadtree.h"
 #include "GameObjectMove.h"
+#include "UIScene.h"
 
 
 //application title
@@ -29,8 +30,11 @@
 class Game
 {
 protected:
+	RECT viewRect;
 	CSound* _soundTheme;
 	D3DXIMAGE_INFO* mapinfo;
+	UIScene* _UI;
+	map<string, int> mapIdName;
 
 public:
 	D3DXIMAGE_INFO* MapInfo() const

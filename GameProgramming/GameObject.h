@@ -21,13 +21,28 @@ enum AnchorPoint
 
 class GameObject
 {
+	bool _disappearing;
+public:
+	bool IsDisappearing() const
+	{
+		return _disappearing;
+	}
+	void setDisappearing(bool value)
+	{
+		_disappearing = value;
+		_isRepeating = false;
+	}
 protected:
 	StateManager* _stateManager;
 	Sprite* _boundingRect;
 	bool _isRepeating = true;
 public:
+	bool IsRepeating() const
+	{
+		return _isRepeating;
+	}
 
-	void setIsRepeating(bool isRepeating)
+	void setIsRepeating(bool isRepeating) 
 	{
 		_isRepeating = isRepeating;
 	}
@@ -113,7 +128,6 @@ public:
 	{
 		return _name;
 	}
-	//Add code NamLe
 	void set_name(string name)
 	{
 		_name = name;

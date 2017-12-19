@@ -1,10 +1,10 @@
 #pragma once
-#include"GameObject.h"
+#include"Pot.h"
 
 class PotPrefab
 {
 public:
-	static void Instantiate(GameObject*, float, float);
+	static void Instantiate(Pot*, float, float, int);
 	PotPrefab();
 	~PotPrefab();
 };

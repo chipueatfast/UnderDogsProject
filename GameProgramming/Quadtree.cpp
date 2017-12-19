@@ -158,6 +158,7 @@ void Quadtree::Retrieve(std::list<GameObject*>* return_objects_list, GameObject*
 		{
 			GameObject* gameObject = *i;
 			if (SimpleIntersect(&gameObject->bounding_box(), &MyCamera::GetInstance()->bounding_box()))
+				if(find(return_objects_list->begin(), return_objects_list->end(), *i)== return_objects_list->end())
 					return_objects_list->push_back(*i);
 		}
 

@@ -19,7 +19,7 @@
 #include "game.h"
 #include "Scene1.h"
 #include "dxaudio.h"
-
+#include "SceneHome.h"
 
 //function prototypes
 LRESULT CALLBACK WinProc(HWND, UINT, WPARAM, LPARAM);
@@ -33,7 +33,7 @@ LRESULT WINAPI WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	case WM_ACTIVATE:
-		
+
 		dikeyboard->Acquire();
 		return 0;
 	case WM_DESTROY:
@@ -87,12 +87,11 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	int nCmdShow)
 {
 
-	Scene1* scene1 = new Scene1();
-	GameManager::GetInstance()->ReplaceScene(scene1);
+
 	int mFPS = 1;
 	MSG msg;
 	float tickPerFrame = 1.0f / mFPS, delta = 0;
-	HWND hWnd;
+
 	// register the class
 	MyRegisterClass(hInstance);
 	//set up the screen in windowed or fullscreen mode?
@@ -101,47 +100,32 @@ int WINAPI WinMain(HINSTANCE hInstance,
 		style = WS_EX_TOPMOST | WS_VISIBLE | WS_POPUP;
 	else
 		style = WS_OVERLAPPED;
-	//create a new window
-	hWnd = CreateWindow(
-		APPTITLE, //window class
-		APPTITLE, //title bar
-		style, //window style
-		CW_USEDEFAULT, //x position of window
-		CW_USEDEFAULT, //y position of window
-		SCREEN_WIDTH, //width of the window
-		SCREEN_HEIGHT, //height of the window
-		NULL, //parent window
-		NULL, //menu
-		hInstance, //application instance
-		NULL); //window parameters
-			   //was there an error creating the window?
-	//initialize  DirectInput
-	if(!Init_DirectInput(hWnd))
+	CreateHWND(hInstance, style);
+
+	if (!Init_DirectInput(hwnd))
 	{
-		MessageBox(hWnd, "Error initializing DirectInput", "Error", MB_OK);
+		MessageBox(hwnd, "Error initializing DirectInput", "Error", MB_OK);
 		return 0;
 
 	}
 	//initialize DirectSound 
-	if (!DirectSound_Init(hWnd)) 
-	{ 
-		MessageBox(hWnd, "Error initializing DirectSound", "Error", MB_OK); 
-		return 0; 
+	if (!DirectSound_Init(hwnd))
+	{
+		MessageBox(hwnd, "Error initializing DirectSound", "Error", MB_OK);
+		return 0;
 	}
 
-	if (!hWnd)
+
+	if (!hwnd)
 		return FALSE;
+	auto showWindow = ShowWindow(hwnd, nCmdShow);
 	//display the window
-	ShowWindow(hWnd, nCmdShow);
-	UpdateWindow(hWnd);
-	if (!Init_Direct3D(hWnd, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN))
+#include "Camera.h"
+	UpdateWindow(hwnd);
+	if (!Init_Direct3D(hwnd, SCREEN_WIDTH, SCREEN_HEIGHT, FULLSCREEN))
 		return 0;
-	//initialize the game
-	if (!GameManager::GetInstance()->GetCurrentScene()->Game_Init(hWnd))
-	{
-		MessageBox(hWnd, "Error initializing the game", "Error", MB_OK);
-		return 0;
-	}
+	SceneHome *sceneHome = new SceneHome();
+	GameManager::GetInstance()->ReplaceScene(sceneHome);
 	// main message loop
 	int done = 0;
 	while (!done)
@@ -156,21 +140,21 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
-		delta += GameTime::GetInstance()->GetCounter();
+		/*delta += GameTime::GetInstance()->GetCounter();
 		if (delta >= tickPerFrame)
+		{*/
+		//process game loop (prevents running after window is closed)
+		GameManager::GetInstance()->GetCurrentScene()->Game_Run(hwnd, delta);
+		delta = 0;
+		//}
+		/*else
 		{
-			//process game loop (prevents running after window is closed)
-			GameManager::GetInstance()->GetCurrentScene()->Game_Run(hWnd, delta);
-			delta = 0;
-		}
-		else
-		{
-			Sleep(tickPerFrame - delta);
-			delta = tickPerFrame;
-		}
-		
-		
-		
+		Sleep(tickPerFrame - delta);
+		delta = tickPerFrame;
+		}*/
+
+
+
 
 	}
 	return msg.wParam;
