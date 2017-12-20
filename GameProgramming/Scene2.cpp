@@ -17,6 +17,7 @@ GameObject* temp_star;
 GameObject* temp_object_scene2;
 GameObject* temp_bullet_scene2;
 AppleBullet* temp_apple_bullet_scene2;
+GameObject* collector;
 bool drawOneOnAnime;
 //timing variable
 DWORD startScene2 = GetTickCount();
@@ -24,6 +25,7 @@ int Scene2::Game_Init(HWND hwnd)
 {
 	//init background and camera procedure
 	mapinfo = new D3DXIMAGE_INFO();
+	collector = new GameObject();
 	
 	mapETC = LoadTexture("Res/SceneBoss/backgroundJafarfronttest.png", D3DCOLOR_XRGB(63, 72, 204), mapinfo);
 	background = LoadSurface("Res/SceneBoss/backgroundJafar.png", D3DCOLOR_XRGB(63, 72, 204));
@@ -301,8 +303,7 @@ void Scene2::DisposablePhysicUpdate(float t)
 		temp_bullet_scene2 = *i;
 		if (find(_onScreenList->begin(), _onScreenList->end(), temp_bullet_scene2) == _onScreenList->end() || temp_bullet_scene2->state_manager()->life_span() <= 0)
 		{
-			temp_star = *i;
-			delete temp_star;
+			delete *i;
 			i = _enemyBulletStarList->erase(i);
 			_gameObjectList->remove(temp_bullet_scene2);
 			_onScreenList->remove(temp_bullet_scene2);
@@ -350,7 +351,7 @@ void Scene2::DisposablePhysicUpdate(float t)
 			{
 				if (_mainCharacter->is_immune() == 0.0f)
 				{
-					_mainCharacter->set_health(_mainCharacter->health() - 1);
+					//_mainCharacter->set_health(_mainCharacter->health() - 1);
 				}
 			}
 			i++;
@@ -607,8 +608,7 @@ void Scene2::LoadListObjectXml(char* xmlpath)
 			anObject->setAnchor(AnchorPoint::BOTTOM_MID);
 			 
 			anObject->set_bounding_box(CalculateBoundingBox(anObject->x(), anObject->y(), anObject->width(), anObject->height(), anObject->anchor()));
-			(CalculateBoundingBox(anObject->x(), anObject->y(), anObject->width(), anObject->height(), anObject->anchor()));
-			 
+			(CalculateBoundingBox(anObject->x(), anObject->y(), anObject->width(), anObject->height(), anObject->anchor()));		 
 			_gameObjectList->push_back(anObject);
 		}
 	}

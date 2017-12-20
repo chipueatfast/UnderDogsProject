@@ -161,9 +161,9 @@ int Scene1::Game_Init(HWND hwnd)
 	//MyCamera::GetInstance()->setPosition(MyCamera::GetInstance()->width() / 2, mapinfo->Height / 2 - MyCamera::GetInstance()->height() / 2);
 	//return okay
 
-	mainCharacter->setPosition(2000, 664);
+	mainCharacter->setPosition(50, 500);
 
-	MyCamera::GetInstance()->setPosition(2000,664);
+	MyCamera::GetInstance()->setPosition(50,500);
 
 	return 1;
 }
@@ -415,7 +415,8 @@ void Scene1::DisposablePhysicUpdate(float t)
 		{
 		case 16:
 			//parabol knife
-			temp_bullet_enemy->set_vy(CalculateParabolVy(1, temp_object_jug->Position(), 80, -100, temp_bullet_enemy->x()));
+			temp_bullet_enemy->set_vx(2);
+			temp_bullet_enemy->set_vy(CalculateParabolVy(-2, temp_object_jug->Position(), 80, 70, temp_bullet_enemy->x()));
 			break;
 		}
 			//to remove disposable thing out of screen when they are out of sight
@@ -425,9 +426,12 @@ void Scene1::DisposablePhysicUpdate(float t)
 				if (_bulletCollide->_collisionIndex == 0.0f && mainCharacter->is_immune() == 0.0f)
 				{
 					mainCharacter->set_health(mainCharacter->health() - 1);
+					mainCharacter->set_is_immune(40);
 				}
 
 			}
+			if (SimpleIntersect(mainCharacter->sword(), &temp_bullet_enemy->bounding_box()))
+				temp_bullet_enemy->set_vx(-temp_bullet_enemy->vx());
 			if (find(_onScreenList->begin(), _onScreenList->end(), temp_bullet_enemy) == _onScreenList->end())
 			{
 				_gameObjectList->remove(temp_bullet_enemy);
@@ -626,7 +630,7 @@ void Scene1::EnemyFatAI(GameObjectMove* obj_mov)
 				obj_mov->set_attack_turn_remain(4);
 			}
 			//if in range of sight, fat will attack
-			if (abs(mainCharacter->x() - obj_mov->x())<45 && obj_mov->is_throwing() == false && obj_mov->attack_turn_remain() != 0)
+			if (abs(mainCharacter->x() - obj_mov->x())<80 && obj_mov->is_throwing() == false && obj_mov->attack_turn_remain() != 0)
 			{
 				obj_mov->set_state("002");
 				obj_mov->set_is_stand_still(true);
@@ -649,7 +653,7 @@ void Scene1::EnemyFatAI(GameObjectMove* obj_mov)
 			}
 			else
 				//if in range of pursuit, fat will pursue
-				if (abs(mainCharacter->x() - obj_mov->x()) < 130)
+				if (abs(mainCharacter->x() - obj_mov->x()) < 150)
 				{
 					if ((obj_mov->is_stand_still() == false || (obj_mov->vx() != 0)) && obj_mov->reach_limit() == false && obj_mov->is_throwing()==false)
 					{
@@ -922,6 +926,7 @@ void Scene1::CollisionDetect()
 					temp_burnfx->setPosition(mainCharacter->x(), mainCharacter->y());
 					temp_burnfx->set_state("001");
 					temp_burnfx->setVisible(true);
+					temp_burnfx->setIsRepeating(true);
 					if (find(_onScreenList->begin(), _onScreenList->end(), temp_burnfx) == _onScreenList->end())
 						_onScreenList->push_back(temp_burnfx);
 					break;
@@ -960,44 +965,46 @@ void Scene1::CollisionDetect()
 					break;
 				case 2: //Wall 
 					
-					trace(L"%f", collisionResult._collisionIndex);
-					 if (collisionResult._collisionSide == Side::UPTOP)
-					{ 
-						mainCharacter->set_vy((collisionResult._collisionIndex*mainCharacter->vy()));
+					if (collisionResult._collisionSide == NONE)//|| collisionResult._collisionSide == LEFT || collisionResult._collisionSide == RIGHT)
+					{
+						float newXPosition = mainCharacter->x();
+						if (mainCharacter->curface() == GameObject::RIGHT)
+						{
+							mainCharacter->set_FacePush(GameObject::RIGHT);
+							if (mainCharacter->CurrentState() == "Push")
+							{
+								int nextWidth = mainCharacter->state_manager()->curState().MaxBounding().right - mainCharacter->state_manager()->curState().MaxBounding().left;
+								newXPosition = temp_object->bounding_box().left - nextWidth / 2 - CHARACTER_VX*FIXED_TIME;
+							}
+							else
+							{
+								//newXPosition = temp_object->bounding_box().left - 21;
+								int nextWidth = mainCharacter->state_manager()->curState().MaxBounding().right - mainCharacter->state_manager()->curState().MaxBounding().left;
+								newXPosition = temp_object->bounding_box().left - nextWidth / 2 - CHARACTER_VX*FIXED_TIME;
+							}
+						}
+						else
+						{
+							mainCharacter->set_FacePush(GameObject::LEFT);
+							if (mainCharacter->CurrentState() == "Push")
+							{
+								int nextWidth = mainCharacter->state_manager()->curState().MaxBounding().right - mainCharacter->state_manager()->curState().MaxBounding().left;
+								newXPosition = temp_object->bounding_box().right + nextWidth / 2 + CHARACTER_VX*FIXED_TIME;
+							}
+							else
+							{
+								//	newXPosition = temp_object->bounding_box().right + 21;
+								int nextWidth = mainCharacter->state_manager()->curState().MaxBounding().right - mainCharacter->state_manager()->curState().MaxBounding().left;
+								newXPosition = temp_object->bounding_box().right + nextWidth / 2 + CHARACTER_VX*FIXED_TIME;
+							}
+						}
+						mainCharacter->setPosition(newXPosition, mainCharacter->y());
+						MyCamera::GetInstance()->setPosition(newXPosition, mainCharacter->y());
 						break;
 					}
-					 if (collisionResult._collisionSide == Side::NONE)
-					 {
-						 mainCharacter->set_vy((collisionResult._collisionIndex*mainCharacter->vy() + 3));
-						 break;
-					 }
-
-					if (collisionResult._collisionIndex == 0.0f)
-					{
-						if ((mainCharacter->curface() == GameObject::RIGHT) && collisionResult._collisionSide == Side::LEFT && mainCharacter->vx()>0)
-						{
-							mainCharacter->setPosition(mainCharacter->x() - 3, mainCharacter->y());
-							MyCamera::GetInstance()->setPosition(mainCharacter->x() - 3, mainCharacter->y());
-							mainCharacter->set_vx(0);
-
-							if (mainCharacter->isSwinging() == false)
-							{
-								mainCharacter->set_sub_state("3");
-							}
-						}
-						if ((mainCharacter->curface() == GameObject::LEFT) && collisionResult._collisionSide == Side::RIGHT && mainCharacter->vx()<0)
-						{
-							mainCharacter->setPosition(mainCharacter->x() + 3, mainCharacter->y());
-							MyCamera::GetInstance()->setPosition(mainCharacter->x() + 3, mainCharacter->y());
-							mainCharacter->set_vx(0);
-
-							if (mainCharacter->isSwinging() == false)
-							{
-								mainCharacter->set_sub_state("3");
-							}
-						}
-						
-					}		
+					mainCharacter->set_vx(0);
+					mainCharacter->set_sub_state("3");
+					//if (mainCharacter->vx() != 0 && mainCharacter->sub_state() != "1" && mainCharacter->sub_state() != "2")
 					break;
 
 				case 3://Rope
@@ -1325,7 +1332,7 @@ void Scene1::CollisionDetect()
 					}
 					break;
 				case 11:case 12:
-				case 13:case 14: case 15:
+				case 13:case 14: case 15: case 21:
 					mainCharacter->BeBeaten();
 					break;
 
@@ -1361,7 +1368,7 @@ void Scene1::CollisionDetect()
 						_soundAppleCollision->Play();
 						switch (mapIdName[temp_object_move->get_name()])
 						{
-						case 13:							
+						case 11: case 12: case 13: case 14: case 15: case 16:							
 							
 							if (temp_object_move->is_immune() == 0.0f)
 							{
@@ -1387,7 +1394,7 @@ void Scene1::CollisionDetect()
 				temp_object_move = (GameObjectMove*)*obj;
 				switch (mapIdName[temp_object_move->get_name()])
 				{
-				case 11: case 12: case 13: case 14: case 15:
+				case 11: case 12: case 13: case 14: case 15: case 16:
 				{
 					if (temp_object_move->is_immune() == 0.0f)
 					{
@@ -1418,6 +1425,10 @@ void Scene1::PhysicsUpdate(float t)
 	DisposablePhysicUpdate(t);
 
 //critical bug
+	if (mainCharacter->main_state() != "9")
+	{
+		
+	}
 	if (mainCharacter->vy() == 0)
 	{
 		if (mainCharacter->isSwinging() == false)
@@ -1454,62 +1465,70 @@ void Scene1::GraphicUpdate(float t)
 	MyCamera::GetInstance()->Update(t);
 
 	//Render Everything
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-	d3ddev->StretchRect(background, NULL, backbuffer, NULL, D3DTEXF_NONE);
-
-	viewRect = MyCamera::GetInstance()->View();
-	d3ddev->BeginScene();
-	//erase the entire background 
-
-   //start sprite handler 	
-	sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
-	//trace(L"%d", _explosion->state_manager()->life_span());
-	if ((_explosion->state_manager()->life_span() == 0) || (find(_onScreenList->begin(), _onScreenList->end(), _explosion) == _onScreenList->end()))
+	try
 	{
-		_explosion->state_manager()->setState("001");
-		_explosion->Reset();
-		if (find(_onScreenList->begin(), _onScreenList->end(), _explosion) != _onScreenList->end())
-			_onScreenList->remove(_explosion);
-		_gameObjectList->remove(_explosion);
-	}
-	sprite_handler->SetTransform(&old_matrix);
-	sprite_handler->Draw(mapETC, &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
+		d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+		d3ddev->StretchRect(background, NULL, backbuffer, NULL, D3DTEXF_NONE);
 
-	mainCharacter->setTranslation(D3DXVECTOR2(mainCharacter->x() - MyCamera::GetInstance()->View().left, mainCharacter->y() - MyCamera::GetInstance()->View().top));
-	mainCharacter->DrawBullet();
-	//mainCharacter->RenderBounding(D3DCOLOR_ARGB(200, 255, 67, 78));
-	mainCharacter->Render(false, true, true);
+		viewRect = MyCamera::GetInstance()->View();
+		d3ddev->BeginScene();
+		//erase the entire background 
 
-
-	for (auto i = _onScreenList->begin(); i != _onScreenList->end(); i++)
-	{
-		temp_object = *i;
-		temp_object->setAnchor(AnchorPoint::BOTTOM_MID);
-		temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
-		if (temp_object->sprite()->image())
+		//start sprite handler 	
+		sprite_handler->Begin(D3DXSPRITE_ALPHABLEND);
+		//trace(L"%d", _explosion->state_manager()->life_span());
+		if ((_explosion->state_manager()->life_span() == 0) || (find(_onScreenList->begin(), _onScreenList->end(), _explosion) == _onScreenList->end()))
 		{
-			temp_object->Render(false, true, true);
-			temp_object->GraphicUpdate(t);
+			_explosion->state_manager()->setState("001");
+			_explosion->Reset();
+			if (find(_onScreenList->begin(), _onScreenList->end(), _explosion) != _onScreenList->end())
+				_onScreenList->remove(_explosion);
+			_gameObjectList->remove(_explosion);
 		}
-		temp_object->RenderBounding(D3DCOLOR_ARGB(200, 255, 67, 78));
-	}
+		sprite_handler->SetTransform(&old_matrix);
+		sprite_handler->Draw(mapETC, &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
+
+		mainCharacter->setTranslation(D3DXVECTOR2(mainCharacter->x() - MyCamera::GetInstance()->View().left, mainCharacter->y() - MyCamera::GetInstance()->View().top));
+		mainCharacter->DrawBullet();
+		//mainCharacter->RenderBounding(D3DCOLOR_ARGB(200, 255, 67, 78));
+		mainCharacter->Render(false, true, true);
+
+
+		for (auto i = _onScreenList->begin(); i != _onScreenList->end(); i++)
+		{
+			temp_object = *i;
+			temp_object->setAnchor(AnchorPoint::BOTTOM_MID);
+			temp_object->setTranslation(D3DXVECTOR2(temp_object->x() - viewRect.left, temp_object->y() - viewRect.top));
+			if (temp_object->sprite()->image())
+			{
+				temp_object->Render(false, true, true);
+				temp_object->GraphicUpdate(t);
+			}
+			temp_object->RenderBounding(D3DCOLOR_ARGB(200, 255, 67, 78));
+		}
 
 
 
 
 #pragma region Draw map_front
-	viewRect.top += mapinfo->Height / 2;
-	viewRect.bottom += mapinfo->Height / 2;
-	sprite_handler->SetTransform(&old_matrix);
-	sprite_handler->Draw(mapETC, &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
+		viewRect.top += mapinfo->Height / 2;
+		viewRect.bottom += mapinfo->Height / 2;
+		sprite_handler->SetTransform(&old_matrix);
+		sprite_handler->Draw(mapETC, &viewRect, NULL, NULL, D3DCOLOR_XRGB(255, 255, 255));
 
 #pragma endregion
 
-	//mainCharacter->RenderBounding(D3DCOLOR_ARGB(150, 0, 250, 0));
-	_UI->Render(mainCharacter->health(), mainCharacter->Life(), mainCharacter->appleCount(), mainCharacter->DiamondCount(), mainCharacter->Score());
-	sprite_handler->End();
-	//stop rendering 
-	d3ddev->EndScene();
+		//mainCharacter->RenderBounding(D3DCOLOR_ARGB(150, 0, 250, 0));
+		_UI->Render(mainCharacter->health(), mainCharacter->Life(), mainCharacter->appleCount(), mainCharacter->DiamondCount(), mainCharacter->Score());
+		sprite_handler->End();
+		//stop rendering 
+		d3ddev->EndScene();
+	}
+	catch (int e)
+	{
+		return;
+	}
+	
 
 
 }

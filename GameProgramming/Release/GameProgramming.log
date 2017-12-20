@@ -1,21 +1,47 @@
-﻿  Scene2.cpp
+﻿  AABB.cpp
 c:\users\gnar\source\repos\underdogsproject\gameprogramming\gameobject.h(191): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
 c:\users\gnar\source\repos\underdogsproject\gameprogramming\gameobjectmove.h(2): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\camera.h(54): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\camera.h(58): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.h(198): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\aladdin.h(203): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  c:\program files (x86)\windows kits\10\include\10.0.15063.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(85): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(86): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(325): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(387): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(416): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(511): warning C4244: 'initializing': conversion from 'unsigned long' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(518): warning C4244: 'argument': conversion from 'float' to 'DWORD', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(581): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(583): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\gnar\source\repos\underdogsproject\gameprogramming\scene2.cpp(65): warning C4715: 'Scene2::Game_Init': not all control paths return a value
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(33): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(34): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(35): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(36): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(40): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(41): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(42): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(43): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(48): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(49): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(50): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(51): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(55): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(56): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(57): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(58): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(62): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(63): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(64): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(65): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(70): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(71): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(72): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(73): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(78): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(79): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(80): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(81): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(86): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(87): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(88): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(89): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(94): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(95): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(96): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(97): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(113): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(115): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(117): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(119): warning C4244: 'initializing': conversion from 'LONG' to 'float', possible loss of data
+c:\users\gnar\source\repos\underdogsproject\gameprogramming\aabb.cpp(288): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 AABB.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/OPT:ICF' specification
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
   GameProgramming.vcxproj -> C:\Users\Gnar\source\repos\UnderDogsProject\Release\GameProgramming.exe

@@ -18,8 +18,11 @@ class AppleBullet : public GameObject
 {
 private:
 	bool _isPopping;
+
 	
 public:
+
+
 	bool is_popping() const
 	{
 		return _isPopping;

@@ -44,7 +44,7 @@
     <sprite x="168" y="515" w="114" h="55" oX="168" oY="515" oW="554" oH="291" />
     <sprite x="286" y="496" w="91" h="72" oX="286" oY="496" oW="554" oH="291" />
   </Animation>
-  <Animation name="EnemusHot" imagePath="Enemy1.png" width="500" height="1096">
+  <Animation name="EnemusHot" imagePath="Enemy1.png" width="500" height="1096" delay="2">
     <sprite x="4" y="313" w="40" h="53" oX="4" oY="313" oW="358" oH="457" />
     <sprite x="49" y="311" w="42" h="59" oX="49" oY="311" oW="358" oH="457" />
     <sprite x="94" y="311" w="40" h="58" oX="94" oY="311" oW="358" oH="457" />

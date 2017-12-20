@@ -3,7 +3,7 @@
 void StarBulletPrefab::Instantiate(GameObject* gameObj, int x, int y, GameObject::Face face)
 {
 	gameObj->set_name("StarBullet");
-	gameObj->setSprite(new Sprite("Res\\SceneBoss\\Jafar.png", 0, 0));
+	gameObj->setSprite(new Sprite("Res\\SceneBoss\\Jafar.png", 1, 1));
 	gameObj->set_state_manager(new StateManager("Res\\SceneBoss\\StarBullet.xml"));
 	gameObj->setPosition(x, y);
 	gameObj->state_manager()->AddToDictState("000", "Fly");

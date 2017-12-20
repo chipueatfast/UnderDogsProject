@@ -72,13 +72,13 @@ void GameObjectMove::CalSword()
 		if (curface() == Face::RIGHT)
 		{
 			_sword->left = _boundingBox.right;
-			_sword->right = _sword->left + 50;
+			_sword->right = _sword->left + 40;
 			return;
 		}
 		else
 		{
 			_sword->right = _boundingBox.left;
-			_sword->left = _sword->right - 50;
+			_sword->left = _sword->right - 40;
 			return;
 		}
 	}

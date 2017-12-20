@@ -284,10 +284,12 @@ int CalculateParabolVy(int vx, D3DXVECTOR3 startposition, int max_x, int max_y ,
 {
 	float vy;
 	float a, b, c;
-	a = (startposition.x - (startposition.y + max_y)) / pow((startposition.x - (startposition.x - max_x / 2)), 2);
-	b = -2 * a*(startposition.x - max_x / 2);
-	c = startposition.x + max_y + pow(b, 2) / (4 * a);
-	vy = (CalculateY(curPosX + vx*FIXED_TIME, a, b, c) - CalculateY(curPosX, a, b, c)) / FIXED_TIME;
+
+	a = (- max_y) / pow(max_x / 2, 2);
+	b = -2 * a*(startposition.x + max_x / 2);
+	c = startposition.y - a* pow(startposition.x, 2) - b*startposition.x;
+	
+	vy = (CalculateY(curPosX, a, b, c) - CalculateY(curPosX +vx, a, b, c));
 
 	//`trace(L"\n%.4f", vy);
 	return (int)-vy;

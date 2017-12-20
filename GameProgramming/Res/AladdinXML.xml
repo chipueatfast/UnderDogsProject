@@ -283,7 +283,7 @@
     <sprite x="259" y="2126" w="62" h="21" oX="259" oY="2126" oW="1988" oH="192" />
     <sprite x="333" y="2107" w="54" h="41" oX="333" oY="2107" oW="1988" oH="192" />
   </Animation>
-  <Animation name="Beaten" imagePath="AladdinSprite.png" width="1121" height="2718">
+  <Animation name="Beaten" imagePath="AladdinSprite.png" width="1121" height="2718" delay="3">
     <sprite x="9" y="2167" w="42" h="45" oX="9" oY="2167" oW="2202" oH="376" />
     <sprite x="58" y="2161" w="55" h="51" oX="58" oY="2161" oW="2202" oH="376" />
     <sprite x="122" y="2162" w="59" h="49" oX="122" oY="2162" oW="2202" oH="376" />

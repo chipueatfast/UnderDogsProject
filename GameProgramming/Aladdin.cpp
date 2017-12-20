@@ -219,7 +219,7 @@ void Aladdin::GraphicUpdate(float t)
 			|| (sub_state() == "1" && name!="Climb")
 			|| sub_state() == "2"
 			|| hand_state() != "0"
-		/*	|| degree_state() != "0"*/
+			|| degree_state() != "0"
 			)
 		{
 			Next2();
@@ -391,16 +391,19 @@ void Aladdin::Reset()
 
 void Aladdin::BeBeaten()
 {
-	_invicibleTime--;
-	//OutputDebugString((std::to_string(_invicibleTime)).c_str());
 
-	if (_invicibleTime == 0)
+	if (_isImmune == 0)
 	{
-		set_health(_health - 1);
-
+		//set_health(_health - 1);
 		_soundAladdinBeBeaten->Play();
-		_invicibleTime = 10;
+		_isImmune = 40;
+		set_state("900");
+		_mainState = "9";
+		_subState = "0";
+		_handState = "0";
 	}
+		
+
 
 
 }
